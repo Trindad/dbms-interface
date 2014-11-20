@@ -392,8 +392,8 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo)
 		tp_table *e = (tp_table *)malloc(sizeof(tp_table)*1);
 		e->next = NULL;
 		strcpy(e->nome, nomeCampo); // Copia nome do campo passado para o esquema
-		e->tipo = tipoCampo; // Copia tipo do campo passado para o esquema
-		e->tam = tamanhoCampo; // Copia tamanho do campo passado para o esquema
+		e->tipo    = tipoCampo; // Copia tipo do campo passado para o esquema
+		e->tam     = tamanhoCampo; // Copia tamanho do campo passado para o esquema 
 		t->esquema = e; 
 		return t; // Retorna a estrutura
 	}
@@ -406,8 +406,8 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo)
 				tp_table *e = (tp_table *)malloc(sizeof(tp_table)*1);
 				e->next = NULL;
 				strcpy(e->nome, nomeCampo);
-				e->tipo = tipoCampo;
-				e->tam = tamanhoCampo;
+				e->tipo   = tipoCampo;
+				e->tam    = tamanhoCampo;
 				aux->next = e; // Faz o campo anterior apontar para o campo inserido.
 				return t;
 			}
@@ -458,9 +458,9 @@ int finalizaTabela(table *t)
 }
 //-----------------------------------------
 // INSERE NA TABELA
-column *insereValor(column *c, char *nomeCampo, char *valorCampo)
+column *insereValor(column *c, char *nomeCampo, char *valorCampo, table *t, int chave)
 {
-	
+	int erro;
 	column *aux;
 	if(c == NULL) // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
 	{
@@ -468,12 +468,16 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo)
 		e->valorCampo = (char *)malloc(sizeof(char) * (sizeof(valorCampo)));
 		strcpy(e->nomeCampo, nomeCampo); 
 		strcpy(e->valorCampo, valorCampo);
+        e->chaveColum = chave;
 		e->next = NULL;
 		c = e;
 		return c;
 	} 
 	else
 	{
+        erro = verificaNomeChave(t, nomeCampo, valorCampo, chave);
+        printf("EROOOOOOOOOOOOO: %d\n", erro);
+
 		for(aux = c; aux != NULL; aux = aux->next) // Anda até o final da lista de valores a serem inseridos e adiciona um novo valor.
 		{
 			if(aux->next == NULL)
@@ -483,6 +487,7 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo)
 				e->next = NULL;
 				strcpy(e->nomeCampo, nomeCampo);
 				strcpy(e->valorCampo, valorCampo);
+                e->chaveColum = chave;
 				aux->next = e;
 				return c;
 			}
