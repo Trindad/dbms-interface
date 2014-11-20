@@ -458,12 +458,20 @@ int finalizaTabela(table *t)
 }
 //-----------------------------------------
 // INSERE NA TABELA
-column *insereValor(column *c, char *nomeCampo, char *valorCampo, table *t, int chave)
+column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabela, int chave)
 {
 	int erro;
 	column *aux;
 	if(c == NULL) // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
 	{
+		erro = verificaNomeChave(nomeTabela, nomeCampo, valorCampo, chave);
+        printf("IF:::::: %d\n", erro);
+
+        if(erro == ERRO_CHAVE_PRIMARIA){
+        	printf("ERRO DE CHAVE PRIMARIA\n");
+        	return NULL;
+        }
+
 		column *e = (column *)malloc(sizeof(column)*1);
 		e->valorCampo = (char *)malloc(sizeof(char) * (sizeof(valorCampo)));
 		strcpy(e->nomeCampo, nomeCampo); 
@@ -475,8 +483,13 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo, table *t, int 
 	} 
 	else
 	{
-        erro = verificaNomeChave(t, nomeCampo, valorCampo, chave);
+        erro = verificaNomeChave(nomeTabela, nomeCampo, valorCampo, chave);
         printf("EROOOOOOOOOOOOO: %d\n", erro);
+
+        if(erro == ERRO_CHAVE_PRIMARIA){
+        	printf("ERRO DE CHAVE PRIMARIA\n");
+        	return NULL;
+        }
 
 		for(aux = c; aux != NULL; aux = aux->next) // Anda até o final da lista de valores a serem inseridos e adiciona um novo valor.
 		{

@@ -258,7 +258,7 @@ void imprime(char nomeTabela[]) {
 /***********************************************************************************|
 |* FUNÇÃO: Inserir tuplas na tabela selecionada conforme 'menu'.                   */   
     
-void insere(int menu){
+int insere(int menu){
     int nrTabelas,erro, object, schema, carro, modelo, fabricante, proprietario;  
     char var[100];
     nrTabelas = 4;
@@ -288,16 +288,16 @@ void insere(int menu){
         //Modelo
         if(!modelo){
             tab[1] = iniciaTabela("Modelo"); 
-            tab[1] = adicionaCampo(tab[1], "CodModelo"     , 'I', 10);
+            tab[1] = adicionaCampo(tab[1], "CodModelo"     , 'I', (sizeof(int)));
             tab[1] = adicionaCampo(tab[1], "NomeMod"       , 'S', 20);
-            tab[1] = adicionaCampo(tab[1], "CodFabricante" , 'I', 20);
+            tab[1] = adicionaCampo(tab[1], "CodFabricante" , 'I', (sizeof(int)));
             erro   = finalizaTabela(tab[1]);
         }
 
         //Fabricante
         if(!fabricante){
             tab[2] = iniciaTabela("Fabricante"); 
-            tab[2] = adicionaCampo(tab[2], "CodFabricante"  , 'I', 10);
+            tab[2] = adicionaCampo(tab[2], "CodFabricante"  , 'I', (sizeof(int)));
             tab[2] = adicionaCampo(tab[2], "NomeFab"        , 'S', 20);
             erro   = finalizaTabela(tab[2]);
         }
@@ -318,29 +318,35 @@ void insere(int menu){
             printf("\nDigite o codigo do Carro (Chassi):");
             getchar();
             scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "Chassi", var, tab[0], 1);
-            
+            colunas = insereValor(colunas, "Chassi", var, "Carro", 1);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;
+
             printf("\nDigite a Kilometragem do Carro:");
             scanf("%s", var);
-            colunas = insereValor(colunas, "Kms", var, tab[0], 0);
-            
+            colunas = insereValor(colunas, "Kms", var, "Carro", 0);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;            
+
             printf("\nDigite a Data da Compra:");
             getchar();
             scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "DataCompra", var, tab[0], 0);
-            
+            colunas = insereValor(colunas, "DataCompra", var, "Carro", 0);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;                        
+
             printf("\nDigite o Ano do Carro:");
             scanf("%s", var);
-            colunas = insereValor(colunas, "Ano", var, tab[0], 0);
+            colunas = insereValor(colunas, "Ano", var, "Carro", 0);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;            
             
             printf("\nDigite o codigo do Modelo do carro:");
             scanf("%s", var);
-            colunas = insereValor(colunas, "CodModelo", var, tab[0], 2);
-            
+            colunas = insereValor(colunas, "CodModelo", var, "Carro", 2);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;            
+
             printf("\nDigite a potência Motor do carro:");
             getchar();
             scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "Motor", var, tab[0], 0);
+            colunas = insereValor(colunas, "Motor", var, "Carro", 0);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;            
             
             erro = finalizaInsert("Carro", colunas);    
 
@@ -348,34 +354,36 @@ void insere(int menu){
 
         case 2:
             printf("\nDigite o codigo do modelo do carro:");
-            getchar();
-            scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "CodModelo", var, tab[1], 1);
-            
+            scanf("%s", var);
+            colunas = insereValor(colunas, "CodModelo", var, "Modelo", 1);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;   
+
             printf("\nDigite o Nome do Modelo:");
             getchar();
             scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "NomeMod", var, tab[1], 0);
-            
+            colunas = insereValor(colunas, "NomeMod", var, "Modelo", 0);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;   
+
             printf("\nDigite o codigo do Fabricante:");
-            getchar();
-            scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "CodFabricante", var, tab[1], 2);              
+            scanf("%s", var);
+            colunas = insereValor(colunas, "CodFabricante", var, "Modelo", 2);              
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;   
 
             erro = finalizaInsert("Modelo", colunas);   
 
             break;
             
         case 3: 
-            printf("\nDigite a Sigla do Fabricante:");
-            getchar();
-            scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "CodFabricante", var, tab[2], 1);
+            printf("\nDigite o codigo do Fabricante:");
+            scanf("%s", var);
+            colunas = insereValor(colunas, "CodFabricante", var, "Fabricante", 1);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;   
             
             printf("\nDigite o Nome do Fabricante:");
             getchar();
             scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "NomeFab", var, tab[2], 0);         
+            colunas = insereValor(colunas, "NomeFab", var, "Fabricante", 0);         
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;   
 
             erro = finalizaInsert("Fabricante", colunas);                       
 
@@ -385,22 +393,26 @@ void insere(int menu){
             printf("\nDigite RG do Proprietário do Veículo:");
             getchar();
             scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "Rg", var, tab[3], 1);
-            
+            colunas = insereValor(colunas, "Rg", var, "Proprietario", 1);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;   
+
             printf("\nDigite o Nome do Proprietário do Veículo (até 11 caracteres):");
             getchar();
             scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "Nome", var, tab[3], 0);
-            
+            colunas = insereValor(colunas, "Nome", var, "Proprietario", 0);
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;   
+
             printf("\nDigite a data de nascimento do Proprietário do Veículo:");
             getchar();
             scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "DataNasc", var, tab[3], 0); 
-            
+            colunas = insereValor(colunas, "DataNasc", var, "Proprietario", 0); 
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;   
+
             printf("\nDigite o Email do Proprietário do Veículo (até 11 caracteres):");
             getchar();
             scanf("%[^\n]", var);
-            colunas = insereValor(colunas, "Email", var, tab[3], 0);           
+            colunas = insereValor(colunas, "Email", var, "Proprietario", 0);           
+            if (!colunas) return ERRO_CHAVE_PRIMARIA;   
 
             erro = finalizaInsert("Proprietario", colunas);     
 
@@ -414,9 +426,10 @@ void insere(int menu){
 
     if(erro != 0){
         printf("Erro na criação das tabelas!\n");
-        return;
+        return ERRO_CRIACAO_TABELA;
     }
     
+    return SUCCESS;
 }
         
 /***********************************************************************************|
@@ -465,14 +478,14 @@ void excluirArquivo(char nome[]){
            "Digite algum número para voltar\n", nome);
 }
 
-int verificaNomeChave(table *t, char *nomeCampo, char *valorCampo, int chave){
+int verificaNomeChave(char *nomeTabela, char *nomeCampo, char *valorCampo, int chave){
     int j, x, erro;
 
     if(chave == 0)
         return SUCCESS;
 
-
-    struct fs_objects objeto = leObjeto(t->nome);    
+    printf("T: %s\n", nomeTabela);
+    struct fs_objects objeto = leObjeto(nomeTabela);    
     tp_table *tabela         = leSchema(objeto);
 
     if(tabela == ERRO_ABRIR_ESQUEMA){
@@ -487,65 +500,47 @@ int verificaNomeChave(table *t, char *nomeCampo, char *valorCampo, int chave){
         return ERRO_DE_PARAMETRO;
     }
 
+
     erro = SUCCESS;
     for(x = 0; erro == SUCCESS; x++)
         erro = colocaTuplaBuffer(bufferpoll, x, tabela, objeto);        
 
     column *pagina = getPage(bufferpoll, tabela, objeto, 0);
 
-    if(pagina == ERRO_PARAMETRO){
-        printf("Tabela Vazia\n");
-        return ERRO_DE_PARAMETRO;
-    }
-
     if(chave == 1){
         for(j = 0; j < objeto.qtdCampos*bufferpoll[0].nrec; j++){
 
-            if(pagina[j].tipoCampo == 'S'){        
-                if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
+            if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
+                if(pagina[j].tipoCampo == 'S'){        
                     if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
-                        return 9;
-                    }
-                    else{
-                        return 1;   
+                        return ERRO_CHAVE_PRIMARIA;
                     }
                 }
-            }
 
-            else if(pagina[j].tipoCampo == 'I'){        
-                if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
-                    if(pagina[j].valorCampo == valorCampo){
-                        return 8;
-                    }
-                    else{
-                        return 2;   
+                else if(pagina[j].tipoCampo == 'I'){ 
+                    int *n = (int *)&pagina[j].valorCampo[0];
+
+                    if(*n == atoi(valorCampo)){
+                        return ERRO_CHAVE_PRIMARIA;
                     }
                 }
-            }
 
-            else if(pagina[j].tipoCampo == 'D'){        
-                if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
-                    if(pagina[j].valorCampo == valorCampo){
-                        return 7;
-                    }
-                    else{
-                        return 3;   
+                else if(pagina[j].tipoCampo == 'D'){ 
+                    double *nn = (double *)&pagina[j].valorCampo[0];
+
+                    if(*nn == atof(valorCampo)){
+                        return ERRO_CHAVE_PRIMARIA;
                     }
                 }
-            }
 
-            else if(pagina[j].tipoCampo == 'C'){        
-                if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
+                else if(pagina[j].tipoCampo == 'C'){                        
                     if(pagina[j].valorCampo == valorCampo){
-                        return 4;
-                    }
-                    else{
-                        return 5;   
+                        return ERRO_CHAVE_PRIMARIA;
                     }
                 }
             }            
         }
     }
 
-    return 6;
+    return 9;
 }
