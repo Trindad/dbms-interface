@@ -458,31 +458,33 @@ int finalizaTabela(table *t)
 }
 //-----------------------------------------
 // INSERE NA TABELA
-column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabela, int chave)
-{
+column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabela, 
+                    int chave, char *tabelaApt, char *attApt){
+
 	int erro;
 	column *aux;
+
+    switch(chave){
+        case 0:
+            erro = SUCCESS;
+            break;
+
+        case 1:
+            erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo);
+            break;
+
+        case 2:
+            erro = verificaChaveFK(nomeTabela, nomeCampo, valorCampo, tabelaApt, attApt);
+            break;
+    }
+
+    if(erro == ERRO_CHAVE_PRIMARIA){
+        printf("ERRO DE CHAVE PRIMARIA\n");
+        return NULL;
+    }
+
 	if(c == NULL){ // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
-		switch(chave){
-            case 0:
-                erro = SUCCESS;
-                break;
-
-            case 1:
-                erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo);
-                break;
-
-            case 2:
-                erro = verificaChaveFK(nomeTabela, nomeCampo, valorCampo);
-                break;
-        }
-
         //erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo, chave);
-
-        if(erro == ERRO_CHAVE_PRIMARIA){
-        	printf("ERRO DE CHAVE PRIMARIA\n");
-        	return NULL;
-        }
 
 		column *e = (column *)malloc(sizeof(column)*1);
 		e->valorCampo = (char *)malloc(sizeof(char) * (sizeof(valorCampo)));
@@ -493,28 +495,8 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabe
 		c = e;
 		return c;
 	} 
-	else{
-
-        switch(chave){
-            case 0:
-                erro = SUCCESS;
-                break;
-
-            case 1:
-                erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo);
-                break;
-
-            case 2:
-                erro = verificaChaveFK(nomeTabela, nomeCampo, valorCampo);
-                break;
-        }
-        
+	else{        
         //erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo, chave);
-
-        if(erro == ERRO_CHAVE_PRIMARIA){
-        	printf("ERRO DE CHAVE PRIMARIA\n");
-        	return NULL;
-        }
 
 		for(aux = c; aux != NULL; aux = aux->next) // Anda até o final da lista de valores a serem inseridos e adiciona um novo valor.
 		{
@@ -539,7 +521,6 @@ int finalizaInsert(char *nome, column *c)
 	column *auxC;
 	int i = 0, x = 0, t;
 	FILE *dados;
-
 
 	struct fs_objects dicio = leObjeto(nome); // Le dicionario
 	tp_table *auxT = leSchema(dicio); // Le esquema

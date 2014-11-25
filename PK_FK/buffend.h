@@ -152,7 +152,7 @@ int finalizaTabela(table *t);
 	*nomeCampo - Nome do campo que o usuário vai inserir um valor.
 	*valorCampo - Valor do campo que vai ser inserido.
 */
-column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabela, int chave);
+column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabela, int chave, char *tabelaApt, char *attApt);
 /*
 	Esta função finaliza a inserção de valores em uma tabela. Assume que o usuário entrou com todos os campos de uma tupla completa.
 	Retorna: 
@@ -192,7 +192,7 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
     E retorna erros caso ocorra.
 */
 
-int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo);
+int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt);
 
 /*
     Essa função verifica as condições para a chave primária(PK)
