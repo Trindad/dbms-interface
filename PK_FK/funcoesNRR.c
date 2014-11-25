@@ -5,6 +5,16 @@
 //  Universidade Federal da Fronteira Sul                                         //      
 //                                                                                //      
 //////////////////////////////////////////////////////////////////////////////////*/
+    
+/* 
+* @TODO
+*
+* -> Implementar controle para criação chave estrangeira (FK)
+* -> Verificar se a chave apontada existe
+* -> Verificar se o valor apontado existe
+* 
+*/
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -478,13 +488,80 @@ void excluirArquivo(char nome[]){
            "Digite algum número para voltar\n", nome);
 }
 
-int verificaNomeChave(char *nomeTabela, char *nomeCampo, char *valorCampo, int chave){
+/***********************************************************************************|
+|* FUNÇÃO: Inicia os atributos utilizados pela FK e PK. Além de erros.             */   
+
+int iniciaAtributos(struct fs_objects *objeto, tp_table **tabela, tp_buffer **bufferpoll, char *nomeT){
+    *objeto     = leObjeto(nomeT);
+    *tabela     = leSchema(*objeto);
+    *bufferpoll = initbuffer();
+
+    if(*tabela == ERRO_ABRIR_ESQUEMA){
+        printf("Erro ao criar o esquema.\n");
+        return ERRO_DE_PARAMETRO;
+    }
+
+    if(*bufferpoll == ERRO_DE_ALOCACAO){
+        printf("Erro ao alocar memória para o buffer.\n");
+        return ERRO_DE_PARAMETRO;
+    }
+
+    return SUCCESS;
+}
+
+/***********************************************************************************|
+|* FUNÇÃO: Verifica as condições para chave estrangeira (FK)                       */   
+
+int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo){
     int j, x, erro;
 
-    if(chave == 0)
-        return SUCCESS;
+    struct fs_objects objeto;
+    tp_table *tabela;
+    tp_buffer *bufferpoll;
+/*
+    struct fs_objects objeto = leObjeto(nomeTabela);    
+    tp_table *tabela         = leSchema(objeto);
 
-    printf("T: %s\n", nomeTabela);
+
+    if(tabela == ERRO_ABRIR_ESQUEMA){
+        printf("Erro ao criar o esquema.\n");
+        return ERRO_DE_PARAMETRO;
+    }
+
+    tp_buffer *bufferpoll = initbuffer();
+
+    
+
+    if(bufferpoll == ERRO_DE_ALOCACAO){
+        printf("Erro ao alocar memória para o buffer.\n");
+        return ERRO_DE_PARAMETRO;
+    }
+*/
+    if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS) 
+        return ERRO_DE_PARAMETRO;
+
+    erro = SUCCESS;
+    for(x = 0; erro == SUCCESS; x++)
+        erro = colocaTuplaBuffer(bufferpoll, x, tabela, objeto);        
+
+    column *pagina = getPage(bufferpoll, tabela, objeto, 0);
+
+    // Fazer para FK.
+
+    return 9;
+}
+
+/***********************************************************************************|
+|* FUNÇÃO: Verifica as condições para chave primária (PK)                          */   
+
+int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo){
+    int j, x, erro;
+    
+    struct fs_objects objeto;
+    tp_table *tabela;
+    tp_buffer *bufferpoll;
+
+    /*
     struct fs_objects objeto = leObjeto(nomeTabela);    
     tp_table *tabela         = leSchema(objeto);
 
@@ -499,7 +576,9 @@ int verificaNomeChave(char *nomeTabela, char *nomeCampo, char *valorCampo, int c
         printf("Erro ao alocar memória para o buffer.\n");
         return ERRO_DE_PARAMETRO;
     }
-
+*/
+    if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS) 
+        return ERRO_DE_PARAMETRO;
 
     erro = SUCCESS;
     for(x = 0; erro == SUCCESS; x++)
@@ -507,39 +586,37 @@ int verificaNomeChave(char *nomeTabela, char *nomeCampo, char *valorCampo, int c
 
     column *pagina = getPage(bufferpoll, tabela, objeto, 0);
 
-    if(chave == 1){
-        for(j = 0; j < objeto.qtdCampos*bufferpoll[0].nrec; j++){
+    for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){
 
-            if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
-                if(pagina[j].tipoCampo == 'S'){        
-                    if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
-                        return ERRO_CHAVE_PRIMARIA;
-                    }
+        if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
+            if(pagina[j].tipoCampo == 'S'){        
+                if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
+                    return ERRO_CHAVE_PRIMARIA;
                 }
+            }
 
-                else if(pagina[j].tipoCampo == 'I'){ 
-                    int *n = (int *)&pagina[j].valorCampo[0];
+            else if(pagina[j].tipoCampo == 'I'){ 
+                int *n = (int *)&pagina[j].valorCampo[0];
 
-                    if(*n == atoi(valorCampo)){
-                        return ERRO_CHAVE_PRIMARIA;
-                    }
+                if(*n == atoi(valorCampo)){
+                    return ERRO_CHAVE_PRIMARIA;
                 }
+            }
 
-                else if(pagina[j].tipoCampo == 'D'){ 
-                    double *nn = (double *)&pagina[j].valorCampo[0];
+            else if(pagina[j].tipoCampo == 'D'){ 
+                double *nn = (double *)&pagina[j].valorCampo[0];
 
-                    if(*nn == atof(valorCampo)){
-                        return ERRO_CHAVE_PRIMARIA;
-                    }
+                if(*nn == atof(valorCampo)){
+                    return ERRO_CHAVE_PRIMARIA;
                 }
+            }
 
-                else if(pagina[j].tipoCampo == 'C'){                        
-                    if(pagina[j].valorCampo == valorCampo){
-                        return ERRO_CHAVE_PRIMARIA;
-                    }
+            else if(pagina[j].tipoCampo == 'C'){                        
+                if(pagina[j].valorCampo == valorCampo){
+                    return ERRO_CHAVE_PRIMARIA;
                 }
-            }            
-        }
+            }
+        }            
     }
 
     return 9;

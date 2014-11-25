@@ -22,3 +22,9 @@ int insere(int menu);
 
 //existeArquivo: Verifica a existência do arquivo da tabela 'filename'
 int existeArquivo(const char* filename);
+
+// Essa função verifica as condições para a chave estrangeira(FK). E retorna erros caso ocorra.
+int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo);
+
+// Essa função verifica as condições para a chave primaria(PK). E retorna erros caso ocorra.
+int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo);

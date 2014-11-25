@@ -186,3 +186,17 @@ column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, 
 	*nTupla - Número da tupla a ser excluida, este número é relativo a página do buffer e não a todos os registros carregados
 */
 column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, int page, int nTupla);
+
+/*
+    Essa função verifica as condições para a chave estrangeira(FK)
+    E retorna erros caso ocorra.
+*/
+
+int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo);
+
+/*
+    Essa função verifica as condições para a chave primária(PK)
+    E retorna erros caso ocorra.
+*/
+
+int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo);

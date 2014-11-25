@@ -462,10 +462,22 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabe
 {
 	int erro;
 	column *aux;
-	if(c == NULL) // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
-	{
-		erro = verificaNomeChave(nomeTabela, nomeCampo, valorCampo, chave);
-        printf("IF:::::: %d\n", erro);
+	if(c == NULL){ // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
+		switch(chave){
+            case 0:
+                erro = SUCCESS;
+                break;
+
+            case 1:
+                erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo);
+                break;
+
+            case 2:
+                erro = verificaChaveFK(nomeTabela, nomeCampo, valorCampo);
+                break;
+        }
+
+        //erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo, chave);
 
         if(erro == ERRO_CHAVE_PRIMARIA){
         	printf("ERRO DE CHAVE PRIMARIA\n");
@@ -481,10 +493,23 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabe
 		c = e;
 		return c;
 	} 
-	else
-	{
-        erro = verificaNomeChave(nomeTabela, nomeCampo, valorCampo, chave);
-        printf("EROOOOOOOOOOOOO: %d\n", erro);
+	else{
+
+        switch(chave){
+            case 0:
+                erro = SUCCESS;
+                break;
+
+            case 1:
+                erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo);
+                break;
+
+            case 2:
+                erro = verificaChaveFK(nomeTabela, nomeCampo, valorCampo);
+                break;
+        }
+        
+        //erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo, chave);
 
         if(erro == ERRO_CHAVE_PRIMARIA){
         	printf("ERRO DE CHAVE PRIMARIA\n");
