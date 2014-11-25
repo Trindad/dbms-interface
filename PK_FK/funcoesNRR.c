@@ -377,7 +377,7 @@ int insere(int menu){
             printf("\nDigite o codigo do Fabricante:");
             scanf("%s", var);
             colunas = insereValor(colunas, "CodFabricante", var, "Modelo", 2, "Fabricante", "CodFabricante");              
-            if (!colunas) return ERRO_CHAVE_PRIMARIA;   
+            if (!colunas) return ERRO_CHAVE_ESTRANGEIRA;   
 
             erro = finalizaInsert("Modelo", colunas);   
 
@@ -536,15 +536,22 @@ int existeAtributo(char *nomeTabela, char *atributo){
 
 int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt){
     int x, erro;
-
+    char str[20]; 
+    char dat[5] = ".dat";
     struct fs_objects objeto;
     tp_table *tabela;
     tp_buffer *bufferpoll;
+    
+    strcpy (str, tabelaApt); 
+    strcat (str, dat);              //Concatena e junta o nome com .dat
+    
+    printf("Arquivo NOME: %s\n", str);
+    printf("Arquivo: %d\nAtt: %d\n", existeArquivo(str), existeAtributo(tabelaApt, attApt));
 
-    if(!existeArquivo(tabelaApt) || !existeAtributo(tabelaApt, attApt))
+    if(!existeArquivo(str) || !existeAtributo(tabelaApt, attApt))
         return ERRO_CHAVE_ESTRANGEIRA;
 
-    if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS) 
+    if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS)
         return ERRO_DE_PARAMETRO;
 
     erro = SUCCESS;

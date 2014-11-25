@@ -478,6 +478,13 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabe
             break;
     }
 
+    printf("ERRO: %d\n", erro);
+
+    if(erro == ERRO_CHAVE_ESTRANGEIRA){
+        printf("ERRO DE CHAVE ESTRANGEIRA\n");
+        return NULL;
+    }
+
     if(erro == ERRO_CHAVE_PRIMARIA){
         printf("ERRO DE CHAVE PRIMARIA\n");
         return NULL;
