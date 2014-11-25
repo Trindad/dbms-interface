@@ -535,7 +535,7 @@ int existeAtributo(char *nomeTabela, char *atributo){
 |* FUNÇÃO: Verifica as condições para chave estrangeira (FK)                       */   
 
 int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt){
-    int x, erro;
+    int x,j, erro;
     char str[20]; 
     char dat[5] = ".dat";
     struct fs_objects objeto;
@@ -560,7 +560,41 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
 
     column *pagina = getPage(bufferpoll, tabela, objeto, 0);
 
-    // Fazer para FK.
+    for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){
+		 
+
+        if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
+			
+            if(pagina[j].tipoCampo == 'S'){     
+                if(strcmp(pagina[j].valorCampo, valorCampo) != 0){
+                    return ERRO_CHAVE_ESTRANGEIRA;
+                }
+            }
+
+            else if(pagina[j].tipoCampo == 'I'){ 
+				
+                int *n = (int *)&pagina[j].valorCampo[0];
+
+                if(*n != atoi(valorCampo)){
+                    return ERRO_CHAVE_ESTRANGEIRA;
+                }
+            }
+
+            else if(pagina[j].tipoCampo == 'D'){ 
+                double *nn = (double *)&pagina[j].valorCampo[0];
+
+                if(*nn != atof(valorCampo)){
+                    return ERRO_CHAVE_ESTRANGEIRA;
+                }
+            }
+
+            else if(pagina[j].tipoCampo == 'C'){                        
+                if(pagina[j].valorCampo != valorCampo){
+                    return ERRO_CHAVE_ESTRANGEIRA;
+                }
+            }
+        }            
+    }
 
     return 9;
 }
