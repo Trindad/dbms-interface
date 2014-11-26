@@ -545,14 +545,15 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
     strcpy (str, tabelaApt); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
     
-    printf("Arquivo NOME: %s\n", str);
-    printf("Arquivo: %d\nAtt: %d\n", existeArquivo(str), existeAtributo(tabelaApt, attApt));
+    //printf("Arquivo NOME: %s\n", str);
+    //printf("Arquivo: %d\nAtt: %d\n", existeArquivo(str), existeAtributo(tabelaApt, attApt));
 
     if(!existeArquivo(str) || !existeAtributo(tabelaApt, attApt))
         return ERRO_CHAVE_ESTRANGEIRA;
 
-    if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS)
+    if(iniciaAtributos(&objeto, &tabela, &bufferpoll, tabelaApt) != SUCCESS)
         return ERRO_DE_PARAMETRO;
+      
 
     erro = SUCCESS;
     for(x = 0; erro == SUCCESS; x++)
@@ -566,8 +567,8 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
         if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
 			
             if(pagina[j].tipoCampo == 'S'){     
-                if(strcmp(pagina[j].valorCampo, valorCampo) != 0){
-                    return ERRO_CHAVE_ESTRANGEIRA;
+                if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
+                    return 0;
                 }
             }
 
@@ -575,28 +576,31 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
 				
                 int *n = (int *)&pagina[j].valorCampo[0];
 
-                if(*n != atoi(valorCampo)){
-                    return ERRO_CHAVE_ESTRANGEIRA;
+                if(*n == atoi(valorCampo)){
+					
+                    return 0;
                 }
             }
 
             else if(pagina[j].tipoCampo == 'D'){ 
                 double *nn = (double *)&pagina[j].valorCampo[0];
 
-                if(*nn != atof(valorCampo)){
-                    return ERRO_CHAVE_ESTRANGEIRA;
+                if(*nn == atof(valorCampo)){
+                    return 0;
                 }
             }
 
             else if(pagina[j].tipoCampo == 'C'){                        
-                if(pagina[j].valorCampo != valorCampo){
-                    return ERRO_CHAVE_ESTRANGEIRA;
+                if(pagina[j].valorCampo == valorCampo){
+                    return 0;
                 }
-            }
+            }else {
+				return ERRO_CHAVE_ESTRANGEIRA;
+			}
         }            
     }
 
-    return 9;
+    return ERRO_CHAVE_ESTRANGEIRA;
 }
 
 /***********************************************************************************|
