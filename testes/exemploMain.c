@@ -52,9 +52,9 @@ int main(){
 	if (!colunas) return ERRO_CHAVE_PRIMARIA;   
 	colunas = insereValor(colunas, "atrib2", "12"		, "tabela1", 0, "", "");
 	if (!colunas) return ERRO_CHAVE_PRIMARIA;   
-	colunas = insereValor(colunas, "atrib2", "teste13"	, "tabela1", 0, "", "");
+	colunas = insereValor(colunas, "atrib3", "teste13"	, "tabela1", 0, "", "");
 	if (!colunas) return ERRO_CHAVE_PRIMARIA;   
-	colunas = insereValor(colunas, "atrib2", "1.4"		, "tabela1", 0, "", "");
+	colunas = insereValor(colunas, "atrib4", "1.4"		, "tabela1", 0, "", "");
 	if (!colunas) return ERRO_CHAVE_PRIMARIA;            
 	erro = finalizaInsert("tabela1", colunas);  
 	
