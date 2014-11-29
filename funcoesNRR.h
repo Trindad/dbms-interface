@@ -28,3 +28,5 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
 
 // Essa função verifica as condições para a chave primaria(PK). E retorna erros caso ocorra.
 int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo);
+
+
