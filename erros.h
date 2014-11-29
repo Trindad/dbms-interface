@@ -25,4 +25,8 @@
 #define ERRO_DE_LEITURA NULL
 #define ERRO_PARAMETRO NULL
 
-//tratamento
+//tratamento PK e FK
+#define NPK 0
+#define PK 1
+#define FK 2
+

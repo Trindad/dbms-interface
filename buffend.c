@@ -383,7 +383,7 @@ table *iniciaTabela(char *nome){
 	return t; // Retorna estrutura para criação de uma tabela.
 }
 
-table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo){
+table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,int chave){
 	if(t == NULL) // Se a estrutura passada for nula, retorna erro.
 		return ERRO_ESTRUTURA_TABELA_NULA;
 	tp_table *aux;  
@@ -394,7 +394,7 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo)
 		strcpy(e->nome, nomeCampo); // Copia nome do campo passado para o esquema
 		e->tipo    = tipoCampo; // Copia tipo do campo passado para o esquema
 		e->tam     = tamanhoCampo; // Copia tamanho do campo passado para o esquema 
-		t->esquema = e; 
+		t->esquema = e;
 		return t; // Retorna a estrutura
 	}
 	else
@@ -461,7 +461,7 @@ int finalizaTabela(table *t)
 column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabela, 
                     int chave, char *tabelaApt, char *attApt){
 
-	int erro;
+	int erro,erroPK;
 	column *aux, *temp;
 	temp=NULL;
     switch(chave){
@@ -474,24 +474,28 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabe
             break;
 
         case 2:
+			erroPK = verificaChavePK(nomeTabela, nomeCampo, valorCampo);
             erro = verificaChaveFK(nomeTabela, nomeCampo, valorCampo, tabelaApt, attApt);
             break;
     }
+    
+    
+    
 	temp = (column *)malloc(sizeof(column)*1);
 
-   if(erro == ERRO_CHAVE_ESTRANGEIRA){
-		temp->retorno=2;
+	if(erro == ERRO_CHAVE_ESTRANGEIRA || erroPK==ERRO_CHAVE_PRIMARIA){
+		temp->retorno=ERRO_CHAVE_ESTRANGEIRA;
 		return temp;
-    }
+	}
 
-    if(erro == ERRO_CHAVE_PRIMARIA){
-		temp->retorno=1;
-        return temp;
-    }
+	if(erro == ERRO_CHAVE_PRIMARIA){
+		temp->retorno=ERRO_CHAVE_PRIMARIA;
+		return temp;
+	}
+	
 
 	if(c == NULL){ // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
-        //erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo, chave);
-
+     
 		column *e = (column *)malloc(sizeof(column)*1);
 		e->valorCampo = (char *)malloc(sizeof(char) * (sizeof(valorCampo)));
 		strcpy(e->nomeCampo, nomeCampo); 
@@ -500,14 +504,11 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabe
 		e->next = NULL;
 		c = e;
 		return c;
-	} 
-	else{        
-        //erro = verificaChavePK(nomeTabela, nomeCampo, valorCampo, chave);
+	}else{        
 
-		for(aux = c; aux != NULL; aux = aux->next) // Anda até o final da lista de valores a serem inseridos e adiciona um novo valor.
-		{
-			if(aux->next == NULL)
-			{
+		for(aux = c; aux != NULL; aux = aux->next){ // Anda até o final da lista de valores a serem inseridos e adiciona um novo valor.
+		
+			if(aux->next == NULL) {
 				column *e = (column *)malloc(sizeof(column)*1);
 				e->valorCampo = (char *)malloc(sizeof(char) * (sizeof(valorCampo)));
 				e->next = NULL;

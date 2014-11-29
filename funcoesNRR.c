@@ -276,39 +276,39 @@ int insere(int menu){
         //Carro
         if(!carro){
             tab[0] = iniciaTabela("Carro");   
-            tab[0] = adicionaCampo(tab[0], "Chassi"     , 'S', 20);
-            tab[0] = adicionaCampo(tab[0], "Kms"        , 'I', (sizeof(int)));
-            tab[0] = adicionaCampo(tab[0], "DataCompra" , 'S', 10);
-            tab[0] = adicionaCampo(tab[0], "Ano"        , 'I', (sizeof(int)));
-            tab[0] = adicionaCampo(tab[0], "CodModelo"  , 'I', (sizeof(int)));
-            tab[0] = adicionaCampo(tab[0], "Motor"      , 'S', 10);
+            tab[0] = adicionaCampo(tab[0], "Chassi"     , 'S', 20,1);
+            tab[0] = adicionaCampo(tab[0], "Kms"        , 'I', (sizeof(int)),0);
+            tab[0] = adicionaCampo(tab[0], "DataCompra" , 'S', 10,0);
+            tab[0] = adicionaCampo(tab[0], "Ano"        , 'I', (sizeof(int)),0);
+            tab[0] = adicionaCampo(tab[0], "CodModelo"  , 'I', (sizeof(int)),2);
+            tab[0] = adicionaCampo(tab[0], "Motor"      , 'S', 10,0);
             erro   = finalizaTabela(tab[0]);
         }
 
         //Modelo
         if(!modelo){
             tab[1] = iniciaTabela("Modelo"); 
-            tab[1] = adicionaCampo(tab[1], "CodModelo"     , 'I', (sizeof(int)));
-            tab[1] = adicionaCampo(tab[1], "NomeMod"       , 'S', 20);
-            tab[1] = adicionaCampo(tab[1], "CodFabricante" , 'I', (sizeof(int)));
+            tab[1] = adicionaCampo(tab[1], "CodModelo"     , 'I', (sizeof(int)),1);
+            tab[1] = adicionaCampo(tab[1], "NomeMod"       , 'S', 20,0);
+            tab[1] = adicionaCampo(tab[1], "CodFabricante" , 'I', (sizeof(int)),2);
             erro   = finalizaTabela(tab[1]);
         }
 
         //Fabricante
         if(!fabricante){
             tab[2] = iniciaTabela("Fabricante"); 
-            tab[2] = adicionaCampo(tab[2], "CodFabricante"  , 'I', (sizeof(int)));
-            tab[2] = adicionaCampo(tab[2], "NomeFab"        , 'S', 20);
+            tab[2] = adicionaCampo(tab[2], "CodFabricante"  , 'I', (sizeof(int)),1);
+            tab[2] = adicionaCampo(tab[2], "NomeFab"        , 'S', 20,0);
             erro   = finalizaTabela(tab[2]);
         }
 
         //Proprietário
         if(!proprietario){
             tab[3] = iniciaTabela("Proprietario");
-            tab[3] = adicionaCampo(tab[3], "Rg"        , 'S', 12);    
-            tab[3] = adicionaCampo(tab[3], "Nome"      , 'S', 45);    
-            tab[3] = adicionaCampo(tab[3], "DataNasc"  , 'S', 15);    
-            tab[3] = adicionaCampo(tab[3], "Email"     , 'S', 50);    
+            tab[3] = adicionaCampo(tab[3], "Rg"        , 'S', 12,1);    
+            tab[3] = adicionaCampo(tab[3], "Nome"      , 'S', 45,0);    
+            tab[3] = adicionaCampo(tab[3], "DataNasc"  , 'S', 15,0);    
+            tab[3] = adicionaCampo(tab[3], "Email"     , 'S', 50,0);    
             erro   = finalizaTabela(tab[3]); 
         }
     }
