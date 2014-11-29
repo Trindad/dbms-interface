@@ -3,21 +3,32 @@ Curso: Ciência da Computação
 Componente Curricular: Banco de Dados II
 Professor: Dr. Denio Duarte
 Alunos: Natan J. Mai, Ricardo Zanuzzo, Rogerio T. Schmidt
+=============================================================================================================================================
+Introdução:
 
-Introdução
-	Nesta atividade, cada equipe terá que implementar na biblioteca do SGBD a inclusão de chave primária (PK) e chave estrangeira (FK) na criação das tabelas. As FK devem ser criticadas caso a tabela/atributo de origem ainda não existam.
+Nesta atividade, cada equipe terá que implementar na biblioteca do SGBD a inclusão de chave primária (PK) e chave estrangeira (FK) na criação das tabelas. As FK devem ser criticadas caso a tabela/atributo de origem ainda não existam.
 	
-A definição de chave primária ou chave estrangeira de um atributo é representado por 0 (Sem chave), 1 (Chave primária) e 2 (Chave estrangeira) na hora da inserção de valores nos atributos. (InsereValor()). Na inserção de valores também foi alterado para adicionar outros parâmetros, segue uma breve descrição sobre todos os parâmetros:
+A definição de chave primária ou chave estrangeira de um atributo é representado por um "flag" que é passado por parametro junto com o valor
+a ser inserido:
+- NPK (Sem chave);
+- PK (Chave primária);
+- FK (Chave estrangeira) 
 
--> Variável do tipo column,
--> Nome do atributo a ser adicionado o valor,
--> Valor,
+No momento da inserção de valores nos atributos. (InsereValor()). Na inserção de valores também foi alterado para adicionar outros parâmetros, segue uma breve descrição sobre todos os parâmetros relacionando a o exemplo abaixo:
+
+insereValor(colunas, "atrib1", "10"	, "tabela1", PK, "", "");		//somente com PK
+insereValor(colunas, "atrib2", "11"	, "tabela1", NPK, "", "");		//sem PK nem FK
+insereValor(colunas, "atrib1", "11"	, "tabela2", FK, "tabela1", "atrib1");	//com PK e FK
+
+-> Variável colunas do tipo column,
+-> Nome do atributo "atrib1" a ser adicionado o valor,
+-> Valor adicionado,
 -> Nome da Tabela,
--> Tipo da chave (0, 1, 2),
+-> Flag do tipo da chave (0, 1, 2),
 -> Tabela referenciada em caso de PK,
-    Caso a chave não seja FK, deixar o valor vazio ""
+    Caso a chave não seja FK, deve se deixar o valor vazio ""
 -> Atributo referenciado em caso de PK.
-    Caso a chave não seja FK, deixar o valor vazio ""
+    Caso a chave não seja FK, deve se deixar o valor vazio ""
 
 É possível adicionar apenas um atributo como chave PK, ou seja, não é tratada a forma de chave composta.
 
