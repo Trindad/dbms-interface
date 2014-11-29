@@ -28,6 +28,7 @@ typedef struct column{ // Estrutura utilizada para inserir em uma tabela, exclui
 	char nomeCampo[TAMANHO_NOME_CAMPO];	//Nome do Campo.
 	char *valorCampo;					// Valor do Campo.
     int  chaveColum;                    // 0(não é chave), 1(chave primaria) e 2(chave estrangeira).
+    int retorno;						//retorno das pk_fk
 	struct column *next;				// Encadeamento para o próximo campo.
 }column;
 

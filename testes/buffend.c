@@ -462,8 +462,8 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabe
                     int chave, char *tabelaApt, char *attApt){
 
 	int erro;
-	column *aux;
-
+	column *aux, *temp;
+	temp=NULL;
     switch(chave){
         case 0:
             erro = SUCCESS;
@@ -475,19 +475,19 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabe
 
         case 2:
             erro = verificaChaveFK(nomeTabela, nomeCampo, valorCampo, tabelaApt, attApt);
+            printf("%d", erro);
             break;
     }
+	temp = (column *)malloc(sizeof(column)*1);
 
-    printf("ERRO: %d\n", erro);
-
-    if(erro == ERRO_CHAVE_ESTRANGEIRA){
-        printf("ERRO DE CHAVE ESTRANGEIRA\n");
-        return NULL;
+   if(erro == ERRO_CHAVE_ESTRANGEIRA){
+		temp->retorno=2;
+		return temp;
     }
 
     if(erro == ERRO_CHAVE_PRIMARIA){
-        printf("ERRO DE CHAVE PRIMARIA\n");
-        return NULL;
+		temp->retorno=1;
+        return temp;
     }
 
 	if(c == NULL){ // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.

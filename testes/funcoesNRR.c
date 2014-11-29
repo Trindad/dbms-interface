@@ -547,7 +547,7 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
 			
             if(pagina[j].tipoCampo == 'S'){     
                 if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
-                    return 0;
+                    return SUCCESS;
                 }
             }
 
@@ -557,7 +557,7 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
 
                 if(*n == atoi(valorCampo)){
 					
-                    return 0;
+                    return SUCCESS;
                 }
             }
 
@@ -565,13 +565,13 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
                 double *nn = (double *)&pagina[j].valorCampo[0];
 
                 if(*nn == atof(valorCampo)){
-                    return 0;
+                    return SUCCESS;
                 }
             }
 
             else if(pagina[j].tipoCampo == 'C'){                        
                 if(pagina[j].valorCampo == valorCampo){
-                    return 0;
+                    return SUCCESS;
                 }
             }else {
 				return ERRO_CHAVE_ESTRANGEIRA;
@@ -634,5 +634,5 @@ int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo){
         }            
     }
 
-    return 9;
+    return SUCCESS;
 }
