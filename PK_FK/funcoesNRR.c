@@ -6,16 +6,6 @@
 //                                                                                //      
 //////////////////////////////////////////////////////////////////////////////////*/
     
-/* 
-* @TODO
-*
-* -> Implementar controle para criação chave estrangeira (FK)
-* -> Verificar se a chave apontada existe
-* -> Verificar se o valor apontado existe
-* 
-*/
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -483,9 +473,6 @@ void excluirArquivo(char nome[]){
     while(getc(fptr) != EOF){       //Adiciona \0 no arquivo inteiro.
         fwrite("\0", 1, 1, fptr);
     }
-
-    printf("\nTodos os registros da tabela %s foram excluídos.\n"
-           "Digite algum número para voltar\n", nome);
 }
 
 /***********************************************************************************|
@@ -496,15 +483,11 @@ int iniciaAtributos(struct fs_objects *objeto, tp_table **tabela, tp_buffer **bu
     *tabela     = leSchema(*objeto);
     *bufferpoll = initbuffer();
 
-    if(*tabela == ERRO_ABRIR_ESQUEMA){
-        printf("Erro ao criar o esquema.\n");
+    if(*tabela == ERRO_ABRIR_ESQUEMA)
         return ERRO_DE_PARAMETRO;
-    }
 
-    if(*bufferpoll == ERRO_DE_ALOCACAO){
-        printf("Erro ao alocar memória para o buffer.\n");
+    if(*bufferpoll == ERRO_DE_ALOCACAO)
         return ERRO_DE_PARAMETRO;
-    }
 
     return SUCCESS;
 }
@@ -545,9 +528,6 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
     strcpy (str, tabelaApt); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
     
-    //printf("Arquivo NOME: %s\n", str);
-    //printf("Arquivo: %d\nAtt: %d\n", existeArquivo(str), existeAtributo(tabelaApt, attApt));
-
     if(!existeArquivo(str) || !existeAtributo(tabelaApt, attApt))
         return ERRO_CHAVE_ESTRANGEIRA;
 
@@ -563,7 +543,6 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
 
     for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){
 		 
-
         if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
 			
             if(pagina[j].tipoCampo == 'S'){     
@@ -613,22 +592,6 @@ int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo){
     tp_table *tabela;
     tp_buffer *bufferpoll;
 
-    /*
-    struct fs_objects objeto = leObjeto(nomeTabela);    
-    tp_table *tabela         = leSchema(objeto);
-
-    if(tabela == ERRO_ABRIR_ESQUEMA){
-        printf("Erro ao criar o esquema.\n");
-        return ERRO_DE_PARAMETRO;
-    }
-
-    tp_buffer *bufferpoll = initbuffer();
-
-    if(bufferpoll == ERRO_DE_ALOCACAO){
-        printf("Erro ao alocar memória para o buffer.\n");
-        return ERRO_DE_PARAMETRO;
-    }
-*/
     if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS) 
         return ERRO_DE_PARAMETRO;
 

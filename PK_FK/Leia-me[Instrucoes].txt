@@ -5,61 +5,36 @@ Professor: Dr. Denio Duarte
 Alunos: Natan J. Mai, Ricardo Zanuzzo, Rogerio T. Schmidt
 
 Introdução
-	Trabalho desenvolvido para o componente curricular de Banco de Dados II. Nele são criado quatro tabelas (carro, modelo, fabricante e proprietário).
-	Na sua execução, é apresentado o seguinte menu inicial, o qual é auto explicativo:
+	Nesta atividade, cada equipe terá que implementar na biblioteca do SGBD a inclusão de chave primária (PK) e chave estrangeira (FK) na criação das tabelas. As FK devem ser criticadas caso a tabela/atributo de origem ainda não existam.
 	
-	-> Tabela Carro
-	-> Tabela Modelo 
-	-> Tabela Fabricante 
-	-> Tabela Proprietário
-	
-	Dentre as tabelas acima, digite: 
-	1 - Inserir valores
-	2 - Imprimir valores
-	3 - Excluir valores
-	4 - Sair
+A definição de chave primária ou chave estrangeira de um atributo é representado por 0 (Sem chave), 1 (Chave primária) e 2 (Chave estrangeira) na hora da inserção de valores nos atributos. (InsereValor()). Na inserção de valores também foi alterado para adicionar outros parâmetros, segue uma breve descrição sobre todos os parâmetros:
 
-A opção 1 permite a inserção de valores nas tabelas citadas, a qual deve ser selecionada.
-A opção 2 permite a impressão das tabelas citadas, a qual deve ser selecionada.
-A opção 3 exclui todas as tuplas da tabela escolhida
+-> Variável do tipo column,
+-> Nome do atributo a ser adicionado o valor,
+-> Valor,
+-> Nome da Tabela,
+-> Tipo da chave (0, 1, 2),
+-> Tabela referenciada em caso de PK,
+    Caso a chave não seja FK, deixar o valor vazio ""
+-> Atributo referenciado em caso de PK.
+    Caso a chave não seja FK, deixar o valor vazio ""
 
-Sobre o dicionário de dados e o esquema:
-	Por definição, o dicionário de dados está no aquivo fs_object.dat e o esquema em fs_schema.dat, os mesmos serão criados no diretório raiz da pasta dos fontes.
-	São carregados na memória pelas funçõe leObjeto(nTabela) e leSchema(objeto) e tem a seguinte estrutura:
+Foi alterado a struct column para podermos trabalhar com as chaves.
 
-	struct fs_objects { // Estrutura usada para carregar fs_object.dat
-		char nome[20];
-		int cod;
-		char nArquivo[20];
-		int qtdCampos;
-	};
+Foi também criado as seguintes funções:
+-> IniciaAtributos,
+-> ExisteAtributo,
+-> VerificaChavePK,
+-> VerificaChaveFK.
 
-	typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
-		char nome[TAMANHO_NOME_CAMPO];	
-		char tipo;						
-		int tam;						
-		struct tp_table *next;	
-	}tp_table;
+Exemplo de main:
 
-	O arquivo fs_object.dat organiza-se da seguinte forma:
-		20B que representam o nome da tabela; 
-		1B que representam o código da tabela;
-		20B que representa o nome do arquivo onde estão as tuplas da tabela;
-		4B que representa a quantidade de campos da tabela.
+/*
+*
+*
+*
+*/
 
-
-	O arquivo fs_schema.dat organiza-se da seguinte forma:
-		4B que representam o codigo da tabela; (Código que representa a tabela em fs_objects.dat)
-		40B que representam o nome do campo;
-		1B que representa o tipo do campo;
-		4B que representa o tamanho do campo.
-
-		
-Sobre os arquivos criados:
-	    -> buffNRR.c : Contém a main e a chamada para a função menu().
-	    -> funcoesNRR.c : Contém a aplicação de todas as funções usadas no programa.
-	    -> funcoesNRR.h : Esse arquivo possui as structs e prototipos das funções.
-	    -> relatorio_bugs: Arquivo que contém a descrição dos bugs e problemas encontrados, função que gerou, forma que foi gerado, entre outros
 	
 Da compilação:
 
