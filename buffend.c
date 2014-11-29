@@ -475,7 +475,6 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo, char *nomeTabe
 
         case 2:
             erro = verificaChaveFK(nomeTabela, nomeCampo, valorCampo, tabelaApt, attApt);
-            printf("%d", erro);
             break;
     }
 	temp = (column *)malloc(sizeof(column)*1);
