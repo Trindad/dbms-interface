@@ -19,6 +19,8 @@ A definição de chave primária ou chave estrangeira de um atributo é represen
 -> Atributo referenciado em caso de PK.
     Caso a chave não seja FK, deixar o valor vazio ""
 
+É possível adicionar apenas um atributo como chave PK, ou seja, não é tratada a forma de chave composta.
+
 Foi alterado a struct column para podermos trabalhar com as chaves.
 
 Foi também criado as seguintes funções:
@@ -30,9 +32,10 @@ Foi também criado as seguintes funções:
 Exemplo de main:
 
 /*
-*
-*
-*
+
+
+
+
 */
 
 	
