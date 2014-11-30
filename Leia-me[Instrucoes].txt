@@ -8,31 +8,52 @@ Introdução:
 
 Nesta atividade, cada equipe terá que implementar na biblioteca do SGBD a inclusão de chave primária (PK) e chave estrangeira (FK) na criação das tabelas. As FK devem ser criticadas caso a tabela/atributo de origem ainda não existam.
 	
-A definição de chave primária ou chave estrangeira de um atributo é representado por um "flag" que é passado por parametro junto com o valor
-a ser inserido:
+A definição de chave primária ou chave estrangeira de um atributo é representado por um "flag" que é passado por parametro na criação da tabela e também junto com o valor a ser inserido.
+
 - NPK (Sem chave);
 - PK (Chave primária);
-- FK (Chave estrangeira) 
+- FK (Chave estrangeira)
 
-No momento da inserção de valores nos atributos. (InsereValor()). Na inserção de valores também foi alterado para adicionar outros parâmetros, segue uma breve descrição sobre todos os parâmetros relacionando a o exemplo abaixo:
+Da criação das tabelas:
+	iniciaTabela("tabela1");
+	adicionaCampo(tab, "atrib11" , 'I', (sizeof(int))	,PK);
+	adicionaCampo(tab, "atrib12" , 'I', (sizeof(int))	,NPK);
+	adicionaCampo(tab, "atrib13" , 'S', 10			,NPK);
+	adicionaCampo(tab, "atrib14" , 'D', (sizeof(double))	,NPK);
+	finalizaTabela(tab);
 
-insereValor(colunas, "atrib1", "10"	, "tabela1", PK, "", "");		//somente com PK
-insereValor(colunas, "atrib2", "11"	, "tabela1", NPK, "", "");		//sem PK nem FK
-insereValor(colunas, "atrib1", "11"	, "tabela2", FK, "tabela1", "atrib1");	//com PK e FK
+-> foi adicionado apenas mais um parâmetro, que é passado para a função adicionaCampo. Trata-se do "flag" que indica o tipo de atributo.
+ 
+
+Da inserção de Tuplas:
+	insereValor(colunas, "atrib1", "10"	, "tabela1", PK, "", "");		//somente com PK
+	insereValor(colunas, "atrib2", "11"	, "tabela1", NPK, "", "");		//sem PK nem FK
+	insereValor(colunas, "atrib1", "11"	, "tabela2", FK, "tabela1", "atrib1");	//com PK e FK
 
 -> Variável colunas do tipo column,
 -> Nome do atributo "atrib1" a ser adicionado o valor,
 -> Valor adicionado,
 -> Nome da Tabela,
--> Flag do tipo da chave (0, 1, 2),
--> Tabela referenciada em caso de PK,
+-> Flag do tipo da chave ("flag"),
+-> Tabela referenciada em caso de FK,
     Caso a chave não seja FK, deve se deixar o valor vazio ""
--> Atributo referenciado em caso de PK.
+-> Atributo referenciado em caso de FK.
     Caso a chave não seja FK, deve se deixar o valor vazio ""
 
-É possível adicionar apenas um atributo como chave PK, ou seja, não é tratada a forma de chave composta.
+
+Dos retornos - Tratamento de PK e FK:
+	ERRO_CHAVE_PRIMARIA -> -14
+	ERRO_CHAVE_ESTRANGEIRA -> -15
+	ERRO_CRIACAO_TABELA -> -16
+
+Estes podem ser tratados na main.
+
+
+É possível adicionar apenas UM atributo como chave PK, ou seja, não é tratada a forma de chave composta.
+
 
 Foi alterado a struct column para podermos trabalhar com as chaves.
+
 
 Foi também criado as seguintes funções:
 -> IniciaAtributos,
@@ -40,22 +61,21 @@ Foi também criado as seguintes funções:
 -> VerificaChavePK,
 -> VerificaChaveFK.
 
-Exemplo de main:
 
-/*
+Juntamente com os arquivos do trabalho, foi criado também o "exemploMain.c". Trata-se de um modelo (exemplo) de uma maneira
+de criar a main(). Nessa exemplo de main() é necessário se atentar ao seguinte:
+-int nrTabelas;	->deve ser setado para a quantidades de tabelas a ser criadas;
+
+-   nTabela[0]  = existeArquivo("tabela1.dat"); -> deve ser colocado aqui os nomes das tabelas
+    nTabela[1]  = existeArquivo("tabela2.dat");
+    nTabela[2]  = existeArquivo("tabela3.dat");
+
+- ao final, foi chamado a função imprime("tabela1") que realiza a impressão das tabelas.
 
 
 
-
-*/
-
-	
 Da compilação:
 
 	$ gcc *.c -o prog -Wall
 	$ ./prog
-
-
-
-
 

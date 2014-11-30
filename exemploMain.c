@@ -25,12 +25,12 @@ int main(){
     nTabela[2]  = existeArquivo("tabela3.dat");
     if(!object || !schema){
     
-		if(!nTabela[0]){ 																	//Se ainda não existe a tabela1, a mesma é criada
-			tab[0] = iniciaTabela("tabela1");  												//Cria a tabela 
-			tab[0] = adicionaCampo(tab[0], "atrib11" , 'I', (sizeof(int))	,PK);			//Cria os atributos
+		if(!nTabela[0]){ 															//Se ainda não existe a tabela1, a mesma é criada
+			tab[0] = iniciaTabela("tabela1");  										//Cria a tabela 
+			tab[0] = adicionaCampo(tab[0], "atrib11" , 'I', (sizeof(int))	,PK);	//Cria os atributos
 			tab[0] = adicionaCampo(tab[0], "atrib12" , 'I', (sizeof(int))	,NPK);
 			tab[0] = adicionaCampo(tab[0], "atrib13" , 'S', 10				,NPK);
-			tab[0] = adicionaCampo(tab[0], "atrib14" , 'D', (sizeof(double))	,NPK);
+			tab[0] = adicionaCampo(tab[0], "atrib14" , 'D', (sizeof(double)),NPK);
 			finalizaTabela(tab[0]);
 		 }
 
@@ -50,7 +50,7 @@ int main(){
 		}
 	}
         
-	//Inserção de tupla na tabela1        
+	//Inserção de tuplas na tabela1        
 	colunas = insereValor(colunas, "atrib11", "10"	, "tabela1", PK, "", "");
 	if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
 	colunas = insereValor(colunas, "atrib12", "12"		, "tabela1", NPK, "", "");
@@ -83,7 +83,7 @@ int main(){
 	if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
 	finalizaInsert("tabela1", colunas); 
 	
-	//Inserção de tupla na tabela2	
+	//Inserção de tuplas na tabela2	
 	colunas=NULL;
 	colunas = insereValor(colunas, "atrib21", "10"	, "tabela2", PK, "", "");
 	if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
@@ -114,8 +114,7 @@ int main(){
 	colunas = insereValor(colunas, "atrib32", "teste", "tabela3", PK, "", "");
 	if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
 	finalizaInsert("tabela3", colunas);
-	
-	
+		
 	
 	//Chama função para imprimir as tabelas
 	imprime("tabela1");
