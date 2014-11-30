@@ -15,23 +15,23 @@ A definição de chave primária ou chave estrangeira de um atributo é represen
 - FK (Chave estrangeira)
 
 Da criação das tabelas:
-	iniciaTabela("tabela1");
-	adicionaCampo(tab, "atrib11" , 'I', (sizeof(int))	,PK);
-	adicionaCampo(tab, "atrib12" , 'I', (sizeof(int))	,NPK);
-	adicionaCampo(tab, "atrib13" , 'S', 10			,NPK);
-	adicionaCampo(tab, "atrib14" , 'D', (sizeof(double))	,NPK);
+	iniciaTabela("nomeTabela");
+	adicionaCampo(tab, "nomeAtrib" , 'I', (sizeof(int))	,PK);
+	adicionaCampo(tab, "nomeAtrib" , 'I', (sizeof(int))	,NPK);
+	adicionaCampo(tab, "nomeAtrib" , 'S', 10			,NPK);
+	adicionaCampo(tab, "nomeAtrib" , 'D', (sizeof(double))	,NPK);
 	finalizaTabela(tab);
 
 -> foi adicionado apenas mais um parâmetro, que é passado para a função adicionaCampo. Trata-se do "flag" que indica o tipo de atributo.
  
 
 Da inserção de Tuplas:
-	insereValor(colunas, "atrib1", "10"	, "tabela1", PK, "", "");		//somente com PK
-	insereValor(colunas, "atrib2", "11"	, "tabela1", NPK, "", "");		//sem PK nem FK
-	insereValor(colunas, "atrib1", "11"	, "tabela2", FK, "tabela1", "atrib1");	//com PK e FK
+	insereValor(colunas, "nomeAtrib", "10"	, "nomeTabela", PK, "", "");						//somente com PK
+	insereValor(colunas, "nomeAtrib", "11"	, "nomeTabela", NPK, "", "");						//sem PK nem FK
+	insereValor(colunas, "nomeAtrib", "11"	, "nomeTabela", FK, "nomeTabelaReferenciada", "nomeAtributoReferenciado");	//com PK e FK
 
 -> Variável colunas do tipo column,
--> Nome do atributo "atrib1" a ser adicionado o valor,
+-> Nome do atributo "nomeAtrib" a ser adicionado o valor,
 -> Valor adicionado,
 -> Nome da Tabela,
 -> Flag do tipo da chave ("flag"),
