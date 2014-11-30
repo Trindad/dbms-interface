@@ -45,7 +45,7 @@ int main(){
 		if(!nTabela[2]){	//Se ainda não existe a tabela3, a mesma é criada
 			tab[2] = iniciaTabela("tabela3"); 
 			tab[2] = adicionaCampo(tab[2], "atrib11" , 'I', (sizeof(int))	,FK);
-			tab[2] = adicionaCampo(tab[2], "atrib32" , 'S', 20				,NPK);
+			tab[2] = adicionaCampo(tab[2], "atrib32" , 'C', 20				,NPK);
 			finalizaTabela(tab[2]);
 		}
 	}
@@ -111,7 +111,7 @@ int main(){
 	colunas=NULL;
 	colunas = insereValor(colunas, "atrib11", "10"	, "tabela3", FK, "tabela1", "atrib11");
 	if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
-	colunas = insereValor(colunas, "atrib32", "teste", "tabela3", PK, "", "");
+	colunas = insereValor(colunas, "atrib32", "M", "tabela3", PK, "", "");
 	if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
 	finalizaInsert("tabela3", colunas);
 		
