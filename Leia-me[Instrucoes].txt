@@ -40,6 +40,12 @@ Da inserção de Tuplas:
 -> Atributo referenciado em caso de FK.
     Caso a chave não seja FK, deve se deixar o valor vazio ""
 
+Após a inserção de cada valor (atributo), deve-se testar o retorno. Caso retorne algum erro (de PK ou FK) o mesmo deve ser abortado e
+corrigido. EX:
+
+-> colunas = insereValor(colunas, "atrib11", "10"	, "tabela3", FK, "tabela1", "atrib11");
+-> if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
+
 
 Dos retornos - Tratamento de PK e FK:
 	ERRO_CHAVE_PRIMARIA -> -14
