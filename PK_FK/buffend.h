@@ -3,8 +3,8 @@
 #include <string.h>
 #include "erros.h"
 
-#define SIZE 1024 				// Tamanho da página.
-#define PAGES 2048 				// Número de páginas.
+#define SIZE 512 				// Tamanho da página.
+#define PAGES 1024 				// Número de páginas.
 #define TAMANHO_NOME_CAMPO 40 	// Tamanho do nome dos campos de uma tabela.
 #define TAMANHO_NOME_TABELA 20 	// Tamanho do nome da tabela.
 #define TAMANHO_NOME_ARQUIVO 20 // Tamanho do nome do arquivo.

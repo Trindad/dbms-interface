@@ -8,11 +8,7 @@
 //                                                                                //      
 //////////////////////////////////////////////////////////////////////////////////*/
 
-//menu: Utilizada no controle do 'menu', com todas as opcoes.
-void menu();
 
-//insere: Inserir tuplas na tabela selecionada conforme 'menu'
-void insere(int menu);
 
 //imprime: Utilizada na impressão das tabelas, conforme o nomeTabela 
 void imprime(char nomeTabela[] );
@@ -22,3 +18,9 @@ int existeArquivo(const char* filename);
 
 //excluir: Exclui a tabela com 'nomeTabela'    
 void excluirArquivo(char nomeTabela[] );
+
+// Essa função verifica as condições para a chave estrangeira(FK). E retorna erros caso ocorra.
+int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt);
+
+// Essa função verifica as condições para a chave primaria(PK). E retorna erros caso ocorra.
+int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo);

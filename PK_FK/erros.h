@@ -13,6 +13,9 @@
 #define ERRO_ABRIR_DICIONARIO -11
 #define ERRO_NO_TIPO_CHAR -12
 #define ERRO_NO_TIPO_DOUBLE -13
+#define ERRO_CHAVE_PRIMARIA -14
+#define ERRO_CHAVE_ESTRANGEIRA -15
+#define ERRO_CRIACAO_TABELA -16
 #define ERRO_DE_ALOCACAO NULL
 #define ERRO_ABRIR_ESQUEMA NULL
 #define ERRO_NOME_TABELA_INVALIDO NULL
@@ -22,4 +25,8 @@
 #define ERRO_DE_LEITURA NULL
 #define ERRO_PARAMETRO NULL
 
-//tratamento
+//tratamento PK e FK
+#define NPK 0
+#define PK 1
+#define FK 2
+
