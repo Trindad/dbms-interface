@@ -9,6 +9,7 @@
 #define TAMANHO_NOME_TABELA 20 	// Tamanho do nome da tabela.
 #define TAMANHO_NOME_ARQUIVO 20 // Tamanho do nome do arquivo.
 
+
 struct fs_objects { // Estrutura usada para carregar fs_objects.dat
 	char nome[TAMANHO_NOME_TABELA];		//  Nome da tabela.
 	int cod;							// Código da tabela.
@@ -20,6 +21,9 @@ typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
 	char nome[TAMANHO_NOME_CAMPO];	// Nome do Campo.
 	char tipo;						// Tipo do Campo.
 	int tam;						// Tamanho do Campo.
+	int chave;
+	char tabelaApt[TAMANHO_NOME_TABELA];
+	char attApt[TAMANHO_NOME_CAMPO];
 	struct tp_table *next;			// Encadeamento para o próximo campo.
 }tp_table;
 
@@ -131,7 +135,7 @@ table *iniciaTabela(char *nomeTabela);
 	tipoCampo - Tipo do campo que irá ser inserido na lista de campos.
 	tamanhoCampo - Tamanho do campo que irá ser inserido na lista de campos.
 */
-table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo);
+table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo, int tChave, char *tabelaApt, char *attApt);
 /*
 	Esta função finaliza a tabela preveamente estrutura pelas funcoes iniciaTabela() e adicionaCampo(). 
 	Escreve nos arquivos fs_object.dat e fs_schema.dat, a estrutura passada.

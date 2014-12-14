@@ -383,7 +383,7 @@ table *iniciaTabela(char *nome){
 	return t; // Retorna estrutura para criação de uma tabela.
 }
 
-table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo){
+table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo, int tChave, char *tabelaApt, char *attApt){
 	if(t == NULL) // Se a estrutura passada for nula, retorna erro.
 		return ERRO_ESTRUTURA_TABELA_NULA;
 	tp_table *aux;  
