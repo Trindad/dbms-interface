@@ -6,13 +6,14 @@
 //                                                                                //
 //////////////////////////////////////////////////////////////////////////////////*/
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "buffend.h"
 #include "funcoesNRR.h"
 
-int main(){
+int main(){/*
     int nrTabelas = 3;
     int nTabela[nrTabelas];
     table  *tab[nrTabelas];	
@@ -119,7 +120,7 @@ int main(){
 	//Chama função para imprimir as tabelas
 	imprime("tabela1");
 	imprime("tabela2");
-	imprime("tabela3");
+	imprime("tabela3");*/
 	return 0;
 }
 
