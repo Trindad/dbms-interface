@@ -527,8 +527,8 @@ int finalizaInsert(char *nome, column *c){
             break;
 
         case FK:
-			//erroPK = verificaChavePK(nomeTabela, nomeCampo, valorCampo);
-            //erro = verificaChaveFK(nomeTabela, nomeCampo, valorCampo, tabelaApt, attApt);
+			erroPK = verificaChavePK(nome, c->nomeCampo, c->valorCampo);
+            erro = verificaChaveFK(nome, c->nomeCampo, c->valorCampo, auxT->tabelaApt, auxT->attApt);
             break;
     }
 	
