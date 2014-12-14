@@ -123,6 +123,8 @@ void excluirArquivo(char nome[]){
 |* FUNÇÃO: Inicia os atributos utilizados pela FK e PK. Além de erros.             */   
 
 int iniciaAtributos(struct fs_objects *objeto, tp_table **tabela, tp_buffer **bufferpoll, char *nomeT){
+	
+	
     *objeto     = leObjeto(nomeT);
     *tabela     = leSchema(*objeto);
     *bufferpoll = initbuffer();
@@ -172,11 +174,14 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
     strcpy (str, tabelaApt); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
     
-    if(!existeArquivo(str) || !existeAtributo(tabelaApt, attApt))
+    
+    
+    if(existeAtributo(tabelaApt, attApt))
         return ERRO_CHAVE_ESTRANGEIRA;
 
     if(iniciaAtributos(&objeto, &tabela, &bufferpoll, tabelaApt) != SUCCESS)
         return ERRO_DE_PARAMETRO;
+       
       
 
     erro = SUCCESS;
@@ -185,7 +190,9 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
 
     column *pagina = getPage(bufferpoll, tabela, objeto, 0);
 
+
     for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){		
+		 
 		 
         if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
 			

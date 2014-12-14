@@ -19,24 +19,24 @@ int main(){
     
 		if(!nTabela[0]){ 															//Se ainda não existe a tabela1, a mesma é criada
 			tab[0] = iniciaTabela("tabela1");  												//Cria a tabela 
-			tab[0] = adicionaCampo(tab[0], "atrib11" , 'I', (sizeof(int))	,PK,"","");		//Cria os atributos
-			tab[0] = adicionaCampo(tab[0], "atrib12" , 'I', (sizeof(int))	,NPK,"","");
-			tab[0] = adicionaCampo(tab[0], "atrib13" , 'S', 10				,NPK,"","");
-			tab[0] = adicionaCampo(tab[0], "atrib14" , 'D', (sizeof(double)),NPK,"","");
+			tab[0] = adicionaCampo(tab[0], "atrib11" , 'I', (sizeof(int))	,PK," "," ");		//Cria os atributos
+			tab[0] = adicionaCampo(tab[0], "atrib12" , 'I', (sizeof(int))	,NPK," "," ");
+			tab[0] = adicionaCampo(tab[0], "atrib13" , 'S', 10				,NPK," "," ");
+			tab[0] = adicionaCampo(tab[0], "atrib14" , 'D', (sizeof(double)),NPK," "," ");
 			finalizaTabela(tab[0]);
 		 }
 		 if(!nTabela[1]){	//Se ainda não existe a tabela2, a mesma é criada
 			tab[1] = iniciaTabela("tabela2"); 
-			tab[1] = adicionaCampo(tab[1], "atrib21" , 'I', (sizeof(int))	,PK, "","");
-			tab[1] = adicionaCampo(tab[1], "atrib22" , 'S', 20				,NPK, "","");
-			tab[1] = adicionaCampo(tab[1], "atrib23" , 'I', (sizeof(int))	,NPK, "","");
-			tab[1] = adicionaCampo(tab[1], "atrib24" , 'S', 10				,NPK, "","");
+			tab[1] = adicionaCampo(tab[1], "atrib21" , 'I', (sizeof(int))	,PK, " "," ");
+			tab[1] = adicionaCampo(tab[1], "atrib22" , 'S', 20				,NPK, " "," ");
+			tab[1] = adicionaCampo(tab[1], "atrib23" , 'I', (sizeof(int))	,NPK, " "," ");
+			tab[1] = adicionaCampo(tab[1], "atrib24" , 'S', 10				,NPK, " "," ");
 			finalizaTabela(tab[1]);
 		}
 		if(!nTabela[2]){	//Se ainda não existe a tabela3, a mesma é criada
 			tab[2] = iniciaTabela("tabela3"); 
-			tab[2] = adicionaCampo(tab[2], "atrib11" , 'I', (sizeof(int))	,FK, "tabela1","atrib11");
-			tab[2] = adicionaCampo(tab[2], "atrib32" , 'C', 20				,NPK, "","");
+			tab[2] = adicionaCampo(tab[2], "atrib11" , 'I', (sizeof(int))	,PK, "","");
+			//tab[2] = adicionaCampo(tab[2], "atrib32" , 'C', 20				,NPK, " "," ");
 			finalizaTabela(tab[2]);
 		}
 	}
@@ -48,39 +48,42 @@ int main(){
 	colunas = insereValor(colunas, "atrib14", "1.4");
 	erro = finalizaInsert("tabela1", colunas); 
 	
+	colunas = NULL;
 	colunas = insereValor(colunas, "atrib11", "11");
 	colunas = insereValor(colunas, "atrib12", "30");
 	colunas = insereValor(colunas, "atrib13", "teste34"	);
 	colunas = insereValor(colunas, "atrib14", "1.7");
-	finalizaInsert("tabela1", colunas); 
+	erro = finalizaInsert("tabela1", colunas); 
 
-
+	colunas = NULL;
 	colunas = insereValor(colunas, "atrib11", "12");
 	colunas = insereValor(colunas, "atrib12", "33");
 	colunas = insereValor(colunas, "atrib13", "teste340");
 	colunas = insereValor(colunas, "atrib14", "1.9");
-	finalizaInsert("tabela1", colunas); 
+	erro = finalizaInsert("tabela1", colunas); 
 	
 	//Inserção de tuplas na tabela2	
+	colunas = NULL;
 	colunas = insereValor(colunas, "atrib21", "10");
 	colunas = insereValor(colunas, "atrib22", "dois");
 	colunas = insereValor(colunas, "atrib23", "23");
 	colunas = insereValor(colunas, "atrib24", "tres");
-	finalizaInsert("tabela2", colunas);
+	erro = finalizaInsert("tabela2", colunas);
 	
+	colunas = NULL;
 	colunas = insereValor(colunas, "atrib21", "11");
 	colunas = insereValor(colunas, "atrib22", "dois");
 	colunas = insereValor(colunas, "atrib23", "23");
 	colunas = insereValor(colunas, "atrib24", "tres");
-	
-	finalizaInsert("tabela2", colunas);
+	erro = finalizaInsert("tabela2", colunas);
 	
 	
 	//Inserção de tupla na tabela3
+	colunas = NULL;
 	colunas = insereValor(colunas, "atrib11", "10");
-	colunas = insereValor(colunas, "atrib32", "M");
+	//colunas = insereValor(colunas, "atrib32", "M");
 	
-	finalizaInsert("tabela3", colunas);
+	erro = finalizaInsert("tabela3", colunas);
 	
 	if(erro == ERRO_CHAVE_PRIMARIA) {
 		printf("ERRO DE CHAVE PRIMARIA !!! \n");

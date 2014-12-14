@@ -21,9 +21,9 @@ typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
 	char nome[TAMANHO_NOME_CAMPO];	// Nome do Campo.
 	char tipo;						// Tipo do Campo.
 	int tam;						// Tamanho do Campo.
-	int chave;
-	char tabelaApt[TAMANHO_NOME_TABELA];
-	char attApt[TAMANHO_NOME_CAMPO];
+	int chave;						// Tipo da chave
+	char tabelaApt[TAMANHO_NOME_TABELA]; //Nome da Tabela Apontada
+	char attApt[TAMANHO_NOME_CAMPO];	//Nome do Atributo Apontado
 	struct tp_table *next;			// Encadeamento para o próximo campo.
 }tp_table;
 

@@ -45,7 +45,7 @@ tp_table *leSchema (struct fs_objects objeto){
 	FILE *schema;
 	int i = 0, cod;
 	char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_CAMPO);
-	char *tuplaT = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);  
+//	char *tuplaT = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);  
 	tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos); // Aloca esquema com a quantidade de campos necessarios.
 
 	if(esquema == NULL)
@@ -68,14 +68,15 @@ tp_table *leSchema (struct fs_objects objeto){
         		fread(&esquema[i].tam, sizeof(int),1,schema);   
         		fread(&esquema[i].chave, sizeof(int),1,schema);  
         		fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, schema);
-        		strcpy(esquema[i].tabelaApt,tuplaT);
+        		//strcpy(esquema[i].tabelaApt,tuplaT);
         		fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
-        		strcpy(esquema[i].attApt,tupla);
+        		//strcpy(esquema[i].attApt,tupla);
         		
         		i++;    		
-        	}
-        	else
-        		fseek(schema, 45, 1); // Pula a quantidade de caracteres para a proxima verificacao (40B do nome, 1B do tipo e 4B do tamanho).
+        	} else {
+
+        		fseek(schema, 109, 1); // Pula a quantidade de caracteres para a proxima verificacao (40B do nome, 1B do tipo e 4B do tamanho,4B da chave, 20B do nome da Tabela Apontada e 40B do atributo apontado).
+			}
         }
         
     }
@@ -299,8 +300,7 @@ int verificaNomeTabela(char *nomeTabela)
  	fclose(dicionario);
  	return 0;
 }
-int quantidadeTabelas()
-{
+int quantidadeTabelas(){
 
 	FILE *dicionario;
 	int codTbl = 0;
@@ -317,6 +317,7 @@ int quantidadeTabelas()
  	}
 
  	fclose(dicionario);
+
 
  	return codTbl;
 }
@@ -391,6 +392,7 @@ table *iniciaTabela(char *nome){
 }
 
 table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo, int tChave, char *tabelaApt, char *attApt){
+	
 	if(t == NULL) // Se a estrutura passada for nula, retorna erro.
 		return ERRO_ESTRUTURA_TABELA_NULA;
 	tp_table *aux;  
@@ -429,8 +431,7 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
 
 	return t; //Retorna estrutura atualizada.
 }
-int finalizaTabela(table *t)
-{
+int finalizaTabela(table *t){
 	if(t == NULL)
 		return ERRO_DE_PARAMETRO;
 
@@ -442,8 +443,8 @@ int finalizaTabela(table *t)
 	if((esquema = fopen("fs_schema.dat","a+b")) == NULL)
         return ERRO_ABRIR_ARQUIVO;
 
-	for(aux = t->esquema; aux!=NULL; aux = aux->next) // Salva novos campos no esquema da tabela, fs_schema.dat
-	{
+	for(aux = t->esquema; aux!=NULL; aux = aux->next){ // Salva novos campos no esquema da tabela, fs_schema.dat
+
 		fwrite(&codTbl,sizeof(codTbl),1,esquema);
 		fwrite(&aux->nome,sizeof(aux->nome),1,esquema);
 		fwrite(&aux->tipo,sizeof(aux->tipo),1,esquema);
@@ -474,12 +475,11 @@ int finalizaTabela(table *t)
 }
 //-----------------------------------------
 // INSERE NA TABELA
-column *insereValor(column *c, char *nomeCampo, char *valorCampo)
-{
+column *insereValor(column *c, char *nomeCampo, char *valorCampo){
 	
 	column *aux;
-	if(c == NULL) // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
-	{
+	if(c == NULL){ // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
+	
 		column *e = (column *)malloc(sizeof(column)*1);
 		e->valorCampo = (char *)malloc(sizeof(char) * (sizeof(valorCampo)));
 		strcpy(e->nomeCampo, nomeCampo); 
@@ -487,13 +487,9 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo)
 		e->next = NULL;
 		c = e;
 		return c;
-	} 
-	else
-	{
-		for(aux = c; aux != NULL; aux = aux->next) // Anda até o final da lista de valores a serem inseridos e adiciona um novo valor.
-		{
-			if(aux->next == NULL)
-			{
+	} else {
+		for(aux = c; aux != NULL; aux = aux->next) { // Anda até o final da lista de valores a serem inseridos e adiciona um novo valor.
+			if(aux->next == NULL){
 				column *e = (column *)malloc(sizeof(column)*1);
 				e->valorCampo = (char *)malloc(sizeof(char) * (sizeof(valorCampo)));
 				e->next = NULL;
@@ -509,15 +505,14 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo)
 }
 int finalizaInsert(char *nome, column *c){
 	column *auxC;
-	int i = 0, x = 0, t, erro, erroPK;
+	int i = 0, x = 0, t, erro;
 	FILE *dados;
 
 
 	struct fs_objects dicio = leObjeto(nome); // Le dicionario
 	tp_table *auxT = leSchema(dicio); // Le esquema
 	
-	
-	 switch(auxT->chave){
+	switch(auxT->chave){
         case NPK:
             erro = SUCCESS;
             break;
@@ -527,26 +522,26 @@ int finalizaInsert(char *nome, column *c){
             break;
 
         case FK:
-			erroPK = verificaChavePK(nome, c->nomeCampo, c->valorCampo);
+			//erroPK = verificaChavePK(nome, c->nomeCampo, c->valorCampo);
             erro = verificaChaveFK(nome, c->nomeCampo, c->valorCampo, auxT->tabelaApt, auxT->attApt);
             break;
     }
 	
-	if(erro == ERRO_CHAVE_ESTRANGEIRA || erroPK==ERRO_CHAVE_PRIMARIA){
-		return ERRO_CHAVE_ESTRANGEIRA;
+	if(erro == ERRO_CHAVE_ESTRANGEIRA){
+		printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
+		exit(1);
 	}
 
 	if(erro == ERRO_CHAVE_PRIMARIA){
-		return ERRO_CHAVE_PRIMARIA;
+		printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
+		exit(1);
 	}
-	
 	
 	
 	if((dados = fopen(dicio.nArquivo,"a+b")) == NULL)
     	return ERRO_ABRIR_ARQUIVO;
 	
-	for(auxC = c, t = 0; auxC != NULL; auxC = auxC->next, t++)
-	{
+	for(auxC = c, t = 0; auxC != NULL; auxC = auxC->next, t++){
 		if(t >= dicio.qtdCampos)
 			t = 0;
 
@@ -565,8 +560,7 @@ int finalizaInsert(char *nome, column *c){
 		}
 		else if(auxT[t].tipo == 'I'){ // Grava um dado do tipo inteiro.
 			i = 0;
-			while (i < strlen(auxC->valorCampo))
-			{
+			while (i < strlen(auxC->valorCampo)){
 				if(auxC->valorCampo[i] < 48 || auxC->valorCampo[i] > 57){ 
 					return ERRO_NO_TIPO_INTEIRO;
 				}
@@ -578,8 +572,7 @@ int finalizaInsert(char *nome, column *c){
 		}
 		else if(auxT[t].tipo == 'D'){ // Grava um dado do tipo double.
 			x = 0;
-			while (x < strlen(auxC->valorCampo))
-			{
+			while (x < strlen(auxC->valorCampo)){
 				if((auxC->valorCampo[x] < 48 || auxC->valorCampo[x] > 57) && (auxC->valorCampo[x] != 46)){ 
 					return ERRO_NO_TIPO_DOUBLE;
 				}
@@ -600,6 +593,8 @@ int finalizaInsert(char *nome, column *c){
 		}
 
 	}
+	
+	
 	fclose(dados);
 	free(c); // Libera a memoria da estrutura.
 	free(auxT); // Libera a memoria da estrutura.
