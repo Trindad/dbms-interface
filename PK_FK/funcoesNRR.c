@@ -288,3 +288,14 @@ int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo){
 
     return SUCCESS;
 }
+
+
+int abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela){
+	*objeto     = leObjeto(nomeTabela);
+    *tabela     = leSchema(*objeto);
+	return 1;
+	
+}
+
+	
+	

@@ -509,8 +509,9 @@ int finalizaInsert(char *nome, column *c){
 	FILE *dados;
 
 
-	struct fs_objects dicio = leObjeto(nome); // Le dicionario
-	tp_table *auxT = leSchema(dicio); // Le esquema
+	struct fs_objects dicio; // Le dicionario
+	tp_table *auxT; // Le esquema
+	abreTabela(nome, &dicio, &auxT);
 	
 	switch(auxT->chave){
         case NPK:
