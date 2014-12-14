@@ -8,7 +8,8 @@ int main(){
     int nTabela[nrTabelas];
     table  *tab[nrTabelas];	
     column *colunas = NULL;
-    int object, schema;
+    int object, schema,erro;
+    
     object      = existeArquivo("fs_object.dat");
     schema		= existeArquivo("fs_schema.dat");
     nTabela[0]  = existeArquivo("tabela1.dat");
@@ -28,14 +29,21 @@ int main(){
 	 
 	 	//Inserção de tuplas na tabela1        
 	colunas = insereValor(colunas, "atrib11", "10");
-//	if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
 	colunas = insereValor(colunas, "atrib12", "12");
-//	if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
 	colunas = insereValor(colunas, "atrib13", "teste13");
-//	if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
 	colunas = insereValor(colunas, "atrib14", "1.4");
-//	if(colunas->retorno<0){ printf("%d\n", colunas->retorno); return  colunas->retorno;}
-	finalizaInsert("tabela1", colunas); 
+	erro = finalizaInsert("tabela1", colunas); 
+	
+	if(erro == ERRO_CHAVE_PRIMARIA) {
+		printf("ERRO DE CHAVE PRIMARIA !!! \n");
+		return erro;
+	}
+	if(erro == ERRO_CHAVE_ESTRANGEIRA) {
+		printf("ERRO DE CHAVE ESTRANGEIRA !!! \n");
+		return erro;
+	}
+		
+	
 	imprime("tabela1");
 
     

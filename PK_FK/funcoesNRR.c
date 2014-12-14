@@ -185,7 +185,7 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
 
     column *pagina = getPage(bufferpoll, tabela, objeto, 0);
 
-    for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){
+    for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){		
 		 
         if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
 			
@@ -248,6 +248,7 @@ int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo){
     for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){
 
         if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
+			
             if(pagina[j].tipoCampo == 'S'){        
                 if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
                     return ERRO_CHAVE_PRIMARIA;

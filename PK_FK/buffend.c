@@ -44,7 +44,8 @@ struct fs_objects leObjeto(char *nTabela){
 tp_table *leSchema (struct fs_objects objeto){
 	FILE *schema;
 	int i = 0, cod;
-	char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_CAMPO);  
+	char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_CAMPO);
+	char *tuplaT = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);  
 	tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos); // Aloca esquema com a quantidade de campos necessarios.
 
 	if(esquema == NULL)
@@ -65,6 +66,12 @@ tp_table *leSchema (struct fs_objects objeto){
         		strcpy(esquema[i].nome,tupla);					// Copia dados do campo para o esquema.
         		fread(&esquema[i].tipo, sizeof(char),1,schema);      
         		fread(&esquema[i].tam, sizeof(int),1,schema);   
+        		fread(&esquema[i].chave, sizeof(int),1,schema);  
+        		fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, schema);
+        		strcpy(esquema[i].tabelaApt,tuplaT);
+        		fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
+        		strcpy(esquema[i].attApt,tupla);
+        		
         		i++;    		
         	}
         	else
@@ -394,6 +401,9 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
 		strcpy(e->nome, nomeCampo); // Copia nome do campo passado para o esquema
 		e->tipo = tipoCampo; // Copia tipo do campo passado para o esquema
 		e->tam = tamanhoCampo; // Copia tamanho do campo passado para o esquema
+		e->chave = tChave;
+		strcpy(e->tabelaApt, tabelaApt);
+		strcpy(e->attApt, attApt);
 		t->esquema = e; 
 		return t; // Retorna a estrutura
 	}
@@ -408,6 +418,9 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
 				strcpy(e->nome, nomeCampo);
 				e->tipo = tipoCampo;
 				e->tam = tamanhoCampo;
+				e->chave = tChave;
+				strcpy(e->tabelaApt, tabelaApt);
+				strcpy(e->attApt, attApt);
 				aux->next = e; // Faz o campo anterior apontar para o campo inserido.
 				return t;
 			}
@@ -435,6 +448,9 @@ int finalizaTabela(table *t)
 		fwrite(&aux->nome,sizeof(aux->nome),1,esquema);
 		fwrite(&aux->tipo,sizeof(aux->tipo),1,esquema);
 		fwrite(&aux->tam,sizeof(aux->tam),1,esquema);
+		fwrite(&aux->chave,sizeof(aux->chave),1,esquema);
+		fwrite(&aux->tabelaApt,sizeof(aux->tabelaApt),1,esquema);
+		fwrite(&aux->attApt,sizeof(aux->attApt),1,esquema);
 
 		qtdCampos++; // Soma quantidade total de campos inseridos.
 	}
@@ -491,15 +507,40 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo)
 
 	return ERRO_INSERIR_VALOR;
 }
-int finalizaInsert(char *nome, column *c)
-{
+int finalizaInsert(char *nome, column *c){
 	column *auxC;
-	int i = 0, x = 0, t;
+	int i = 0, x = 0, t, erro, erroPK;
 	FILE *dados;
 
 
 	struct fs_objects dicio = leObjeto(nome); // Le dicionario
 	tp_table *auxT = leSchema(dicio); // Le esquema
+	
+	
+	 switch(auxT->chave){
+        case NPK:
+            erro = SUCCESS;
+            break;
+
+        case PK:
+            erro = verificaChavePK(nome, c->nomeCampo, c->valorCampo);
+            break;
+
+        case FK:
+			//erroPK = verificaChavePK(nomeTabela, nomeCampo, valorCampo);
+            //erro = verificaChaveFK(nomeTabela, nomeCampo, valorCampo, tabelaApt, attApt);
+            break;
+    }
+	
+	if(erro == ERRO_CHAVE_ESTRANGEIRA || erroPK==ERRO_CHAVE_PRIMARIA){
+		return ERRO_CHAVE_ESTRANGEIRA;
+	}
+
+	if(erro == ERRO_CHAVE_PRIMARIA){
+		return ERRO_CHAVE_PRIMARIA;
+	}
+	
+	
 	
 	if((dados = fopen(dicio.nArquivo,"a+b")) == NULL)
     	return ERRO_ABRIR_ARQUIVO;
