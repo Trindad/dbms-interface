@@ -96,7 +96,7 @@ int main(){
 		
 	
 	imprime("tabela1");
-	imprime("tabela2");
+	excluirArquivo("tabela2");
 	imprime("tabela3");
 
     

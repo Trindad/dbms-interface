@@ -89,12 +89,15 @@ int existeArquivo(const char* filename){
 /***********************************************************************************|
 |* FUNÇÃO: Exclui a tabela com 'nome'                                              */   
 
-void excluirArquivo(char nome[]){
-
+void excluirArquivo(char *nomeTabela){
+	struct fs_objects objeto;
+	tp_table *esquema;
+	int x,erro,j;
     char str[20]; 
     char dat[5] = ".dat";
     
-    strcpy (str, nome); 
+    
+    strcpy (str, nomeTabela); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
 
     if(!existeArquivo(str)){
@@ -102,20 +105,32 @@ void excluirArquivo(char nome[]){
         printf("Arquivo não existe!\n");
         return;
     }
-
-    FILE* fptr = fopen(str, "w");
-    if(fptr != NULL){   
-        fclose(fptr);
-
+    
+	abreTabela(nomeTabela, &objeto, &esquema);
+	tp_buffer *bufferpoll = initbuffer();
+	if(bufferpoll == ERRO_DE_ALOCACAO){
+        printf("Erro ao alocar memória para o buffer.\n");
         return;
     }
 
-    while(getc(fptr) != EOF){       //Adiciona \0 no arquivo inteiro.
-        fwrite("\0", 1, 1, fptr);
-    }
+    erro = SUCCESS;
+    for(x = 0; erro == SUCCESS; x++)
+        erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);        
+    
 
-    printf("\nTodos os registros da tabela %s foram excluídos.\n"
-           "Digite algum número para voltar\n", nome);
+    column *pagina = getPage(bufferpoll, esquema, objeto, 0);
+
+    if(pagina == ERRO_PARAMETRO){
+        printf("Tabela Vazia\n");
+        return ;
+    }
+    
+	column *tuplaE = excluirTuplaBuffer(bufferpoll, esquema, objeto, 0, 2); //pg, tupla
+
+	
+    remove(str);
+    
+    return;
 }
 
 

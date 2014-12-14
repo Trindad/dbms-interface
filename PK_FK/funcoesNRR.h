@@ -17,7 +17,7 @@ void imprime(char nomeTabela[] );
 int existeArquivo(const char* filename);
 
 //excluir: Exclui a tabela com 'nomeTabela'    
-void excluirArquivo(char nomeTabela[] );
+void excluirArquivo(char *nomeTabela );
 
 // Essa função verifica as condições para a chave estrangeira(FK). E retorna erros caso ocorra.
 int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt);
@@ -27,3 +27,4 @@ int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo);
 
 //função que recebe o nome de uma tabela e engloba as funções leObjeto() e leSchema()
 int abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela);
+
