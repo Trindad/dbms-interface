@@ -45,7 +45,7 @@ tp_table *leSchema (struct fs_objects objeto){
 	FILE *schema;
 	int i = 0, cod;
 	char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_CAMPO);
-//	char *tuplaT = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);  
+	char *tuplaT = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);  
 	tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos); // Aloca esquema com a quantidade de campos necessarios.
 
 	if(esquema == NULL)
@@ -68,9 +68,9 @@ tp_table *leSchema (struct fs_objects objeto){
         		fread(&esquema[i].tam, sizeof(int),1,schema);   
         		fread(&esquema[i].chave, sizeof(int),1,schema);  
         		fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, schema);
-        		//strcpy(esquema[i].tabelaApt,tuplaT);
+        		strcpy(esquema[i].tabelaApt,tuplaT);
         		fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
-        		//strcpy(esquema[i].attApt,tupla);
+        		strcpy(esquema[i].attApt,tupla);
         		
         		i++;    		
         	} else {
@@ -404,8 +404,10 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
 		e->tipo = tipoCampo; // Copia tipo do campo passado para o esquema
 		e->tam = tamanhoCampo; // Copia tamanho do campo passado para o esquema
 		e->chave = tChave;
-		strcpy(e->tabelaApt, tabelaApt);
-		strcpy(e->attApt, attApt);
+		if(strlen(tabelaApt) != 0)
+			strcpy(e->tabelaApt, tabelaApt);
+		if(strlen(attApt) != 0)
+			strcpy(e->attApt, attApt);
 		t->esquema = e; 
 		return t; // Retorna a estrutura
 	}
@@ -523,8 +525,10 @@ int finalizaInsert(char *nome, column *c){
             break;
 
         case FK:
-			//erroPK = verificaChavePK(nome, c->nomeCampo, c->valorCampo);
-            erro = verificaChaveFK(nome, c->nomeCampo, c->valorCampo, auxT->tabelaApt, auxT->attApt);
+			printf("\n TIPO %c \n",auxT->tipo);
+			printf("\n CHAVE %d \n",auxT->chave);
+			printf("\n NOME %s \n",auxT->tabelaApt);
+            //erro = verificaChaveFK(nome, c->nomeCampo, c->valorCampo, auxT->tabelaApt, auxT->attApt);
             break;
     }
 	
@@ -535,6 +539,10 @@ int finalizaInsert(char *nome, column *c){
 
 	if(erro == ERRO_CHAVE_PRIMARIA){
 		printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
+		exit(1);
+	}
+	if(erro == ERRO_DE_PARAMETRO) {
+		printf("Erro GRAVE! na função finalizaInsert(). Erro de Parametro.\nAbortando...\n");
 		exit(1);
 	}
 	

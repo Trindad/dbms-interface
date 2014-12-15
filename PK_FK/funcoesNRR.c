@@ -92,7 +92,7 @@ int existeArquivo(const char* filename){
 void excluirArquivo(char *nomeTabela){
 	struct fs_objects objeto;
 	tp_table *esquema;
-	int x,erro,j;
+	int x,erro;
     char str[20]; 
     char dat[5] = ".dat";
     
@@ -125,7 +125,7 @@ void excluirArquivo(char *nomeTabela){
         return ;
     }
     
-	column *tuplaE = excluirTuplaBuffer(bufferpoll, esquema, objeto, 0, 2); //pg, tupla
+	//column *tuplaE = excluirTuplaBuffer(bufferpoll, esquema, objeto, 0, 2); //pg, tupla
 
 	
     remove(str);
@@ -158,21 +158,33 @@ int existeAtributo(char *nomeTabela, char *atributo){
     struct fs_objects objeto; 
     tp_table *tabela;         
     tp_buffer *bufferpoll;
+    
 
-    if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS) 
-        return ERRO_DE_PARAMETRO;
+    //if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS) 
+        //return ERRO_DE_PARAMETRO;
+	
+	objeto     = leObjeto(nomeTabela);
+    tabela     = leSchema(objeto);
+    bufferpoll = initbuffer();
+
 
     erro = SUCCESS;
     for(x = 0; erro == SUCCESS; x++)
         erro = colocaTuplaBuffer(bufferpoll, x, tabela, objeto);        
 
     column *pagina = getPage(bufferpoll, tabela, objeto, 0);
-
-    for(x = 0; x < objeto.qtdCampos; x++)
-        if(strcmp(pagina[x].nomeCampo, atributo) == 0)
-            return 1;
     
-    return 0;
+     if(pagina == ERRO_PARAMETRO){
+        return 0;
+    }
+   
+
+    for(x = 0; x < objeto.qtdCampos*bufferpoll[0].nrec; x++){
+        if(strcmp(pagina[x].nomeCampo, atributo) == 0)
+            return SUCCESS;
+    }
+ 
+    return ERRO_DE_PARAMETRO;
 }
 
 /***********************************************************************************|
@@ -189,7 +201,9 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
     strcpy (str, tabelaApt); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
     
-    
+    erro = existeAtributo(nomeTabela, nomeCampo);
+    if(erro != SUCCESS )
+        return ERRO_DE_PARAMETRO;
     
     if(existeAtributo(tabelaApt, attApt))
         return ERRO_CHAVE_ESTRANGEIRA;
@@ -257,6 +271,11 @@ int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo){
     struct fs_objects objeto;
     tp_table *tabela;
     tp_buffer *bufferpoll;
+    
+    erro = existeAtributo(nomeTabela, nomeCampo);
+	if(erro != SUCCESS )
+        return ERRO_DE_PARAMETRO;
+    
 
     if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS) 
         return ERRO_DE_PARAMETRO;
@@ -304,13 +323,13 @@ int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo){
     return SUCCESS;
 }
 
+/***********************************************************************************|
+|* FUNÇÃO: recebe o nome de uma tabela e engloba as funções leObjeto() e leSchema() */   
 
 int abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela){
 	*objeto     = leObjeto(nomeTabela);
     *tabela     = leSchema(*objeto);
 	return 1;
 	
-}
-
-	
+}	
 	

@@ -35,15 +35,15 @@ int main(){
 		}
 		if(!nTabela[2]){	//Se ainda não existe a tabela3, a mesma é criada
 			tab[2] = iniciaTabela("tabela3"); 
-			tab[2] = adicionaCampo(tab[2], "atrib11" , 'I', (sizeof(int))	,PK, "","");
-			//tab[2] = adicionaCampo(tab[2], "atrib32" , 'C', 20				,NPK, " "," ");
+			tab[2] = adicionaCampo(tab[2], "atrib11" , 'I', (sizeof(int))	,FK, "tabela1","atrib11");
+			tab[2] = adicionaCampo(tab[2], "atrib32" , 'C', 20				,NPK, " "," ");
 			finalizaTabela(tab[2]);
 		}
 	}
 	 
 	 //Inserção de tuplas na tabela1        
 	colunas = insereValor(colunas, "atrib11", "10");
-	colunas = insereValor(colunas, "atrib12", "12");
+	colunas = insereValor(colunas, "atrib12", "35");
 	colunas = insereValor(colunas, "atrib13", "teste13");
 	colunas = insereValor(colunas, "atrib14", "1.4");
 	erro = finalizaInsert("tabela1", colunas); 
@@ -81,7 +81,7 @@ int main(){
 	//Inserção de tupla na tabela3
 	colunas = NULL;
 	colunas = insereValor(colunas, "atrib11", "10");
-	//colunas = insereValor(colunas, "atrib32", "M");
+	colunas = insereValor(colunas, "atrib32", "M");
 	
 	erro = finalizaInsert("tabela3", colunas);
 	
@@ -96,7 +96,8 @@ int main(){
 		
 	
 	imprime("tabela1");
-	excluirArquivo("tabela2");
+	imprime("tabela2");
+	//excluirArquivo("tabela2");
 	imprime("tabela3");
 
     
