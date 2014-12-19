@@ -405,8 +405,14 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
 		e->tipo = tipoCampo; // Copia tipo do campo passado para o esquema
 		e->tam = tamanhoCampo; // Copia tamanho do campo passado para o esquema
 		e->chave = tChave; // Copia tipo de chave passado para o esquema
-		strcpy(e->tabelaApt, tabelaApt); //Copia a Tabela Refenciada da FK de chave passado para o esquema
-		strcpy(e->attApt, attApt); //Copia o Atributo Refenciado da FK de chave passado para o esquema
+		
+		if(strlen(tabelaApt)!=0){
+			strcpy(e->tabelaApt, tabelaApt); //Copia a Tabela Refenciada da FK de chave passado para o esquema;
+		}
+		if(strlen(attApt)!=0){
+			strcpy(e->attApt, attApt); //Copia o Atributo Refenciado da FK de chave passado para o esquema
+		}
+		
 	
 		t->esquema = e; 
 		return t; // Retorna a estrutura
@@ -415,12 +421,17 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
 			if(aux->next == NULL){ // Adiciona um campo no final.	
 				tp_table *e = (tp_table *)malloc(sizeof(tp_table)*1);
 				e->next = NULL;
-				strcpy(e->nome, nomeCampo);
-				e->tipo = tipoCampo;
-				e->tam = tamanhoCampo;
-				e->chave = tChave;
-				strcpy(e->tabelaApt, tabelaApt);
-				strcpy(e->attApt, attApt);
+				strcpy(e->nome, nomeCampo); // Copia nome do campo passado para o esquema
+				e->tipo = tipoCampo; // Copia tipo do campo passado para o esquema
+				e->tam = tamanhoCampo; // Copia tamanho do campo passado para o esquema
+				e->chave = tChave; // Copia tipo de chave passado para o esquema
+
+				if(strlen(tabelaApt)!=0){
+					strcpy(e->tabelaApt, tabelaApt); //Copia a Tabela Refenciada da FK de chave passado para o esquema;
+				}
+				if(strlen(attApt)!=0){
+					strcpy(e->attApt, attApt); //Copia o Atributo Refenciado da FK de chave passado para o esquema
+				}
 				aux->next = e; // Faz o campo anterior apontar para o campo inserido.
 				return t;
 			}
@@ -506,7 +517,6 @@ int finalizaInsert(char *nome, column *c){
 	int i = 0, x = 0, t, erro;
 	FILE *dados;
 
-
 	struct fs_objects dicio; // Le dicionario
 	tp_table *auxT; // Le esquema
 	abreTabela(nome, &dicio, &auxT);
@@ -522,7 +532,10 @@ int finalizaInsert(char *nome, column *c){
             break;
 
         case FK:
+
+			printf("Nome: %s \n",auxT->tabelaApt);
             //erro = verificaChaveFK(nome, c, c->nomeCampo, c->valorCampo, auxT->tabelaApt, auxT->attApt);
+            erro = verificaChaveFK(nome, c, c->nomeCampo, c->valorCampo, "tabela1", "atrib11");
             break;
     }
 	
@@ -875,8 +888,8 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
     if(erro != SUCCESS )
         return ERRO_DE_PARAMETRO;
     
-    if(existeAtributo(tabelaApt, c))
-        return ERRO_CHAVE_ESTRANGEIRA;
+    //if(existeAtributo(tabelaApt, c))
+        //return ERRO_CHAVE_ESTRANGEIRA;
 
     if(iniciaAtributos(&objeto, &tabela, &bufferpoll, tabelaApt) != SUCCESS)
         return ERRO_DE_PARAMETRO;
