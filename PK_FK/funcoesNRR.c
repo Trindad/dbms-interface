@@ -46,7 +46,7 @@ void imprime(char nomeTabela[]) {
         printf("Tabela Vazia\n");
         return ;
     }
-    
+
     // PARA IMPRIMIR PÁGINA
     printf("Número de tuplas: %d\n", bufferpoll[0].nrec);
     for(j=0; j < objeto.qtdCampos*bufferpoll[0].nrec; j++){
@@ -87,15 +87,59 @@ int existeArquivo(const char* filename){
 }
 
 /***********************************************************************************|
+|* FUNÇÃO: Organiza o arquivo para remover espaços vazios                          */   
+
+void ProcuraNoArquivo(char *nomeTabela){
+    int tam, teste;
+    FILE *dicionario;
+    char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+    if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
+        return ERRO_ABRIR_ARQUIVO;
+
+    teste = 0;
+
+    while(fgetc (dicionario) != EOF){
+        
+        fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
+        tam = strlen(tupla);
+        
+        if(strcmp(tupla, nomeTabela) == 0){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
+            int cont = 0;
+            fseek(dicionario, 1, 1);            
+            printf("TESTE: %d\n", teste);
+            fseek(dicionario, 1, SEEK_SET);
+            fwrite("ssss", 4 * sizeof(char), SEEK_SET, dicionario);
+
+            while(cont < tam){
+                printf("CONT %c\n", tupla[cont]);
+                fwrite('a', sizeof(char), teste, dicionario);
+                tupla[cont] = '\0';
+                cont++;
+            }
+
+            printf("TUPLA: %s\n", tupla);
+            return 1;
+        }
+        
+        teste = sizeof(tupla);    
+        fseek(dicionario, 28, 1);
+    }
+
+    fclose(dicionario);
+    return 0;
+}
+
+
+/***********************************************************************************|
 |* FUNÇÃO: Exclui a tabela com 'nome'                                              */   
 
 void excluirArquivo(char *nomeTabela){
 	struct fs_objects objeto;
 	tp_table *esquema;
-	int x,erro;
+	int x,erro, cont;
     char str[20]; 
     char dat[5] = ".dat";
-    
+    char a = 'a';
     
     strcpy (str, nomeTabela); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
@@ -125,8 +169,22 @@ void excluirArquivo(char *nomeTabela){
         return ;
     }
     
-	//column *tuplaE = excluirTuplaBuffer(bufferpoll, esquema, objeto, 0, 2); //pg, tupla
+    printf("NOME do arquivo: %s\n", nomeTabela);
+    ProcuraNoArquivo(nomeTabela);
 
+    /*
+    cont = 0;
+    
+    printf("sssssssss%d\n", strlen(objeto.nome));
+    while(cont < strlen(objeto.nome)){
+        objeto.nome[cont] = '\0';
+        cont++;
+    }
+        
+    printf("NOMEss do arquivo: %s\n", objeto.nome);*/
+
+
+	//column *tuplaE = excluirTuplaBuffer(bufferpoll, esquema, objeto, 0, 2); //pg, tupla
 	
     remove(str);
     
@@ -138,7 +196,6 @@ void excluirArquivo(char *nomeTabela){
 |* FUNÇÃO: Inicia os atributos utilizados pela FK e PK. Além de erros.             */   
 
 int iniciaAtributos(struct fs_objects *objeto, tp_table **tabela, tp_buffer **bufferpoll, char *nomeT){
-	
 	
     *objeto     = leObjeto(nomeT);
     *tabela     = leSchema(*objeto);
@@ -329,7 +386,6 @@ int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo){
 int abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela){
 	*objeto     = leObjeto(nomeTabela);
     *tabela     = leSchema(*objeto);
-	return 1;
 	
+    return 1;
 }	
-	

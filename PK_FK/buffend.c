@@ -524,10 +524,10 @@ int finalizaInsert(char *nome, column *c){
             erro = verificaChavePK(nome, c->nomeCampo, c->valorCampo);
             break;
 
-        case FK:
+        case FK:/*
 			printf("\n TIPO %c \n",auxT->tipo);
 			printf("\n CHAVE %d \n",auxT->chave);
-			printf("\n NOME %s \n",auxT->tabelaApt);
+			printf("\n NOME %s \n",auxT->tabelaApt);*/
             //erro = verificaChaveFK(nome, c->nomeCampo, c->valorCampo, auxT->tabelaApt, auxT->attApt);
             break;
     }
