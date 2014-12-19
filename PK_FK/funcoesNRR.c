@@ -91,41 +91,57 @@ int existeArquivo(const char* filename){
 
 void ProcuraNoArquivo(char *nomeTabela){
     int tam, teste;
-    FILE *dicionario;
-    char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+    int x = 0;
+    int achouA, achouT;
+    int tamanhoTotal = sizeof(struct fs_objects);
+    char *c;
+    FILE *dicionario, *fp;
+
+    char *nomeT = (char *)malloc(sizeof(char) * TAMANHO_NOME_TABELA);
+    char *tupla = (char *)malloc(sizeof(char) * tamanhoTotal);
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
         return ERRO_ABRIR_ARQUIVO;
 
-    teste = 0;
-
-    while(fgetc (dicionario) != EOF){
+    fp = fopen("fs_teste.dat", "a+b");
         
-        fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
-        tam = strlen(tupla);
-        
-        if(strcmp(tupla, nomeTabela) == 0){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
-            int cont = 0;
-            fseek(dicionario, 1, 1);            
-            printf("TESTE: %d\n", teste);
-            fseek(dicionario, 1, SEEK_SET);
-            fwrite("ssss", 4 * sizeof(char), SEEK_SET, dicionario);
+    fseek(dicionario, 0, SEEK_SET);
+    fseek(fp, 0, SEEK_SET);
+    
+    achouT = 0, achouA = 0;
 
-            while(cont < tam){
-                printf("CONT %c\n", tupla[cont]);
-                fwrite('a', sizeof(char), teste, dicionario);
-                tupla[cont] = '\0';
-                cont++;
-            }
-
-            printf("TUPLA: %s\n", tupla);
-            return 1;
-        }
-        
-        teste = sizeof(tupla);    
-        fseek(dicionario, 28, 1);
+    x = 0, teste = 0;
+    while(getc(dicionario) != EOF){
+        x++;
     }
+    printf("X1: %d\n", x);
 
+    fseek(dicionario, 0, SEEK_SET);
+    fseek(fp, 0, SEEK_SET);
+
+    while(!feof(dicionario)){
+        fread(nomeT, sizeof(char), TAMANHO_NOME_TABELA, dicionario);        
+
+        if(strcmp(nomeT, nomeTabela) == 0)
+            fseek(dicionario, 28, 1);
+        
+        else{
+            teste = teste + TAMANHO_NOME_TABELA;
+            if(teste < (x - (tamanhoTotal - TAMANHO_NOME_TABELA))){
+                fseek(fp, 0, SEEK_END);
+                fwrite(nomeT, sizeof(char), TAMANHO_NOME_TABELA, fp);
+            }
+        }
+    }
+    
+    x = 0;fseek(fp, 0, SEEK_SET);
+    while(getc(fp) != EOF){
+        x++;
+    }
     fclose(dicionario);
+    fclose(fp);
+    remove("fs_object.dat");
+    system("mv fs_teste.dat fs_object.dat");
+        
     return 0;
 }
 
@@ -186,7 +202,7 @@ void excluirArquivo(char *nomeTabela){
 
 	//column *tuplaE = excluirTuplaBuffer(bufferpoll, esquema, objeto, 0, 2); //pg, tupla
 	
-    remove(str);
+    //remove(str);
     
     return;
 }
