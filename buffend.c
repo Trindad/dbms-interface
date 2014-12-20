@@ -770,53 +770,173 @@ int existeArquivo(const char* filename){
     return 0;
 }
 
+int TrocaArquivosObj(char *nomeTabela, char *linha){
+    int x = 0;
+    char *tabela = (char *)malloc(sizeof(char) * TAMANHO_NOME_TABELA);
+
+    while(x < TAMANHO_NOME_TABELA){
+        tabela[x] = linha[x];
+        x++;
+    }
+
+    if(strcmp(tabela, nomeTabela) == 0){
+        //printf("TABELA TROCA: %s\n", tabela);
+        return 1;
+    }
+
+    return 0;
+}
+
+char * TrocaArquivosSch(char *linha){
+    int x = 0;
+    char *att = (char *)malloc(sizeof(char) * (TAMANHO_NOME_CAMPO));
+
+    while(x < TAMANHO_NOME_CAMPO){
+        att[x] = linha[x];
+        x++;
+    }
+
+    return att;
+}
+
+/***********************************************************************************|
+|* FUNÇÃO: Organiza o arquivo para remover espaços vazios                          */   
+
+int procuraObjectArquivo(char *nomeTabela){
+    int teste        = 0, 
+        cont         = 0, 
+        achou        = 0,
+        tamanhoTotal = sizeof(struct fs_objects);
+
+    FILE *dicionario, *fp;
+
+    char *table = (char *)malloc(sizeof(char) * tamanhoTotal);
+
+    if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
+        return ERRO_ABRIR_ARQUIVO;
+
+    if((fp = fopen("fs_teste.dat", "a+b")) == NULL)
+        return ERRO_ABRIR_ARQUIVO;
+        
+    fseek(dicionario, 0, SEEK_SET);
+    fseek(fp, 0, SEEK_SET);
+
+    while(cont < quantidadeTabelas()){
+        fread(table, sizeof(char), tamanhoTotal, dicionario);
+        teste = TrocaArquivosObj(nomeTabela, table);
+        
+        if(teste == 0){                                         //NÃO É IGUAL
+            fseek(fp, 0, SEEK_END);
+            fwrite(table, sizeof(char), tamanhoTotal, fp);            
+        }
+
+        else if(achou != 1){                                    //É IGUAL E NÃO TINHA SIDO DESCOBERTO.
+            achou = 1;
+            fread(table, sizeof(char), 0, dicionario);
+        }
+        cont++;
+    }
+    fclose(fp);
+    fclose(dicionario);
+    remove("fs_object.dat");
+    system("mv fs_teste.dat fs_object.dat");
+        
+    return 0;
+}
+
+int procuraSchemaArquivo(struct fs_objects objeto, int qtd){
+    FILE *schema, *newSchema;
+    int i = 0, cod = 0, x = 0;
+    char *tupla = (char *)malloc(sizeof(char) * 109);
+    tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos);
+
+    if((schema = fopen("fs_schema.dat", "a+b")) == NULL)
+        return ERRO_REMOVER_ARQUIVO_SCHEMA;
+    
+    if((newSchema = fopen("fs_nschema.dat", "a+b")) == NULL)
+        return ERRO_REMOVER_ARQUIVO_SCHEMA;
+
+    fseek(newSchema, 0, SEEK_SET);
+
+    while((fgetc (schema) != EOF)){ // Varre o arquivo ate encontrar todos os campos com o codigo da tabela.
+        fseek(schema, -1, 1);
+        fseek(newSchema, 0, SEEK_END);
+
+        if(fread(&cod, sizeof(int), 1, schema)){ // Le o codigo da tabela.
+            if(cod != objeto.cod){ // Verifica se o campo a ser copiado e da tabela que esta na estrutura fs_objects.
+                fwrite(&cod, sizeof(int), 1, newSchema);
+
+                fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
+                strcpy(esquema[i].nome,tupla);                  // Copia dados do campo para o esquema.
+                fwrite(tupla, sizeof(char), TAMANHO_NOME_CAMPO, newSchema);                
+
+                fread(&esquema[i].tipo, sizeof(char),1,schema);      
+                fread(&esquema[i].tam, sizeof(int),1,schema);   
+                fread(&esquema[i].chave, sizeof(int),1,schema);  
+                fwrite(&esquema[i].tipo, sizeof(char), 1, newSchema);                
+                fwrite(&esquema[i].tam, sizeof(int), 1, newSchema);                
+                fwrite(&esquema[i].chave, sizeof(int), 1, newSchema);                
+
+                fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, schema);
+                strcpy(esquema[i].tabelaApt,tupla);
+                fwrite(&esquema[i].tabelaApt, sizeof(char), TAMANHO_NOME_TABELA, newSchema);                
+
+                fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
+                strcpy(esquema[i].attApt,tupla);
+                fwrite(&esquema[i].attApt, sizeof(char), TAMANHO_NOME_CAMPO, newSchema);                
+                
+                x++;            
+            } else {
+                fseek(schema, 109, 1); // Pula a quantidade de caracteres para a proxima verificacao (40B do nome, 1B do tipo e 4B do tamanho,4B da chave, 20B do nome da Tabela Apontada e 40B do atributo apontado).
+            }
+        }
+    }
+    
+    fclose(newSchema);
+    fclose(schema);
+    
+    remove("fs_schema.dat");
+    system("mv fs_nschema.dat fs_schema.dat");
+   
+    return 0;
+}
+
+
 /***********************************************************************************|
 |* FUNÇÃO: Exclui a tabela com 'nome'                                              */   
 
-void excluirArquivo(char *nomeTabela){
+int excluirArquivo(char *nomeTabela){
 	struct fs_objects objeto;
 	tp_table *esquema;
 	int x,erro;
     char str[20]; 
     char dat[5] = ".dat";
-    
-    
+
     strcpy (str, nomeTabela); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
 
-    if(!existeArquivo(str)){
-        system("clear");
-        printf("Arquivo não existe!\n");
-        return;
-    }
-    
-	esquema = abreTabela(nomeTabela, &objeto, &esquema);
+	abreTabela(nomeTabela, &objeto, &esquema);
 	tp_buffer *bufferpoll = initbuffer();
+
 	if(bufferpoll == ERRO_DE_ALOCACAO){
         printf("Erro ao alocar memória para o buffer.\n");
-        return;
+        return ERRO_LEITURA_DADOS;
     }
 
     erro = SUCCESS;
     for(x = 0; erro == SUCCESS; x++)
         erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);        
     
+    if(procuraSchemaArquivo(objeto, objeto.qtdCampos) != 0)
+        return ERRO_REMOVER_ARQUIVO_SCHEMA;
 
-    column *pagina = getPage(bufferpoll, esquema, objeto, 0);
-
-    if(pagina == ERRO_PARAMETRO){
-        printf("Tabela Vazia\n");
-        return ;
-    }
-    
-	//column *tuplaE = excluirTuplaBuffer(bufferpoll, esquema, objeto, 0, 2); //pg, tupla
-
+    if(procuraObjectArquivo(nomeTabela) != 0)
+       return ERRO_REMOVER_ARQUIVO_OBJECT;
+	    
+	remove(str);
 	
-    remove(str);
-    
-    return;
+    return SUCCESS;
 }
-
 
 /***********************************************************************************|
 |* FUNÇÃO: Inicia os atributos utilizados pela FK e PK. Além de erros.             */   

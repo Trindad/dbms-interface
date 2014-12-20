@@ -196,14 +196,26 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
 //imprime: Utilizada na impressão das tabelas, conforme o nomeTabela 
 void imprime(char nomeTabela[] );
 
-//existeArquivo: Verifica a existência do arquivo da tabela 'filename'
+//existeArquivo:
 int existeArquivo(const char* filename);
 
 //existeAtributo: Verifica a existência do atributo antes de adicionar na tabela 
 int existeAtributo(char *nomeTabela, column *c);
 
-//excluir: Exclui a tabela com 'nomeTabela'    
-void excluirArquivo(char *nomeTabela );
+//excluirArquivo: Exclui a tabela com 'nomeTabela'    
+int excluirArquivo(char *nomeTabela);
+
+//TrocaArquivosObj:
+int TrocaArquivosObj(char *nomeTabela, char *linha);
+
+//TrocaArquivosSch:
+char * TrocaArquivosSch(char *linha);
+
+//procuraObjectArquivo:
+int procuraObjectArquivo(char *nomeTabela);
+
+//procuraSchemaArquivo:
+int procuraSchemaArquivo(struct fs_objects objeto, int qtd);
 
 // Essa função verifica as condições para a chave estrangeira(FK). E retorna erros caso ocorra.
 int verificaChaveFK(char *nomeTabela, column *c, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt);
