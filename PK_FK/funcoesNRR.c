@@ -17,10 +17,8 @@
 |* FUNÇÃO: Utilizada na impressão das tabelas, conforme nomeTabela                 */   
     
 void imprime(char nomeTabela[]) {
-
     int j,erro, x;
     struct fs_objects objeto = leObjeto(nomeTabela);    
-    
     tp_table *esquema = leSchema(objeto);
 
     if(esquema == ERRO_ABRIR_ESQUEMA){
@@ -39,7 +37,6 @@ void imprime(char nomeTabela[]) {
     for(x = 0; erro == SUCCESS; x++)
         erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);        
     
-
     column *pagina = getPage(bufferpoll, esquema, objeto, 0);
 
     if(pagina == ERRO_PARAMETRO){
@@ -86,7 +83,7 @@ int existeArquivo(const char* filename){
     return 0;
 }
 
-int TrocaArquivos(char *nomeTabela, char *linha){
+int TrocaArquivosObj(char *nomeTabela, char *linha){
     int x = 0;
     char *tabela = (char *)malloc(sizeof(char) * TAMANHO_NOME_TABELA);
 
@@ -101,13 +98,24 @@ int TrocaArquivos(char *nomeTabela, char *linha){
     }
 
     return 0;
+}
 
+char * TrocaArquivosSch(char *linha){
+    int x = 0;
+    char *att = (char *)malloc(sizeof(char) * (TAMANHO_NOME_CAMPO));
+
+    while(x < TAMANHO_NOME_CAMPO){
+        att[x] = linha[x];
+        x++;
+    }
+
+    return att;
 }
 
 /***********************************************************************************|
 |* FUNÇÃO: Organiza o arquivo para remover espaços vazios                          */   
 
-void procuraObjectArquivo(char *nomeTabela){
+int procuraObjectArquivo(char *nomeTabela){
     int teste        = 0, 
         cont         = 0, 
         achou        = 0,
@@ -128,9 +136,8 @@ void procuraObjectArquivo(char *nomeTabela){
 
     while(cont < quantidadeTabelas()){
         fread(table, sizeof(char), tamanhoTotal, dicionario);
-
-        teste = TrocaArquivos(nomeTabela, table);
-
+        teste = TrocaArquivosObj(nomeTabela, table);
+        
         if(teste == 0){                                         //NÃO É IGUAL
             fseek(fp, 0, SEEK_END);
             fwrite(table, sizeof(char), tamanhoTotal, fp);            
@@ -150,65 +157,112 @@ void procuraObjectArquivo(char *nomeTabela){
     return 0;
 }
 
+int procuraSchemaArquivo(struct fs_objects objeto, int qtd){
+    FILE *schema, *newSchema;
+    int i = 0, cod = 0, x = 0, teste, achou;
+    char *tupla = (char *)malloc(sizeof(char) * 109);
+    tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos);
+
+    if((schema = fopen("fs_schema.dat", "a+b")) == NULL)
+        return ERRO_REMOVER_ARQUIVO_SCHEMA;
+    
+    if((newSchema = fopen("fs_nschema.dat", "a+b")) == NULL)
+        return ERRO_REMOVER_ARQUIVO_SCHEMA;
+
+    fseek(newSchema, 0, SEEK_SET);
+
+    /*achou = 0;
+    while(!feof(schema)){
+        //fread(&cod, sizeof(int), 1, schema);
+        //printf("COD: %d\n", cod);
+        fread(tupla, sizeof(char), 109, schema);
+        fwrite(tupla, sizeof(char), 109, newSchema);       
+    }*/
+
+    while((fgetc (schema) != EOF)){ // Varre o arquivo ate encontrar todos os campos com o codigo da tabela.
+        fseek(schema, -1, 1);
+        fseek(newSchema, 0, SEEK_END);
+
+        if(fread(&cod, sizeof(int), 1, schema)){ // Le o codigo da tabela.
+            if(cod != objeto.cod){ // Verifica se o campo a ser copiado e da tabela que esta na estrutura fs_objects.
+                fwrite(&cod, sizeof(int), 1, newSchema);
+
+                fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
+                strcpy(esquema[i].nome,tupla);                  // Copia dados do campo para o esquema.
+                fwrite(tupla, sizeof(char), TAMANHO_NOME_CAMPO, newSchema);                
+
+                fread(&esquema[i].tipo, sizeof(char),1,schema);      
+                fread(&esquema[i].tam, sizeof(int),1,schema);   
+                fread(&esquema[i].chave, sizeof(int),1,schema);  
+                fwrite(&esquema[i].tipo, sizeof(char), 1, newSchema);                
+                fwrite(&esquema[i].tam, sizeof(int), 1, newSchema);                
+                fwrite(&esquema[i].chave, sizeof(int), 1, newSchema);                
+
+                fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, schema);
+                strcpy(esquema[i].tabelaApt,tupla);
+                fwrite(&esquema[i].tabelaApt, sizeof(char), TAMANHO_NOME_TABELA, newSchema);                
+
+                fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
+                strcpy(esquema[i].attApt,tupla);
+                fwrite(&esquema[i].attApt, sizeof(char), TAMANHO_NOME_CAMPO, newSchema);                
+                
+                x++;            
+            } else {
+                fseek(schema, 109, 1); // Pula a quantidade de caracteres para a proxima verificacao (40B do nome, 1B do tipo e 4B do tamanho,4B da chave, 20B do nome da Tabela Apontada e 40B do atributo apontado).
+            }
+        }
+    }
+    
+    fclose(newSchema);
+    fclose(schema);
+    
+    remove("fs_schema.dat");
+    system("mv fs_nschema.dat fs_schema.dat");
+   
+    return 0;
+}
+
 
 /***********************************************************************************|
 |* FUNÇÃO: Exclui a tabela com 'nome'                                              */   
 
-void excluirArquivo(char *nomeTabela){
+int excluirArquivo(char *nomeTabela){
 	struct fs_objects objeto;
 	tp_table *esquema;
-	int x,erro, cont;
+	int x,erro;
     char str[20]; 
     char dat[5] = ".dat";
-    char a = 'a';
-    
+
     strcpy (str, nomeTabela); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
-
+/*
     if(!existeArquivo(str)){
         system("clear");
         printf("Arquivo não existe!\n");
-        return;
+        return ERRO_VAZIO;
     }
-    
+  */  
 	abreTabela(nomeTabela, &objeto, &esquema);
 	tp_buffer *bufferpoll = initbuffer();
 	if(bufferpoll == ERRO_DE_ALOCACAO){
         printf("Erro ao alocar memória para o buffer.\n");
-        return;
+        return ERRO_LEITURA_DADOS;
     }
 
     erro = SUCCESS;
     for(x = 0; erro == SUCCESS; x++)
         erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);        
     
-
     column *pagina = getPage(bufferpoll, esquema, objeto, 0);
 
-    if(pagina == ERRO_PARAMETRO){
-        printf("Tabela Vazia\n");
-        return ;
-    }
-    
-    procuraObjectArquivo(nomeTabela);
+    procuraSchemaArquivo(objeto, objeto.qtdCampos);
 
-    /*
-    cont = 0;
-    
-    printf("sssssssss%d\n", strlen(objeto.nome));
-    while(cont < strlen(objeto.nome)){
-        objeto.nome[cont] = '\0';
-        cont++;
-    }
-        
-    printf("NOMEss do arquivo: %s\n", objeto.nome);*/
-
-
-	//column *tuplaE = excluirTuplaBuffer(bufferpoll, esquema, objeto, 0, 2); //pg, tupla
+    if(procuraObjectArquivo(nomeTabela) != 0)
+       return ERRO_REMOVER_ARQUIVO_OBJECT;
 	
     //remove(str);
     
-    return;
+    return SUCCESS;
 }
 
 
@@ -236,14 +290,12 @@ int existeAtributo(char *nomeTabela, char *atributo){
     tp_table *tabela;         
     tp_buffer *bufferpoll;
     
-
     //if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS) 
         //return ERRO_DE_PARAMETRO;
 	
 	objeto     = leObjeto(nomeTabela);
     tabela     = leSchema(objeto);
     bufferpoll = initbuffer();
-
 
     erro = SUCCESS;
     for(x = 0; erro == SUCCESS; x++)
@@ -254,13 +306,12 @@ int existeAtributo(char *nomeTabela, char *atributo){
      if(pagina == ERRO_PARAMETRO){
         return 0;
     }
-   
-
-    for(x = 0; x < objeto.qtdCampos*bufferpoll[0].nrec; x++){
+    
+    for(x = 0; x < objeto.qtdCampos * bufferpoll[0].nrec; x++){
         if(strcmp(pagina[x].nomeCampo, atributo) == 0)
             return SUCCESS;
     }
- 
+    
     return ERRO_DE_PARAMETRO;
 }
 

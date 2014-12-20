@@ -323,6 +323,7 @@ int quantidadeTabelas(){
 }
 //---------------------------------------
 // INSERE UMA TUPLA NO BUFFER!
+// ///
 char *getTupla(tp_table *campos,struct fs_objects objeto, int from){ //Pega uma tupla do disco a partir do valor de from
 
     int tamTpl = tamTupla(campos, objeto);
@@ -333,8 +334,9 @@ char *getTupla(tp_table *campos,struct fs_objects objeto, int from){ //Pega uma 
 
     dados = fopen(objeto.nArquivo, "r");
 
-	if (dados == NULL)
+	if (dados == NULL){
 		return ERRO_DE_LEITURA;
+    }
 
     fseek(dados, from, 1);
     if(fgetc (dados) != EOF){
@@ -348,11 +350,15 @@ char *getTupla(tp_table *campos,struct fs_objects objeto, int from){ //Pega uma 
     fclose(dados);
     return linha;
 }
+
+/////////////////
 void setTupla(tp_buffer *buffer,char *tupla, int tam, int pos){ //Coloca uma tupla de tamanho "tam" no buffer e na página "pos"
 	int i=buffer[pos].position;
 	for (;i<buffer[pos].position + tam;i++)
         buffer[pos].data[i] = *(tupla++);
 }
+
+/////////////////
 int colocaTuplaBuffer(tp_buffer *buffer, int from, tp_table *campos, struct fs_objects objeto){//Define a página que será incluida uma nova tupla
 	
 	char *tupla = getTupla(campos,objeto,from);
@@ -423,8 +429,10 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
 				e->tipo = tipoCampo;
 				e->tam = tamanhoCampo;
 				e->chave = tChave;
-				strcpy(e->tabelaApt, tabelaApt);
-				strcpy(e->attApt, attApt);
+				if(strlen(tabelaApt) != 0)
+                    strcpy(e->tabelaApt, tabelaApt);
+                if(strlen(attApt) != 0)
+                    strcpy(e->attApt, attApt);
 				aux->next = e; // Faz o campo anterior apontar para o campo inserido.
 				return t;
 			}
@@ -515,6 +523,7 @@ int finalizaInsert(char *nome, column *c){
 	tp_table *auxT; // Le esquema
 	abreTabela(nome, &dicio, &auxT);
 	
+    printf("chave: %d\n", auxT->chave);
 	switch(auxT->chave){
         case NPK:
             erro = SUCCESS;
@@ -524,11 +533,11 @@ int finalizaInsert(char *nome, column *c){
             erro = verificaChavePK(nome, c->nomeCampo, c->valorCampo);
             break;
 
-        case FK:/*
+        case FK:
 			printf("\n TIPO %c \n",auxT->tipo);
 			printf("\n CHAVE %d \n",auxT->chave);
-			printf("\n NOME %s \n",auxT->tabelaApt);*/
-            //erro = verificaChaveFK(nome, c->nomeCampo, c->valorCampo, auxT->tabelaApt, auxT->attApt);
+			printf("\n NOME %s \n",auxT->tabelaApt);
+            erro = verificaChaveFK(nome, c->nomeCampo, c->valorCampo, auxT->tabelaApt, auxT->attApt);
             break;
     }
 	
