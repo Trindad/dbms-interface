@@ -35,7 +35,7 @@ int main(){
 		if(!nTabela[2]){	//Se ainda não existe a tabela3, a mesma é criada
 			tab[2] = iniciaTabela("tabela3"); 
 			tab[2] = adicionaCampo(tab[2], "atrib11" , 'I', (sizeof(int))	,FK, "tabela1","atrib11");
-			tab[2] = adicionaCampo(tab[2], "atrib32" , 'C', 20				,NPK, " "," ");
+			tab[2] = adicionaCampo(tab[2], "atrib32" , 'S', 20				,NPK, " "," ");
 			finalizaTabela(tab[2]);
 		}
 	}
