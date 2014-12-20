@@ -12,7 +12,6 @@
 #include "buffend.h"
 #include "funcoesNRR.h"
 
-
 /***********************************************************************************|
 |* FUNÇÃO: Utilizada na impressão das tabelas, conforme nomeTabela                 */   
     
@@ -41,7 +40,7 @@ void imprime(char nomeTabela[]) {
 
     if(pagina == ERRO_PARAMETRO){
         printf("Tabela Vazia\n");
-        return ;
+        return;
     }
 
     // PARA IMPRIMIR PÁGINA
@@ -159,7 +158,7 @@ int procuraObjectArquivo(char *nomeTabela){
 
 int procuraSchemaArquivo(struct fs_objects objeto, int qtd){
     FILE *schema, *newSchema;
-    int i = 0, cod = 0, x = 0;
+    int cod = 0;
     char *tupla = (char *)malloc(sizeof(char) * 109);
     tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos);
 
@@ -180,27 +179,26 @@ int procuraSchemaArquivo(struct fs_objects objeto, int qtd){
                 fwrite(&cod, sizeof(int), 1, newSchema);
 
                 fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
-                strcpy(esquema[i].nome,tupla);                  // Copia dados do campo para o esquema.
+                strcpy(esquema[0].nome,tupla);                  // Copia dados do campo para o esquema.
                 fwrite(tupla, sizeof(char), TAMANHO_NOME_CAMPO, newSchema);                
 
-                fread(&esquema[i].tipo, sizeof(char),1,schema);      
-                fread(&esquema[i].tam, sizeof(int),1,schema);   
-                fread(&esquema[i].chave, sizeof(int),1,schema);  
-                fwrite(&esquema[i].tipo, sizeof(char), 1, newSchema);                
-                fwrite(&esquema[i].tam, sizeof(int), 1, newSchema);                
-                fwrite(&esquema[i].chave, sizeof(int), 1, newSchema);                
+                fread(&esquema[0].tipo, sizeof(char),1,schema);      
+                fread(&esquema[0].tam, sizeof(int),1,schema);   
+                fread(&esquema[0].chave, sizeof(int),1,schema);  
+                fwrite(&esquema[0].tipo, sizeof(char), 1, newSchema);                
+                fwrite(&esquema[0].tam, sizeof(int), 1, newSchema);                
+                fwrite(&esquema[0].chave, sizeof(int), 1, newSchema);                
 
                 fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, schema);
-                strcpy(esquema[i].tabelaApt,tupla);
-                fwrite(&esquema[i].tabelaApt, sizeof(char), TAMANHO_NOME_TABELA, newSchema);                
+                strcpy(esquema[0].tabelaApt,tupla);
+                fwrite(&esquema[0].tabelaApt, sizeof(char), TAMANHO_NOME_TABELA, newSchema);                
 
                 fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
-                strcpy(esquema[i].attApt,tupla);
-                fwrite(&esquema[i].attApt, sizeof(char), TAMANHO_NOME_CAMPO, newSchema);                
-                
-                x++;            
+                strcpy(esquema[0].attApt,tupla);
+                fwrite(&esquema[0].attApt, sizeof(char), TAMANHO_NOME_CAMPO, newSchema);                
+                   
             } else {
-                fseek(schema, 109, 1); // Pula a quantidade de caracteres para a proxima verificacao (40B do nome, 1B do tipo e 4B do tamanho,4B da chave, 20B do nome da Tabela Apontada e 40B do atributo apontado).
+                fseek(schema, 109, 1); 
             }
         }
     }

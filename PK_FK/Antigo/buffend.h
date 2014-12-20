@@ -18,12 +18,12 @@ struct fs_objects { // Estrutura usada para carregar fs_objects.dat
 };
 
 typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
-	char nome[TAMANHO_NOME_CAMPO];	// Nome do Campo.                    40bytes   
-	char tipo;						// Tipo do Campo.                     1bytes
-	int tam;						// Tamanho do Campo.                  4bytes
-	int chave;						// Tipo da chave                      4bytes
-	char tabelaApt[TAMANHO_NOME_TABELA]; //Nome da Tabela Apontada        20bytes 
-	char attApt[TAMANHO_NOME_CAMPO];	//Nome do Atributo Apontado       40bytes
+	char nome[TAMANHO_NOME_CAMPO];	// Nome do Campo.
+	char tipo;						// Tipo do Campo.
+	int tam;						// Tamanho do Campo.
+	int chave;						// Tipo da chave
+	char tabelaApt[TAMANHO_NOME_TABELA]; //Nome da Tabela Apontada
+	char attApt[TAMANHO_NOME_CAMPO];	//Nome do Atributo Apontado
 	struct tp_table *next;			// Encadeamento para o próximo campo.
 }tp_table;
 
@@ -81,8 +81,6 @@ struct fs_objects leObjeto(char *nTabela);
 	*objeto - Objeto, já previamente inicializado em leObjeto(nTabela), que contém as informações sobre uma determinada tabela
 */
 tp_table *leSchema (struct fs_objects objeto);
-
-tp_table *procuraAtributoFK(struct fs_objects objeto);
 
 /*
 	Esta função calcula, usando o esquema e o dicionário de dados, o tamanho da tupla de uma tabela, retornando o mesmo.
@@ -191,39 +189,3 @@ column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, 
 	*nTupla - Número da tupla a ser excluida, este número é relativo a página do buffer e não a todos os registros carregados
 */
 column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, int page, int nTupla);
-
-
-/********************************************************************************************************************/
-
-//imprime: Utilizada na impressão das tabelas, conforme o nomeTabela 
-void imprime(char nomeTabela[] );
-
-//existeArquivo:
-int existeArquivo(const char* filename);
-
-//existeAtributo: Verifica a existência do atributo antes de adicionar na tabela 
-int existeAtributo(char *nomeTabela, column *c);
-
-//excluirArquivo: Exclui a tabela com 'nomeTabela'    
-int excluirArquivo(char *nomeTabela);
-
-//TrocaArquivosObj:
-int TrocaArquivosObj(char *nomeTabela, char *linha);
-
-//TrocaArquivosSch:
-char * TrocaArquivosSch(char *linha);
-
-//procuraObjectArquivo:
-int procuraObjectArquivo(char *nomeTabela);
-
-//procuraSchemaArquivo:
-int procuraSchemaArquivo(struct fs_objects objeto, int qtd);
-
-// Essa função verifica as condições para a chave estrangeira(FK). E retorna erros caso ocorra.
-int verificaChaveFK(char *nomeTabela, column *c, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt);
-
-// Essa função verifica as condições para a chave primaria(PK). E retorna erros caso ocorra.
-int verificaChavePK(char *nomeTabela, column *c, char *nomeCampo, char *valorCampo);
-
-//função que recebe o nome de uma tabela e engloba as funções leObjeto() e leSchema()
-tp_table *abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela);
