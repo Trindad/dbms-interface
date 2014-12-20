@@ -86,59 +86,64 @@ int existeArquivo(const char* filename){
     return 0;
 }
 
+int TrocaArquivos(char *nomeTabela, char *linha){
+    int x = 0;
+    char *tabela = (char *)malloc(sizeof(char) * TAMANHO_NOME_TABELA);
+
+    while(x < TAMANHO_NOME_TABELA){
+        tabela[x] = linha[x];
+        x++;
+    }
+
+    if(strcmp(tabela, nomeTabela) == 0){
+        //printf("TABELA TROCA: %s\n", tabela);
+        return 1;
+    }
+
+    return 0;
+
+}
+
 /***********************************************************************************|
 |* FUNÇÃO: Organiza o arquivo para remover espaços vazios                          */   
 
-void ProcuraNoArquivo(char *nomeTabela){
-    int tam, teste;
-    int x = 0;
-    int achouA, achouT;
-    int tamanhoTotal = sizeof(struct fs_objects);
-    char *c;
+void procuraObjectArquivo(char *nomeTabela){
+    int teste        = 0, 
+        cont         = 0, 
+        achou        = 0,
+        tamanhoTotal = sizeof(struct fs_objects);
+
     FILE *dicionario, *fp;
 
-    char *nomeT = (char *)malloc(sizeof(char) * TAMANHO_NOME_TABELA);
-    char *tupla = (char *)malloc(sizeof(char) * tamanhoTotal);
+    char *table = (char *)malloc(sizeof(char) * tamanhoTotal);
+
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
         return ERRO_ABRIR_ARQUIVO;
 
-    fp = fopen("fs_teste.dat", "a+b");
+    if((fp = fopen("fs_teste.dat", "a+b")) == NULL)
+        return ERRO_ABRIR_ARQUIVO;
         
     fseek(dicionario, 0, SEEK_SET);
     fseek(fp, 0, SEEK_SET);
-    
-    achouT = 0, achouA = 0;
 
-    x = 0, teste = 0;
-    while(getc(dicionario) != EOF){
-        x++;
-    }
-    printf("X1: %d\n", x);
+    while(cont < quantidadeTabelas()){
+        fread(table, sizeof(char), tamanhoTotal, dicionario);
 
-    fseek(dicionario, 0, SEEK_SET);
-    fseek(fp, 0, SEEK_SET);
+        teste = TrocaArquivos(nomeTabela, table);
 
-    while(!feof(dicionario)){
-        fread(nomeT, sizeof(char), TAMANHO_NOME_TABELA, dicionario);        
-
-        if(strcmp(nomeT, nomeTabela) == 0)
-            fseek(dicionario, 28, 1);
-        
-        else{
-            teste = teste + TAMANHO_NOME_TABELA;
-            if(teste < (x - (tamanhoTotal - TAMANHO_NOME_TABELA))){
-                fseek(fp, 0, SEEK_END);
-                fwrite(nomeT, sizeof(char), TAMANHO_NOME_TABELA, fp);
-            }
+        if(teste == 0){                                         //NÃO É IGUAL
+            fseek(fp, 0, SEEK_END);
+            fwrite(table, sizeof(char), tamanhoTotal, fp);            
         }
+
+        else if(achou != 1){                                    //É IGUAL E NÃO TINHA SIDO DESCOBERTO.
+            achou = 1;
+            fread(table, sizeof(char), 0, dicionario);
+        }
+        cont++;
     }
-    
-    x = 0;fseek(fp, 0, SEEK_SET);
-    while(getc(fp) != EOF){
-        x++;
-    }
-    fclose(dicionario);
     fclose(fp);
+    fclose(dicionario);
     remove("fs_object.dat");
     system("mv fs_teste.dat fs_object.dat");
         
@@ -185,8 +190,7 @@ void excluirArquivo(char *nomeTabela){
         return ;
     }
     
-    printf("NOME do arquivo: %s\n", nomeTabela);
-    ProcuraNoArquivo(nomeTabela);
+    procuraObjectArquivo(nomeTabela);
 
     /*
     cont = 0;
