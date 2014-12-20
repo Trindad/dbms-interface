@@ -159,7 +159,7 @@ int procuraObjectArquivo(char *nomeTabela){
 
 int procuraSchemaArquivo(struct fs_objects objeto, int qtd){
     FILE *schema, *newSchema;
-    int i = 0, cod = 0, x = 0, teste, achou;
+    int i = 0, cod = 0, x = 0;
     char *tupla = (char *)malloc(sizeof(char) * 109);
     tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos);
 
@@ -170,14 +170,6 @@ int procuraSchemaArquivo(struct fs_objects objeto, int qtd){
         return ERRO_REMOVER_ARQUIVO_SCHEMA;
 
     fseek(newSchema, 0, SEEK_SET);
-
-    /*achou = 0;
-    while(!feof(schema)){
-        //fread(&cod, sizeof(int), 1, schema);
-        //printf("COD: %d\n", cod);
-        fread(tupla, sizeof(char), 109, schema);
-        fwrite(tupla, sizeof(char), 109, newSchema);       
-    }*/
 
     while((fgetc (schema) != EOF)){ // Varre o arquivo ate encontrar todos os campos com o codigo da tabela.
         fseek(schema, -1, 1);
@@ -235,15 +227,10 @@ int excluirArquivo(char *nomeTabela){
 
     strcpy (str, nomeTabela); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
-/*
-    if(!existeArquivo(str)){
-        system("clear");
-        printf("Arquivo não existe!\n");
-        return ERRO_VAZIO;
-    }
-  */  
+
 	abreTabela(nomeTabela, &objeto, &esquema);
 	tp_buffer *bufferpoll = initbuffer();
+
 	if(bufferpoll == ERRO_DE_ALOCACAO){
         printf("Erro ao alocar memória para o buffer.\n");
         return ERRO_LEITURA_DADOS;
@@ -253,15 +240,12 @@ int excluirArquivo(char *nomeTabela){
     for(x = 0; erro == SUCCESS; x++)
         erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);        
     
-    column *pagina = getPage(bufferpoll, esquema, objeto, 0);
-
-    procuraSchemaArquivo(objeto, objeto.qtdCampos);
+    if(procuraSchemaArquivo(objeto, objeto.qtdCampos) != 0)
+        return ERRO_REMOVER_ARQUIVO_SCHEMA;
 
     if(procuraObjectArquivo(nomeTabela) != 0)
        return ERRO_REMOVER_ARQUIVO_OBJECT;
-	
-    //remove(str);
-    
+	    
     return SUCCESS;
 }
 
@@ -270,7 +254,6 @@ int excluirArquivo(char *nomeTabela){
 |* FUNÇÃO: Inicia os atributos utilizados pela FK e PK. Além de erros.             */   
 
 int iniciaAtributos(struct fs_objects *objeto, tp_table **tabela, tp_buffer **bufferpoll, char *nomeT){
-	
     *objeto     = leObjeto(nomeT);
     *tabela     = leSchema(*objeto);
     *bufferpoll = initbuffer();
@@ -284,18 +267,15 @@ int iniciaAtributos(struct fs_objects *objeto, tp_table **tabela, tp_buffer **bu
     return SUCCESS;
 }
 
-int existeAtributo(char *nomeTabela, char *atributo){
+int existeAtributo(char *nomeTabela, column *c){
     int erro, x;
     struct fs_objects objeto; 
     tp_table *tabela;         
     tp_buffer *bufferpoll;
-    
-    //if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS) 
-        //return ERRO_DE_PARAMETRO;
-	
-	objeto     = leObjeto(nomeTabela);
-    tabela     = leSchema(objeto);
-    bufferpoll = initbuffer();
+    column *aux;
+
+    if(iniciaAtributos(&objeto, &tabela, &bufferpoll, nomeTabela) != SUCCESS) 
+        return ERRO_DE_PARAMETRO;
 
     erro = SUCCESS;
     for(x = 0; erro == SUCCESS; x++)
@@ -303,22 +283,31 @@ int existeAtributo(char *nomeTabela, char *atributo){
 
     column *pagina = getPage(bufferpoll, tabela, objeto, 0);
     
-     if(pagina == ERRO_PARAMETRO){
-        return 0;
+    if(pagina == NULL){
+        pagina = getPage(bufferpoll, tabela, objeto, 1);
     }
     
-    for(x = 0; x < objeto.qtdCampos * bufferpoll[0].nrec; x++){
-        if(strcmp(pagina[x].nomeCampo, atributo) == 0)
-            return SUCCESS;
+     if(pagina != NULL){
+        erro = SUCCESS;
+        for(x = 0; x < objeto.qtdCampos; x++){
+            for(aux = c; aux != NULL; aux=aux->next){
+                if(strcmp(pagina[x].nomeCampo, aux->nomeCampo) == 0)
+                    erro++;
+            }
+        }
+        if(erro != objeto.qtdCampos){
+            return ERRO_DE_PARAMETRO;
+        }
     }
-    
-    return ERRO_DE_PARAMETRO;
+ 
+    return SUCCESS; 
 }
 
 /***********************************************************************************|
 |* FUNÇÃO: Verifica as condições para chave estrangeira (FK)                       */   
 
-int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt){
+
+int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt){
     int x,j, erro;
     char str[20]; 
     char dat[5] = ".dat";
@@ -329,18 +318,17 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
     strcpy (str, tabelaApt); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
     
-    erro = existeAtributo(nomeTabela, nomeCampo);
+    erro = existeAtributo(nomeTabela, c);
     if(erro != SUCCESS )
         return ERRO_DE_PARAMETRO;
     
-    if(existeAtributo(tabelaApt, attApt))
-        return ERRO_CHAVE_ESTRANGEIRA;
+    //if(existeAtributo(tabelaApt, c))
+        //return ERRO_CHAVE_ESTRANGEIRA;
 
     if(iniciaAtributos(&objeto, &tabela, &bufferpoll, tabelaApt) != SUCCESS)
         return ERRO_DE_PARAMETRO;
        
       
-
     erro = SUCCESS;
     for(x = 0; erro == SUCCESS; x++)
         erro = colocaTuplaBuffer(bufferpoll, x, tabela, objeto);        
@@ -348,11 +336,10 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
     column *pagina = getPage(bufferpoll, tabela, objeto, 0);
 
 
-    for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){		
-		 
-		 
+    for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){     
+                  
         if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
-			
+            
             if(pagina[j].tipoCampo == 'S'){     
                 if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
                     return SUCCESS;
@@ -360,11 +347,11 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
             }
 
             else if(pagina[j].tipoCampo == 'I'){ 
-				
+                
                 int *n = (int *)&pagina[j].valorCampo[0];
 
                 if(*n == atoi(valorCampo)){
-					
+                    
                     return SUCCESS;
                 }
             }
@@ -382,8 +369,8 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
                     return SUCCESS;
                 }
             }else {
-				return ERRO_CHAVE_ESTRANGEIRA;
-			}
+                return ERRO_CHAVE_ESTRANGEIRA;
+            }
         }            
     }
 
@@ -393,15 +380,15 @@ int verificaChaveFK(char *nomeTabela, char *nomeCampo, char *valorCampo, char *t
 /***********************************************************************************|
 |* FUNÇÃO: Verifica as condições para chave primária (PK)                          */   
 
-int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo){
+int verificaChavePK(char *nomeTabela, column *c, char *nomeCampo, char *valorCampo){
     int j, x, erro;
     
     struct fs_objects objeto;
     tp_table *tabela;
     tp_buffer *bufferpoll;
     
-    erro = existeAtributo(nomeTabela, nomeCampo);
-	if(erro != SUCCESS )
+    erro = existeAtributo(nomeTabela, c);
+    if(erro != SUCCESS )
         return ERRO_DE_PARAMETRO;
     
 
@@ -417,7 +404,7 @@ int verificaChavePK(char *nomeTabela, char *nomeCampo, char *valorCampo){
     for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){
 
         if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
-			
+            
             if(pagina[j].tipoCampo == 'S'){        
                 if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
                     return ERRO_CHAVE_PRIMARIA;

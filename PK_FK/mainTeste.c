@@ -109,7 +109,7 @@ int main(){
 		return erro;
 	}
 		
-	//excluirArquivo("tabela8");
+	//excluirArquivo("tabela1");
 	imprime("tabela1");
     imprime("tabela2");
     imprime("tabela3");
