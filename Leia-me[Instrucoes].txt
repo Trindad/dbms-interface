@@ -104,7 +104,7 @@ Da compilação:
 
 ##############LEIA-ME PARTE 3 #############################################################################################################
 
-
+=> 20 dezembro 2014 <=
 
 Universidade Federal da Fronteira Sul – UFFS 
 Curso: Ciência da Computação
@@ -112,6 +112,7 @@ Componente Curricular: Banco de Dados II
 Professor: Dr. Denio Duarte
 Alunos: Natan J. Mai, Ricardo Zanuzzo, Rogerio T. Schmidt
 =============================================================================================================================================
+
 Introdução:
 
 - Ao criar uma tabela, ter a possibilidade de definir chaves primárias e estrangeiras.
@@ -163,11 +164,11 @@ Estes podem ser tratados na main.
 Foi alterado a struct tp_table para podermos trabalhar com as chaves.
 
 typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
-	char nome[TAMANHO_NOME_CAMPO];	// Nome do Campo.
-	char tipo;						// Tipo do Campo.
-	int tam;						// Tamanho do Campo.
-	int chave;						// Tipo da chave
-	char tabelaApt[TAMANHO_NOME_TABELA]; //Nome da Tabela Apontada
+	char nome[TAMANHO_NOME_CAMPO];		// Nome do Campo.
+	char tipo;				// Tipo do Campo.
+	int tam;				// Tamanho do Campo.
+	int chave;				// Tipo da chave
+	char tabelaApt[TAMANHO_NOME_TABELA]; 	//Nome da Tabela Apontada
 	char attApt[TAMANHO_NOME_CAMPO];	//Nome do Atributo Apontado
 	struct tp_table *next;			// Encadeamento para o próximo campo.
 }tp_table;
@@ -177,14 +178,16 @@ Foi também criado as seguintes funções:
 -> IniciaAtributos,
 -> ExisteAtributo,
 -> VerificaChavePK,
--> VerificaChaveFK.
+-> VerificaChaveFK,
+-> ExcluirArquivo,
+-> AbreTabela.
 
 
 Juntamente com os arquivos do trabalho, foi criado também o "exemploMain.c". Trata-se de um modelo (exemplo) de uma maneira
 de criar a main(). Nessa exemplo de main() é necessário se atentar ao seguinte:
 -int nrTabelas;	->deve ser setado para a quantidades de tabelas a ser criadas;
 
--   nTabela[0]  = existeArquivo("tabela1.dat"); -> deve ser colocado aqui os nomes das tabelas
+-   nTabela[0]  = existeArquivo("tabela1.dat"); 	// -> deve ser colocado aqui os nomes das tabelas
     nTabela[1]  = existeArquivo("tabela2.dat");
     nTabela[2]  = existeArquivo("tabela3.dat");
 
