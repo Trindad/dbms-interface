@@ -517,9 +517,11 @@ int finalizaInsert(char *nome, column *c){
 	int i = 0, x = 0, t, erro;
 	FILE *dados;
 
-	struct fs_objects dicio; // Le dicionario
-	tp_table *auxT; // Le esquema
-	abreTabela(nome, &dicio, &auxT);
+	struct fs_objects objeto,dicio; // Le dicionario
+	tp_table *auxT ; // Le esquema
+	auxT = abreTabela(nome, &dicio, &auxT);
+	
+	table *tab = (table *)malloc(sizeof(table));
 	
 	switch(auxT->chave){
         case NPK:
@@ -527,13 +529,14 @@ int finalizaInsert(char *nome, column *c){
             break;
 
         case PK:
-		
             erro = verificaChavePK(nome, c , c->nomeCampo, c->valorCampo);
             break;
 
         case FK:
-
-			printf("Nome: %s \n",auxT->tabelaApt);
+			tab->esquema = abreTabela(nome, &objeto, &tab->esquema);
+			for(;tab->esquema != NULL; tab->esquema=tab->esquema->next){
+				printf("Nome: %s \n",tab->esquema->tabelaApt);
+			}
             //erro = verificaChaveFK(nome, c, c->nomeCampo, c->valorCampo, auxT->tabelaApt, auxT->attApt);
             erro = verificaChaveFK(nome, c, c->nomeCampo, c->valorCampo, "tabela1", "atrib11");
             break;
@@ -787,7 +790,7 @@ void excluirArquivo(char *nomeTabela){
         return;
     }
     
-	abreTabela(nomeTabela, &objeto, &esquema);
+	esquema = abreTabela(nomeTabela, &objeto, &esquema);
 	tp_buffer *bufferpoll = initbuffer();
 	if(bufferpoll == ERRO_DE_ALOCACAO){
         printf("Erro ao alocar memória para o buffer.\n");
@@ -1008,9 +1011,9 @@ int verificaChavePK(char *nomeTabela, column *c, char *nomeCampo, char *valorCam
 /***********************************************************************************|
 |* FUNÇÃO: recebe o nome de uma tabela e engloba as funções leObjeto() e leSchema() */   
 
-int abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela){
+tp_table *abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela){
 	*objeto     = leObjeto(nomeTabela);
     *tabela     = leSchema(*objeto);
-	return 1;
+	return *tabela;
 	
 }

@@ -14,6 +14,7 @@ int main(){
     nTabela[0]  = existeArquivo("tabela1.dat");
     nTabela[1]  = existeArquivo("tabela2.dat");
     nTabela[2]  = existeArquivo("tabela3.dat");
+    nTabela[3]  = existeArquivo("tabela4.dat");
      if(!object || !schema){
     
 		if(!nTabela[0]){ 															//Se ainda não existe a tabela1, a mesma é criada
@@ -37,6 +38,12 @@ int main(){
 			tab[2] = adicionaCampo(tab[2], "atrib11" , 'I', (sizeof(int))	,FK, "tabela1","atrib11");
 			tab[2] = adicionaCampo(tab[2], "atrib32" , 'S', 20				,NPK, " "," ");
 			finalizaTabela(tab[2]);
+		}
+		if(!nTabela[3]){	//Se ainda não existe a tabela3, a mesma é criada
+			tab[3] = iniciaTabela("tabela4"); 
+			tab[3] = adicionaCampo(tab[3], "atrib41" , 'I', (sizeof(int))	,PK, "","");
+			tab[3] = adicionaCampo(tab[3], "atrib42" , 'D', (sizeof(double)),NPK, " "," ");
+			finalizaTabela(tab[3]);
 		}
 	}
 	 
@@ -86,9 +93,21 @@ int main(){
 	erro = finalizaInsert("tabela3", colunas);
 	
 	colunas = NULL;
-	colunas = insereValor(colunas, "atrib11", "15");
+	colunas = insereValor(colunas, "atrib11", "11");
 	colunas = insereValor(colunas, "atrib32", "F");
 	erro = finalizaInsert("tabela3", colunas);
+	
+	colunas = NULL;
+	colunas = insereValor(colunas, "atrib11", "15");
+	colunas = insereValor(colunas, "atrib32", "G");
+	erro = finalizaInsert("tabela3", colunas);
+	
+	//Inserção de tupla na tabela4
+	colunas = NULL;
+	colunas = insereValor(colunas, "atrib41", "100");
+	colunas = insereValor(colunas, "atrib42", "1.1");
+	erro = finalizaInsert("tabela4", colunas);
+	
 	
 	if(erro == ERRO_CHAVE_PRIMARIA) {
 		printf("ERRO DE CHAVE PRIMARIA !!! \n");
@@ -104,6 +123,7 @@ int main(){
 	imprime("tabela2");
 	//excluirArquivo("tabela2");
 	imprime("tabela3");
+	imprime("tabela4");
 
     
     return 0;

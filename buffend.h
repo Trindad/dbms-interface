@@ -212,4 +212,4 @@ int verificaChaveFK(char *nomeTabela, column *c, char *nomeCampo, char *valorCam
 int verificaChavePK(char *nomeTabela, column *c, char *nomeCampo, char *valorCampo);
 
 //função que recebe o nome de uma tabela e engloba as funções leObjeto() e leSchema()
-int abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela);
+tp_table *abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela);
