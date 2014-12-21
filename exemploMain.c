@@ -14,7 +14,7 @@ int main(){
     nTabela[0]  = existeArquivo("Aluno.dat");
     nTabela[1]  = existeArquivo("Inst.dat");
     nTabela[2]  = existeArquivo("Insc.dat");
-    nTabela[3]  = existeArquivo("Jose.dat");
+    nTabela[3]  = existeArquivo("Curso.dat");
      if(!object || !schema){
     
         if(!nTabela[0]){                                                            //Se ainda não existe a tabela1, a mesma é criada
@@ -38,14 +38,13 @@ int main(){
             tab[2] = adicionaCampo(tab[2], "ID"         , 'I', (sizeof(int))  ,PK, "","");
             tab[2] = adicionaCampo(tab[2], "CPF"        , 'I', (sizeof(int))  ,FK, "Aluno","CPF");
             tab[2] = adicionaCampo(tab[2], "CodInst"    , 'I', (sizeof(int))  ,FK , "Inst","CodInst");
-            //tab[2] = adicionaCampo(tab[2], "Matricula"  , 'I', (sizeof(int))  ,NPK, "","");
             finalizaTabela(tab[2]);
         }
         if(!nTabela[3]){    //Se ainda não existe a tabela3, a mesma é criada
-            tab[3] = iniciaTabela("Jose"); 
-            tab[3] = adicionaCampo(tab[3], "IDS"         , 'I', (sizeof(int))  ,NPK, "","");
-            tab[3] = adicionaCampo(tab[3], "CPFS"        , 'I', (sizeof(int))  ,NPK, "","");
-            //tab[2] = adicionaCampo(tab[2], "Matricula"  , 'I', (sizeof(int))  ,NPK, "","");
+            tab[3] = iniciaTabela("Curso"); 
+            tab[3] = adicionaCampo(tab[3], "CodCurso"         , 'I', (sizeof(int))  ,PK, "","");
+            tab[3] = adicionaCampo(tab[3], "Nome"        	  , 'S', 20  ,NPK, "","");
+            tab[3] = adicionaCampo(tab[3], "CodInst"          , 'I', (sizeof(int))  ,FK, "Inst","CodInst");
             finalizaTabela(tab[3]);
         }
     }
@@ -101,34 +100,33 @@ int main(){
     colunas = insereValor(colunas, "ID", "1");
     colunas = insereValor(colunas, "CPF", "123456");
     colunas = insereValor(colunas, "CodInst", "333");
-    //colunas = insereValor(colunas, "Matricula", "12232");
     finalizaInsert("Insc", colunas);
     
     colunas = NULL;
     colunas = insereValor(colunas, "ID", "2");
     colunas = insereValor(colunas, "CPF", "654321");
     colunas = insereValor(colunas, "CodInst", "222");
-    //colunas = insereValor(colunas, "Matricula", "12223");
     finalizaInsert("Insc", colunas);
     
     colunas = NULL;
     colunas = insereValor(colunas, "ID", "3");
     colunas = insereValor(colunas, "CPF", "1234567");
     colunas = insereValor(colunas, "CodInst", "111");
-    //colunas = insereValor(colunas, "Matricula", "1311");
     finalizaInsert("Insc", colunas);
  
+ 
+	//Inserção de tupla na tabela3
     colunas = NULL;
-    colunas = insereValor(colunas, "IDS", "3");
-    colunas = insereValor(colunas, "CPFS", "1234567");
-    //colunas = insereValor(colunas, "Matricula", "1311");
-    finalizaInsert("Jose", colunas);
+    colunas = insereValor(colunas, "CodCurso", "001");
+    colunas = insereValor(colunas, "Nome", "CC");
+    colunas = insereValor(colunas, "CodInst", "111");
+    finalizaInsert("Curso", colunas);
 
-    imprime("Aluno");
+    imprime("Aluno"); 			//Imprime os atributos da tabela "Aluno"
     imprime("Inst");
-    excluirTabela("Inst");
+    excluirTabela("Inst");		//Remove os dados do dicionario e a tabela do disco
     imprime("Insc");
-    imprime("Jose");
+    imprime("Curso");
     excluirTabela("Insc");
     excluirTabela("Aluno");
     
