@@ -237,7 +237,7 @@ Da criação das tabelas:
 Foi adicionado mais um parâmetro, que é passado para a função adicionaCampo. Trata-se do "flag" que indica o tipo de atributo.
 No caso de se tratar de uma chave estrangeira, é necessário apontar a tabela referenciada (tabRefer) e o atributo referenciado (atribRefer).
 
- 
+Obsevação Inserção: Se tabela tiver chave estrangeira FK, o primeiro atributo deve ser PK.
 
 Da inserção de Tuplas:
 	insereValor(colunas, "nomeAtrib1", "value1");
@@ -256,9 +256,7 @@ Dos retornos - Tratamento de PK e FK:
 
 Estes podem ser tratados na main.
 
-
 É possível adicionar apenas UM atributo como chave PK, ou seja, não é tratada a forma de chave composta.
-
 
 Foi alterado a struct tp_table para podermos trabalhar com as chaves:
 
@@ -280,7 +278,6 @@ Foi também criado as seguintes funções:
 -> VerificaChaveFK,
 -> ExcluirArquivo,
 -> AbreTabela.
-
 
 Juntamente com os arquivos do trabalho, foi criado também o "exemploMain.c". Trata-se de um modelo (exemplo) de uma maneira
 de criar a main(). Nessa exemplo de main() é necessário se atentar ao seguinte:

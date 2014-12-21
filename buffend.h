@@ -260,7 +260,7 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
 */
 
 /************************************************************************************************
-/* Natan J. Mai, Ricardo Zanuzzo e Rogério Torchelsen                                          */
+/  Natan J. Mai, Ricardo Zanuzzo e Rogério Torchelsen                                          */
 
 void imprime(char nomeTabela[] );
 /* ---------------------------------------------------------------------------------------------- 
