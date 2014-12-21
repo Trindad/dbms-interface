@@ -514,12 +514,13 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo){
 }
 int finalizaInsert(char *nome, column *c){
 	column *auxC;
-	int i = 0, x = 0, t, erro;
+	int i = 0, x = 0, t, erro, j = 0, cont = 0;
 	FILE *dados;
 
 	struct fs_objects objeto,dicio; // Le dicionario
 	tp_table *auxT ; // Le esquema
 	auxT = abreTabela(nome, &dicio, &auxT);
+    column *aux;
 
 	table *tab     = (table *)malloc(sizeof(table));
 	tp_table *tab2 = (tp_table *)malloc(sizeof(struct tp_table)); 
@@ -536,8 +537,18 @@ int finalizaInsert(char *nome, column *c){
         case FK:
 			tab->esquema = abreTabela(nome, &objeto, &tab->esquema);
             tab2 = procuraAtributoFK(objeto);
-            erro = verificaChaveFK(nome, c, c->nomeCampo, c->valorCampo, tab2->tabelaApt, tab2->attApt);
-            
+            for(j = 0; j < objeto.qtdCampos; j++){
+   
+                printf("cont: %d\n", cont);
+                printf("OBJETO: %s\n", tab2[j].tabelaApt);
+                printf("VALORC: %s\n", c->valorCampo);
+                erro = verificaChaveFK(nome, c, tab2[j].nome, c->valorCampo, tab2[j].tabelaApt, tab2[j].attApt);
+                 
+                if(erro==SUCCESS){
+                   c = c->next;
+                }
+            }
+
             break;
     }
 	
@@ -786,53 +797,51 @@ int TrocaArquivosObj(char *nomeTabela, char *linha){
     return 0;
 }
 
-/*
-tp_table *abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela){
-    *objeto     = leObjeto(nomeTabela);
-    *tabela     = leSchema(*objeto);
-
-    return *tabela;
-}
- */
 tp_table *procuraAtributoFK(struct fs_objects objeto){
-    FILE *schema, *newSchema;
-    int cod = 0, chave;
+    FILE *schema;
+    int cod = 0, chave, i = 0;
     char *tupla = (char *)malloc(sizeof(char) * 109);
     tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos);
+    tp_table *vetEsqm = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos);
 
-    if((schema = fopen("fs_schema.dat", "a+b")) == NULL)
-        return ERRO_REMOVER_ARQUIVO_SCHEMA;
+    if((schema = fopen("fs_schema.dat", "a+b")) == NULL){
+        printf("Erro GRAVE ao abrir o ESQUEMA.\nAbortando...\n");
+        exit(1);
+    }
     
-    while((fgetc (schema) != EOF)){ // Varre o arquivo ate encontrar todos os campos com o codigo da tabela.
+    while((fgetc (schema) != EOF) && i < objeto.qtdCampos){ // Varre o arquivo ate encontrar todos os campos com o codigo da tabela.
         fseek(schema, -1, 1);
 
         if(fread(&cod, sizeof(int), 1, schema)){ // Le o codigo da tabela.
             if(cod == objeto.cod){
                 fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
-                strcpy(esquema[0].nome,tupla);                  // Copia dados do campo para o esquema.
+                strcpy(esquema[i].nome,tupla);                  // Copia dados do campo para o esquema.
 
-                fread(&esquema[0].tipo , sizeof(char), 1 , schema);      
-                fread(&esquema[0].tam  , sizeof(int) , 1 , schema);   
+                fread(&esquema[i].tipo , sizeof(char), 1 , schema);      
+                fread(&esquema[i].tam  , sizeof(int) , 1 , schema);   
                 fread(&chave, sizeof(int) , 1 , schema);  
 
                 fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, schema);
-                strcpy(esquema[0].tabelaApt,tupla);
+                strcpy(esquema[i].tabelaApt,tupla);
 
                 fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);           
-                strcpy(esquema[0].attApt,tupla);
+                strcpy(esquema[i].attApt,tupla);
                 
-                if(chave == 2 && strlen(esquema[0].attApt) != 0 && strlen(esquema[0].tabelaApt) != 0){
-                    return esquema;
+                if(chave == 2 && strlen(esquema[i].attApt) != 0 && strlen(esquema[i].tabelaApt) != 0){
+                    strcpy(vetEsqm[i].tabelaApt, esquema[i].tabelaApt);
+                    strcpy(vetEsqm[i].attApt, esquema[i].attApt);
+                    strcpy(vetEsqm[i].nome, esquema[i].nome);
+                    
+                    i++;
+                    //return esquema;
                 }
-
-
             } else {
                 fseek(schema, 109, 1);
             }
         }
     }
 
-    return esquema;
+    return vetEsqm;
 }
 
 /***********************************************************************************|
@@ -1060,10 +1069,11 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
 
     column *pagina = getPage(bufferpoll, tabela, objeto, 0);
 
-
+    printf("NRec %d \n",objeto.qtdCampos);
     for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){		
 		 
-		 
+		printf("campo %s - %s \n",pagina[j].nomeCampo,nomeCampo);
+
         if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
 			
             if(pagina[j].tipoCampo == 'S'){     
@@ -1073,7 +1083,7 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
             }
 
             else if(pagina[j].tipoCampo == 'I'){ 
-				
+				printf("OK \n");
                 int *n = (int *)&pagina[j].valorCampo[0];
 
                 if(*n == atoi(valorCampo)){

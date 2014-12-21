@@ -120,6 +120,8 @@ int quantidadeTabelas();
 	*nomeTabela - Nome de uma tabela,  a qual deseja-se saber se existe no dicionario.
 */
 int verificaNomeTabela(char *nomeTabela);
+
+int iniciaAtributos(struct fs_objects *objeto, tp_table **tabela, tp_buffer **bufferpoll, char *nomeT);
 /*
 	Esta função inicia um estrutura do tipo table, como nome de tabela passado. 
 	Retorna:

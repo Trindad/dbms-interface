@@ -36,7 +36,7 @@ int main(){
 		if(!nTabela[2]){	//Se ainda não existe a tabela3, a mesma é criada
 			tab[2] = iniciaTabela("tabela3"); 
 			tab[2] = adicionaCampo(tab[2], "atrib11" , 'I', (sizeof(int))	,FK, "tabela1","atrib11");
-			tab[2] = adicionaCampo(tab[2], "atrib32" , 'S', 20				,NPK, " "," ");
+			tab[2] = adicionaCampo(tab[2], "atrib21" , 'I', (sizeof(int))   ,FK, "tabela2","atrib21");
 			finalizaTabela(tab[2]);
 		}
 		if(!nTabela[3]){	//Se ainda não existe a tabela3, a mesma é criada
@@ -89,18 +89,19 @@ int main(){
 	//Inserção de tupla na tabela3
 	colunas = NULL;
 	colunas = insereValor(colunas, "atrib11", "10");
-	colunas = insereValor(colunas, "atrib32", "M");
+	colunas = insereValor(colunas, "atrib32", "11");
 	erro = finalizaInsert("tabela3", colunas);
 	
 	colunas = NULL;
 	colunas = insereValor(colunas, "atrib11", "11");
-	colunas = insereValor(colunas, "atrib32", "F");
+	colunas = insereValor(colunas, "atrib32", "10");
 	erro = finalizaInsert("tabela3", colunas);
 	
 	colunas = NULL;
 	colunas = insereValor(colunas, "atrib11", "15");
-	colunas = insereValor(colunas, "atrib32", "G");
+	colunas = insereValor(colunas, "atrib32", "10");
 	erro = finalizaInsert("tabela3", colunas);
+
 	
 	//Inserção de tupla na tabela4
 	colunas = NULL;
