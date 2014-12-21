@@ -3,7 +3,7 @@
 #include "buffend.h"
 
 int main(){
-    int nrTabelas = 4;
+    int nrTabelas = 3;
     int nTabela[nrTabelas];
     table  *tab[nrTabelas]; 
     column *colunas;
@@ -13,8 +13,7 @@ int main(){
     schema      = existeArquivo("fs_schema.dat");
     nTabela[0]  = existeArquivo("Aluno.dat");
     nTabela[1]  = existeArquivo("Inst.dat");
-    nTabela[2]  = existeArquivo("Curso.dat");
-    nTabela[3]  = existeArquivo("Inscri.dat");
+    nTabela[2]  = existeArquivo("Inscri.dat");
      if(!object || !schema){
     
         if(!nTabela[0]){                                                                    //Se ainda não existe a Aluno, a mesma é criada
@@ -33,20 +32,13 @@ int main(){
             tab[1] = adicionaCampo(tab[1], "Reitor"   , 'S', 10              ,NPK, "","");
             finalizaTabela(tab[1]);
         }
-        if(!nTabela[2]){  
-            tab[2] = iniciaTabela("Curso"); 
-            tab[2] = adicionaCampo(tab[2], "CodCurso"    , 'I', (sizeof(int))  ,PK, "","");
-            tab[2] = adicionaCampo(tab[2], "Nome"        , 'S', 20  ,NPK, "","");
-            tab[2] = adicionaCampo(tab[2], "CodInst"     , 'I', (sizeof(int))  ,FK, "Inst","CodInst");
+        if(!nTabela[2]){ 
+            tab[2] = iniciaTabela("Inscri"); 
+            tab[2] = adicionaCampo(tab[2], "CodMat"     , 'I', (sizeof(int))  ,PK, "","");
+            tab[2] = adicionaCampo(tab[2], "CPF"        , 'I', (sizeof(int))  ,FK, "Aluno","CPF");
+            tab[2] = adicionaCampo(tab[2], "CodInst"    , 'I', (sizeof(int))  ,FK , "Inst","CodInst");
+            tab[2] = adicionaCampo(tab[2], "Curso"   , 'S',  20  ,NPK, "","");
             finalizaTabela(tab[2]);
-        }
-        if(!nTabela[3]){ 
-            tab[3] = iniciaTabela("Inscri"); 
-            tab[3] = adicionaCampo(tab[3], "CodMat"     , 'I', (sizeof(int))  ,PK, "","");
-            tab[3] = adicionaCampo(tab[3], "CPF"        , 'I', (sizeof(int))  ,FK, "Aluno","CPF");
-            tab[3] = adicionaCampo(tab[3], "CodInst"    , 'I', (sizeof(int))  ,FK , "Inst","CodInst");
-            tab[3] = adicionaCampo(tab[3], "CodCurso"   , 'I',  (sizeof(int))  ,NPK, "","");
-            finalizaTabela(tab[3]);
         }
        
     }
@@ -98,47 +90,33 @@ int main(){
     finalizaInsert("Inst", colunas);
     
     
+    
     //Inserção de tupla na tabela3
-    colunas = NULL;
-    colunas = insereValor(colunas, "CodCurso", "001");
-    colunas = insereValor(colunas, "Nome", "ADM");
-    colunas = insereValor(colunas, "CodInst", "111");
-    finalizaInsert("Curso", colunas);
-    
-    colunas = NULL;
-    colunas = insereValor(colunas, "CodCurso", "002");
-    colunas = insereValor(colunas, "Nome", "CC");
-    colunas = insereValor(colunas, "CodInst", "111");
-    finalizaInsert("Curso", colunas);
-    
-    
-    //Inserção de tupla na tabela4
     colunas = NULL;
     colunas = insereValor(colunas, "CodMat", "1401");
     colunas = insereValor(colunas, "CPF", "123456");
     colunas = insereValor(colunas, "CodInst", "333");
-    colunas = insereValor(colunas, "codCurso", "002");
+    colunas = insereValor(colunas, "Curso", "CC");
     finalizaInsert("Inscri", colunas);
     
     colunas = NULL;
     colunas = insereValor(colunas, "CodMat", "1402");
     colunas = insereValor(colunas, "CPF", "654321");
     colunas = insereValor(colunas, "CodInst", "222");
-    colunas = insereValor(colunas, "codCurso", "002");
+    colunas = insereValor(colunas, "Curso", "CC");
     finalizaInsert("Inscri", colunas);
     
     colunas = NULL;
     colunas = insereValor(colunas, "CodMat", "1403");
     colunas = insereValor(colunas, "CPF", "1234567");
     colunas = insereValor(colunas, "CodInst", "111");
-    colunas = insereValor(colunas, "codCurso", "001");
+    colunas = insereValor(colunas, "Curso", "ADM");
     finalizaInsert("Inscri", colunas);
     
     imprime("Aluno");
     imprime("Inst");
     excluirTabela("Inst");
     imprime("Inscri");
-    imprime("Curso");
     excluirTabela("Inscri");
     excluirTabela("Aluno");
     
