@@ -3,7 +3,7 @@
 #include "buffend.h"
 
 int main(){
-    int nrTabelas = 3;
+    int nrTabelas = 4;
     int nTabela[nrTabelas];
     table  *tab[nrTabelas]; 
     column *colunas;
@@ -14,6 +14,7 @@ int main(){
     nTabela[0]  = existeArquivo("Aluno.dat");
     nTabela[1]  = existeArquivo("Inst.dat");
     nTabela[2]  = existeArquivo("Insc.dat");
+    nTabela[3]  = existeArquivo("Jose.dat");
      if(!object || !schema){
     
         if(!nTabela[0]){                                                            //Se ainda não existe a tabela1, a mesma é criada
@@ -37,8 +38,15 @@ int main(){
             tab[2] = adicionaCampo(tab[2], "ID"         , 'I', (sizeof(int))  ,PK, "","");
             tab[2] = adicionaCampo(tab[2], "CPF"        , 'I', (sizeof(int))  ,FK, "Aluno","CPF");
             tab[2] = adicionaCampo(tab[2], "CodInst"    , 'I', (sizeof(int))  ,FK , "Inst","CodInst");
-            tab[2] = adicionaCampo(tab[2], "Matricula"  , 'I', (sizeof(int))  ,NPK, "","");
+            //tab[2] = adicionaCampo(tab[2], "Matricula"  , 'I', (sizeof(int))  ,NPK, "","");
             finalizaTabela(tab[2]);
+        }
+        if(!nTabela[3]){    //Se ainda não existe a tabela3, a mesma é criada
+            tab[3] = iniciaTabela("Jose"); 
+            tab[3] = adicionaCampo(tab[3], "IDS"         , 'I', (sizeof(int))  ,NPK, "","");
+            tab[3] = adicionaCampo(tab[3], "CPFS"        , 'I', (sizeof(int))  ,NPK, "","");
+            //tab[2] = adicionaCampo(tab[2], "Matricula"  , 'I', (sizeof(int))  ,NPK, "","");
+            finalizaTabela(tab[3]);
         }
     }
     
@@ -93,30 +101,36 @@ int main(){
     colunas = insereValor(colunas, "ID", "1");
     colunas = insereValor(colunas, "CPF", "123456");
     colunas = insereValor(colunas, "CodInst", "333");
-    colunas = insereValor(colunas, "Matricula", "12232");
+    //colunas = insereValor(colunas, "Matricula", "12232");
     finalizaInsert("Insc", colunas);
     
     colunas = NULL;
     colunas = insereValor(colunas, "ID", "2");
     colunas = insereValor(colunas, "CPF", "654321");
     colunas = insereValor(colunas, "CodInst", "222");
-    colunas = insereValor(colunas, "Matricula", "12223");
+    //colunas = insereValor(colunas, "Matricula", "12223");
     finalizaInsert("Insc", colunas);
     
     colunas = NULL;
     colunas = insereValor(colunas, "ID", "3");
     colunas = insereValor(colunas, "CPF", "1234567");
     colunas = insereValor(colunas, "CodInst", "111");
-    colunas = insereValor(colunas, "Matricula", "1311");
+    //colunas = insereValor(colunas, "Matricula", "1311");
     finalizaInsert("Insc", colunas);
  
-    
+    colunas = NULL;
+    colunas = insereValor(colunas, "IDS", "3");
+    colunas = insereValor(colunas, "CPFS", "1234567");
+    //colunas = insereValor(colunas, "Matricula", "1311");
+    finalizaInsert("Jose", colunas);
+
     imprime("Aluno");
     imprime("Inst");
-    //excluirTabela("Inst");
+    excluirTabela("Inst");
     imprime("Insc");
-    //excluirTabela("Insc");
-
+    imprime("Jose");
+    excluirTabela("Insc");
+    excluirTabela("Aluno");
     
     return 0;
 }
