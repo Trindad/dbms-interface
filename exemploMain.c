@@ -34,10 +34,10 @@ int main(){
         }
         if(!nTabela[2]){    //Se ainda não existe a tabela3, a mesma é criada
             tab[2] = iniciaTabela("Insc"); 
-            tab[2] = adicionaCampo(tab[2], "ID"      , 'I', (sizeof(int))   ,PK, "","");
-            tab[2] = adicionaCampo(tab[2], "CPF"      , 'I', (sizeof(int))  ,FK, "Aluno","CPF");
-            tab[2] = adicionaCampo(tab[2], "Matricula", 'I', (sizeof(int))  ,FK , "Inst","CodInst");
-            tab[2] = adicionaCampo(tab[2], "CodInst"  , 'I', (sizeof(int))  ,NPK, " ","");
+            tab[2] = adicionaCampo(tab[2], "ID"         , 'I', (sizeof(int))  ,PK, "","");
+            tab[2] = adicionaCampo(tab[2], "CPF"        , 'I', (sizeof(int))  ,FK, "Aluno","CPF");
+            tab[2] = adicionaCampo(tab[2], "CodInst"    , 'I', (sizeof(int))  ,FK , "Inst","CodInst");
+            tab[2] = adicionaCampo(tab[2], "Matricula"  , 'I', (sizeof(int))  ,NPK, "","");
             finalizaTabela(tab[2]);
         }
     }
@@ -92,30 +92,30 @@ int main(){
     colunas = NULL;
     colunas = insereValor(colunas, "ID", "1");
     colunas = insereValor(colunas, "CPF", "123456");
-    colunas = insereValor(colunas, "Matricula", "1221");
-    colunas = insereValor(colunas, "CodInst", "111");
+    colunas = insereValor(colunas, "CodInst", "333");
+    colunas = insereValor(colunas, "Matricula", "12232");
     finalizaInsert("Insc", colunas);
     
     colunas = NULL;
     colunas = insereValor(colunas, "ID", "2");
     colunas = insereValor(colunas, "CPF", "654321");
-    colunas = insereValor(colunas, "Matricula", "1222");
     colunas = insereValor(colunas, "CodInst", "222");
+    colunas = insereValor(colunas, "Matricula", "12223");
     finalizaInsert("Insc", colunas);
     
     colunas = NULL;
     colunas = insereValor(colunas, "ID", "3");
     colunas = insereValor(colunas, "CPF", "1234567");
-    colunas = insereValor(colunas, "Matricula", "1223");
     colunas = insereValor(colunas, "CodInst", "111");
+    colunas = insereValor(colunas, "Matricula", "1311");
     finalizaInsert("Insc", colunas);
  
     
     imprime("Aluno");
     imprime("Inst");
-    excluirArquivo("Inst");
+    //excluirTabela("Inst");
     imprime("Insc");
-    excluirArquivo("Insc");
+    //excluirTabela("Insc");
 
     
     return 0;

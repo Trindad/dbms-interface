@@ -511,8 +511,8 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo){
     return ERRO_INSERIR_VALOR;
 }
 int finalizaInsert(char *nome, column *c){
-    column *auxC;
-    int i = 0, x = 0, t, erro, j = 0;
+    column *auxC, *xxx;
+    int i = 0, x = 0, t, erro, j = 0, y = 0;
     FILE *dados;
 
     struct fs_objects objeto,dicio; // Le dicionario
@@ -522,27 +522,39 @@ int finalizaInsert(char *nome, column *c){
     table *tab     = (table *)malloc(sizeof(table));
     tp_table *tab2 = (tp_table *)malloc(sizeof(struct tp_table)); 
 
-    switch(auxT->chave){
-        case NPK:
-            erro = SUCCESS;
-            break;
+    tab->esquema = abreTabela(nome, &objeto, &tab->esquema);
+    tab2 = procuraAtributoFK(objeto);
+    
+    for(j = 0, xxx = c; j < objeto.qtdCampos && xxx != NULL; j++, xxx = xxx->next){
+        switch(tab2[j].chave){
+            case NPK:
+                erro = SUCCESS;
+                break;
 
-        case PK:
-            erro = verificaChavePK(nome, c , c->nomeCampo, c->valorCampo);
-            break;
-
-        case FK:
-            tab->esquema = abreTabela(nome, &objeto, &tab->esquema);
-            tab2 = procuraAtributoFK(objeto);
-            for(j = 0; j < objeto.qtdCampos && c != NULL; j++){   
-                erro = verificaChaveFK(nome, c, tab2[j].nome, c->valorCampo, tab2[j].tabelaApt, tab2[j].attApt);
-                if(erro==SUCCESS){
-                   c = c->next;
+            case PK:
+                erro = verificaChavePK(nome, xxx , xxx->nomeCampo, xxx->valorCampo);
+                if(erro == ERRO_CHAVE_PRIMARIA){
+                    printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
+                    exit(1);
                 }
-            }
 
-            break;
+                break;
+
+            case FK:
+                if(tab2[j].chave == 2 && strlen(tab2[j].attApt) != 0 && strlen(tab2[j].tabelaApt) != 0){
+
+                    erro = verificaChaveFK(nome, xxx, tab2[j].nome, xxx->valorCampo, tab2[j].tabelaApt, tab2[j].attApt);
+
+                    if(erro != SUCCESS){
+                        printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
+                        exit(1);
+                    }
+                }
+
+                break;
+        }
     }
+    
     
     if(erro == ERRO_CHAVE_ESTRANGEIRA){
         printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
@@ -818,14 +830,15 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
                 fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);           
                 strcpy(esquema[i].attApt,tupla);
                 
-                if(chave == 2 && strlen(esquema[i].attApt) != 0 && strlen(esquema[i].tabelaApt) != 0){
+                //if(chave == 2 && strlen(esquema[i].attApt) != 0 && strlen(esquema[i].tabelaApt) != 0){
                     strcpy(vetEsqm[i].tabelaApt, esquema[i].tabelaApt);
                     strcpy(vetEsqm[i].attApt, esquema[i].attApt);
                     strcpy(vetEsqm[i].nome, esquema[i].nome);
-                    
+                    vetEsqm[i].chave = chave;
+
                     i++;
                     //return esquema;
-                }
+                //}
             } else {
                 fseek(schema, 109, 1);
             }
@@ -880,7 +893,7 @@ int procuraObjectArquivo(char *nomeTabela){
     return 0;
 }
 
-int procuraSchemaArquivo(struct fs_objects objeto, int qtd){
+int procuraSchemaArquivo(struct fs_objects objeto){
 
     FILE *schema, *newSchema;
     int cod = 0;
@@ -941,7 +954,7 @@ int procuraSchemaArquivo(struct fs_objects objeto, int qtd){
 /***********************************************************************************|
 |* FUNÇÃO: Exclui a tabela com 'nome'                                              */   
 
-int excluirArquivo(char *nomeTabela){
+int excluirTabela(char *nomeTabela){
     struct fs_objects objeto;
     tp_table *esquema;
     int x,erro;
@@ -963,7 +976,7 @@ int excluirArquivo(char *nomeTabela){
     for(x = 0; erro == SUCCESS; x++)
         erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);        
     
-    if(procuraSchemaArquivo(objeto, objeto.qtdCampos) != 0)
+    if(procuraSchemaArquivo(objeto) != 0)
         return ERRO_REMOVER_ARQUIVO_SCHEMA;
 
     if(procuraObjectArquivo(nomeTabela) != 0)
@@ -1044,8 +1057,8 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
     strcat (str, dat);              //Concatena e junta o nome com .dat
     
     erro = existeAtributo(nomeTabela, c);
-    if(erro != SUCCESS )
-        return ERRO_DE_PARAMETRO;
+    /*if(erro != SUCCESS )
+        return ERRO_DE_PARAMETRO;*/
         
     //if(existeAtributo(tabelaApt, c))
         //return ERRO_CHAVE_ESTRANGEIRA;
@@ -1060,8 +1073,11 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
 
     column *pagina = getPage(bufferpoll, tabela, objeto, 0);
 
+    //printf("asf: %d\n", bufferpoll[0].nrec);
+
     for(j = 0; j < objeto.qtdCampos * bufferpoll[0].nrec; j++){     
-         
+        
+       // printf("VALORC: %s\n VC: %s\n", pagina[j].valorCampo, valorCampo); 
 
         if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
             

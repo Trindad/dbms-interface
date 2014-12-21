@@ -213,13 +213,13 @@ int excluirArquivo(char *nomeTabela);
 int TrocaArquivosObj(char *nomeTabela, char *linha);
 
 //TrocaArquivosSch:
-char * TrocaArquivosSch(char *linha);
+char *TrocaArquivosSch(char *linha);
 
 //procuraObjectArquivo:
 int procuraObjectArquivo(char *nomeTabela);
 
 //procuraSchemaArquivo:
-int procuraSchemaArquivo(struct fs_objects objeto, int qtd);
+int procuraSchemaArquivo(struct fs_objects objeto);
 
 // Essa função verifica as condições para a chave estrangeira(FK). E retorna erros caso ocorra.
 int verificaChaveFK(char *nomeTabela, column *c, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt);
