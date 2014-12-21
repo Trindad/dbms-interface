@@ -113,12 +113,12 @@ int main(){
     colunas = insereValor(colunas, "Curso", "ADM");
     finalizaInsert("Inscri", colunas);
     
-    imprime("Aluno");
+    imprime("Aluno");        //Imprime os atributos da tabela "Aluno"
     imprime("Inst");
-    excluirTabela("Inst");
+    excluirTabela("Inst");   //Exclui os dados da tabela do dicionario e remove-a do disco
     imprime("Inscri");
     excluirTabela("Inscri");
-    excluirTabela("Aluno");
+    
     
     return 0;
 }
