@@ -18,12 +18,12 @@ struct fs_objects { // Estrutura usada para carregar fs_objects.dat
 };
 
 typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
-	char nome[TAMANHO_NOME_CAMPO];	// Nome do Campo.
-	char tipo;						// Tipo do Campo.
-	int tam;						// Tamanho do Campo.
-	int chave;						// Tipo da chave
-	char tabelaApt[TAMANHO_NOME_TABELA]; //Nome da Tabela Apontada
-	char attApt[TAMANHO_NOME_CAMPO];	//Nome do Atributo Apontado
+	char nome[TAMANHO_NOME_CAMPO];	// Nome do Campo.                    40bytes   
+	char tipo;						// Tipo do Campo.                     1bytes
+	int tam;						// Tamanho do Campo.                  4bytes
+	int chave;						// Tipo da chave                      4bytes
+	char tabelaApt[TAMANHO_NOME_TABELA]; //Nome da Tabela Apontada        20bytes 
+	char attApt[TAMANHO_NOME_CAMPO];	//Nome do Atributo Apontado       40bytes
 	struct tp_table *next;			// Encadeamento para o próximo campo.
 }tp_table;
 
@@ -82,6 +82,8 @@ struct fs_objects leObjeto(char *nTabela);
 */
 tp_table *leSchema (struct fs_objects objeto);
 
+tp_table *procuraAtributoFK(struct fs_objects objeto);
+
 /*
 	Esta função calcula, usando o esquema e o dicionário de dados, o tamanho da tupla de uma tabela, retornando o mesmo.
 	*esquema - Estrutura que contém o esquema da tabela (nome de campo, tipo de campo, etc)
@@ -118,6 +120,8 @@ int quantidadeTabelas();
 	*nomeTabela - Nome de uma tabela,  a qual deseja-se saber se existe no dicionario.
 */
 int verificaNomeTabela(char *nomeTabela);
+
+int iniciaAtributos(struct fs_objects *objeto, tp_table **tabela, tp_buffer **bufferpoll, char *nomeT);
 /*
 	Esta função inicia um estrutura do tipo table, como nome de tabela passado. 
 	Retorna:
@@ -196,8 +200,7 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
 //imprime: Utilizada na impressão das tabelas, conforme o nomeTabela 
 void imprime(char nomeTabela[] );
 
-/* Função que verifica a existência de um arquivo.dat. Se existir retorna 1, caso contrário retorna 0
-   Esta função é utilizada antes da criação de cada tabela. Caso ela já exista, não é recriada*/
+//existeArquivo:
 int existeArquivo(const char* filename);
 
 //existeAtributo: Verifica a existência do atributo antes de adicionar na tabela 
