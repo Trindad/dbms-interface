@@ -260,7 +260,7 @@ Estes podem ser tratados na main.
 É possível adicionar apenas UM atributo como chave PK, ou seja, não é tratada a forma de chave composta.
 
 
-Foi alterado a struct tp_table para podermos trabalhar com as chaves.
+Foi alterado a struct tp_table para podermos trabalhar com as chaves:
 
 typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
 	char nome[TAMANHO_NOME_CAMPO];		// Nome do Campo.
@@ -291,6 +291,8 @@ de criar a main(). Nessa exemplo de main() é necessário se atentar ao seguinte
     nTabela[2]  = existeArquivo("tabela3.dat");
 
 - ao final, foi chamado a função imprime("tabela1") que realiza a impressão das tabelas.
+
+Também pode ser utilizado a função excluirArquivo. A mesma apaga a fisicamente tabela e os registros do dicionário de dados
 
 
 

@@ -14,13 +14,12 @@ int main(){
     nTabela[0]  = existeArquivo("Aluno.dat");
     nTabela[1]  = existeArquivo("Inst.dat");
     nTabela[2]  = existeArquivo("Insc.dat");
-//    nTabela[3]  = existeArquivo("tabela4.dat");
      if(!object || !schema){
     
-		if(!nTabela[0]){ 															//Se ainda não existe a tabela1, a mesma é criada
-			tab[0] = iniciaTabela("Aluno");  										//Cria a tabela 
-			tab[0] = adicionaCampo(tab[0], "CPF" 	 , 'I', (sizeof(int))	,PK,"","");
-			tab[0] = adicionaCampo(tab[0], "Nome" 	 , 'S', 20				,NPK,"","");		//Cria os atributos
+		if(!nTabela[0]){ 																	//Se ainda não existe a tabela1, a mesma é criada
+			tab[0] = iniciaTabela("Aluno");  												//Cria a tabela 
+			tab[0] = adicionaCampo(tab[0], "CPF" 	 , 'I', (sizeof(int))	,PK,"","");		//Cria os atributos
+			tab[0] = adicionaCampo(tab[0], "Nome" 	 , 'S', 20				,NPK,"","");	
 			tab[0] = adicionaCampo(tab[0], "Endereco", 'S', 20				,NPK,"","");
 			tab[0] = adicionaCampo(tab[0], "Peso" 	 , 'D', (sizeof(double)),NPK,"","");
 			finalizaTabela(tab[0]);
@@ -40,13 +39,7 @@ int main(){
 			tab[2] = adicionaCampo(tab[2], "CodInst"  , 'I', (sizeof(int))	,NPK, " ","");
 			finalizaTabela(tab[2]);
 		}
-	/*	if(!nTabela[3]){	//Se ainda não existe a tabela3, a mesma é criada
-			tab[3] = iniciaTabela("tabela4"); 
-			tab[3] = adicionaCampo(tab[3], "atrib41" , 'I', (sizeof(int))	,PK, "","");
-			tab[3] = adicionaCampo(tab[3], "atrib42" , 'D', (sizeof(double)),NPK, " "," ");
-			finalizaTabela(tab[3]);
-		}
-	*/}
+}
 	
 	 
 	 //Inserção de tuplas na tabela1   
@@ -112,32 +105,12 @@ int main(){
 	colunas = insereValor(colunas, "Matricula", "1223");
 	colunas = insereValor(colunas, "CodInst", "111");
 	erro = finalizaInsert("Insc", colunas);
-
-	
-/*	//Inserção de tupla na tabela4
-	colunas = NULL;
-	colunas = insereValor(colunas, "atrib41", "100");
-	colunas = insereValor(colunas, "atrib42", "1.1");
-	erro = finalizaInsert("tabela4", colunas);
-	
-	
-	if(erro == ERRO_CHAVE_PRIMARIA) {
-		printf("ERRO DE CHAVE PRIMARIA !!! \n");
-		return erro;
-	}
-	if(erro == ERRO_CHAVE_ESTRANGEIRA) {
-		printf("ERRO DE CHAVE ESTRANGEIRA !!! \n");
-		return erro;
-	}
-*/		
 	
 	imprime("Aluno");
 	imprime("Inst");
 	excluirArquivo("Inst");
 	imprime("Insc");
 	excluirArquivo("Insc");
-//	imprime("tabela4");
-
     
     return 0;
 }
