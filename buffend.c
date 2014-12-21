@@ -524,15 +524,15 @@ int finalizaInsert(char *nome, column *c){
 	table *tab = (table *)malloc(sizeof(table));
 	
 	switch(auxT->chave){
-        case NPK:
+        case NPK:				//não é chave (nem PK nem FK)
             erro = SUCCESS;
             break;
 
-        case PK:
+        case PK:		//se for PK, verifica se tem problema de chave primária
             erro = verificaChavePK(nome, c , c->nomeCampo, c->valorCampo);
             break;
 
-        case FK:
+        case FK:		//se for FK, verifica se tem problema de chave estrangeira
 			tab->esquema = abreTabela(nome, &objeto, &tab->esquema);
 			for(;tab->esquema != NULL; tab->esquema=tab->esquema->next){
 				printf("Nome: %s \n",tab->esquema->tabelaApt);
@@ -542,7 +542,7 @@ int finalizaInsert(char *nome, column *c){
             break;
     }
 	
-	if(erro == ERRO_CHAVE_ESTRANGEIRA){
+	if(erro == ERRO_CHAVE_ESTRANGEIRA){ 
 		printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
 		exit(1);
 	}
@@ -758,7 +758,8 @@ void imprime(char nomeTabela[]) {
         
 /***********************************************************************************|
 |* FUNÇÃO: Verifica a existência do arquivo da tabela 'filename'.                  */   
-    
+/* Função que verifica a existência de um arquivo.dat. Se existir retorna 1, caso contrário retorna 0
+   Esta função é utilizada antes da criação de cada tabela. Caso ela já exista, não é recriada*/
 int existeArquivo(const char* filename){
     FILE* fptr = fopen(filename, "r");
     if (fptr != NULL){

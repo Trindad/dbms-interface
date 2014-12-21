@@ -196,7 +196,8 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
 //imprime: Utilizada na impressão das tabelas, conforme o nomeTabela 
 void imprime(char nomeTabela[] );
 
-//existeArquivo:
+/* Função que verifica a existência de um arquivo.dat. Se existir retorna 1, caso contrário retorna 0
+   Esta função é utilizada antes da criação de cada tabela. Caso ela já exista, não é recriada*/
 int existeArquivo(const char* filename);
 
 //existeAtributo: Verifica a existência do atributo antes de adicionar na tabela 
