@@ -40,6 +40,8 @@ struct fs_objects leObjeto(char *nTabela){
         }
         fseek(dicionario, 28, 1); // Pula a quantidade de caracteres para a proxima verificacao(4B do codigo, 20B do nome do arquivo e 4B da quantidade de campos).
     }
+    free(tupla);
+
     return objeto;
 }
 tp_table *leSchema (struct fs_objects objeto){
@@ -81,6 +83,9 @@ tp_table *leSchema (struct fs_objects objeto){
         }
         
     }
+    free(tupla);
+    free(tuplaT);
+
     return esquema;
 }
 //--------------------------------------------------
@@ -97,6 +102,7 @@ tp_buffer * initbuffer(){
         bp->nrec=0;
         bp++;
     }
+
     return bp;
 }
 //--------------------------------------------------
@@ -297,6 +303,8 @@ int verificaNomeTabela(char *nomeTabela)
     }
 
     fclose(dicionario);
+    free(tupla);
+
     return 0;
 }
 int quantidadeTabelas(){
@@ -511,8 +519,8 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo){
     return ERRO_INSERIR_VALOR;
 }
 int finalizaInsert(char *nome, column *c){
-    column *auxC, *xxx;
-    int i = 0, x = 0, t, erro, j = 0, y = 0;
+    column *auxC, *temp;
+    int i = 0, x = 0, t, erro, j = 0;
     FILE *dados;
 
     struct fs_objects objeto,dicio; // Le dicionario
@@ -525,14 +533,14 @@ int finalizaInsert(char *nome, column *c){
     tab->esquema = abreTabela(nome, &objeto, &tab->esquema);
     tab2 = procuraAtributoFK(objeto);
     
-    for(j = 0, xxx = c; j < objeto.qtdCampos && xxx != NULL; j++, xxx = xxx->next){
+    for(j = 0, temp = c; j < objeto.qtdCampos && temp != NULL; j++, temp = temp->next){
         switch(tab2[j].chave){
             case NPK:
                 erro = SUCCESS;
                 break;
 
             case PK:
-                erro = verificaChavePK(nome, xxx , xxx->nomeCampo, xxx->valorCampo);
+                erro = verificaChavePK(nome, temp , temp->nomeCampo, temp->valorCampo);
                 if(erro == ERRO_CHAVE_PRIMARIA){
                     printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
                     exit(1);
@@ -543,7 +551,7 @@ int finalizaInsert(char *nome, column *c){
             case FK:
                 if(tab2[j].chave == 2 && strlen(tab2[j].attApt) != 0 && strlen(tab2[j].tabelaApt) != 0){
 
-                    erro = verificaChaveFK(nome, xxx, tab2[j].nome, xxx->valorCampo, tab2[j].tabelaApt, tab2[j].attApt);
+                    erro = verificaChaveFK(nome, temp, tab2[j].nome, temp->valorCampo, tab2[j].tabelaApt, tab2[j].attApt);
 
                     if(erro != SUCCESS){
                         printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
@@ -629,8 +637,9 @@ int finalizaInsert(char *nome, column *c){
     
     
     fclose(dados);
-    free(c); // Libera a memoria da estrutura.
+    free(c);    // Libera a memoria da estrutura.
     free(auxT); // Libera a memoria da estrutura.
+    free(temp); // Libera a memoria da estrutura.
     return SUCCESS;
 }
 //----------------------------------------
@@ -708,11 +717,11 @@ column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, 
 }
 //----------------------------------------
 
-
-
-
-/***********************************************************************************|
-|* FUNÇÃO: Utilizada na impressão das tabelas, conforme nomeTabela                 */   
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Utilizada para impressão de tabelas.
+    Parametros: Nome da tabela (char).    
+    Retorno:    void.
+   ---------------------------------------------------------------------------------------------*/
     
 void imprime(char nomeTabela[]) {
 
@@ -769,9 +778,11 @@ void imprime(char nomeTabela[]) {
     printf("\n\n");
 }
 
-        
-/***********************************************************************************|
-|* FUNÇÃO: Verifica a existência do arquivo da tabela 'filename'.                  */   
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Verificação de existência de um arquivo.
+    Parametros: Nome do arquivo.    
+    Retorno:    INT 1 (existe) , 0 (não existe).
+   ---------------------------------------------------------------------------------------------*/
     
 int existeArquivo(const char* filename){
     FILE* fptr = fopen(filename, "r");
@@ -783,6 +794,12 @@ int existeArquivo(const char* filename){
 
     return 0;
 }
+
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Verifica se o nome da tabela 'nomeTabela' está nos primeiros bytes de 'linha'
+    Parametros: Nome da tabela, char linha.    
+    Retorno:    INT(1 - Está contido, 0 - Não está)                
+   ---------------------------------------------------------------------------------------------*/
 
 int TrocaArquivosObj(char *nomeTabela, char *linha){
     int x = 0;
@@ -797,8 +814,15 @@ int TrocaArquivosObj(char *nomeTabela, char *linha){
         return 1;
     }
 
+    free(tabela);
     return 0;
 }
+
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Retorna vetor de esquemas com todos os atributos chaves (PK, FK e NPK)
+    Parametros: Objeto da tabela.
+    Retorno:    Vetor de esquemas vetEsqm
+   ---------------------------------------------------------------------------------------------*/
 
 tp_table *procuraAtributoFK(struct fs_objects objeto){
     FILE *schema;
@@ -830,15 +854,12 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
                 fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);           
                 strcpy(esquema[i].attApt,tupla);
                 
-                //if(chave == 2 && strlen(esquema[i].attApt) != 0 && strlen(esquema[i].tabelaApt) != 0){
-                    strcpy(vetEsqm[i].tabelaApt, esquema[i].tabelaApt);
-                    strcpy(vetEsqm[i].attApt, esquema[i].attApt);
-                    strcpy(vetEsqm[i].nome, esquema[i].nome);
-                    vetEsqm[i].chave = chave;
+                strcpy(vetEsqm[i].tabelaApt, esquema[i].tabelaApt);
+                strcpy(vetEsqm[i].attApt, esquema[i].attApt);
+                strcpy(vetEsqm[i].nome, esquema[i].nome);
+                vetEsqm[i].chave = chave;
 
-                    i++;
-                    //return esquema;
-                //}
+                i++;
             } else {
                 fseek(schema, 109, 1);
             }
@@ -848,8 +869,13 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
     return vetEsqm;
 }
 
-/***********************************************************************************|
-|* FUNÇÃO: Organiza o arquivo para remover espaços vazios                          */   
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Copia todas as informações menos a tabela com nome NomeTabela, que será removida.
+    Parametros: Nome da tabela que será removida do object.dat.
+    Retorno:    INT
+                SUCCESS,
+                ERRO_ABRIR_ARQUIVO
+   ---------------------------------------------------------------------------------------------*/
 
 int procuraObjectArquivo(char *nomeTabela){
     int teste        = 0, 
@@ -890,8 +916,16 @@ int procuraObjectArquivo(char *nomeTabela){
     remove("fs_object.dat");
     system("mv fs_nobject.dat fs_object.dat");
         
-    return 0;
+    return SUCCESS;
 }
+
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Copia todas as informações menos a tabela do objeto, que será removida.
+    Parametros: Objeto que será removido do schema.
+    Retorno:    INT
+                SUCCESS,
+                ERRO_REMOVER_ARQUIVO_SCHEMA
+   ---------------------------------------------------------------------------------------------*/
 
 int procuraSchemaArquivo(struct fs_objects objeto){
 
@@ -948,11 +982,18 @@ int procuraSchemaArquivo(struct fs_objects objeto){
     remove("fs_schema.dat");
     system("mv fs_nschema.dat fs_schema.dat");
    
-    return 0;
+    return SUCCESS;
 }
 
-/***********************************************************************************|
-|* FUNÇÃO: Exclui a tabela com 'nome'                                              */   
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Função para exclusão de tabelas.
+    Parametros: Nome da tabela (char).    
+    Retorno:    INT
+                SUCCESS, 
+                ERRO_REMOVER_ARQUIVO_OBJECT, 
+                ERRO_REMOVER_ARQUIVO_SCHEMA, 
+                ERRO_LEITURA_DADOS.
+   ---------------------------------------------------------------------------------------------*/
 
 int excluirTabela(char *nomeTabela){
     struct fs_objects objeto;
@@ -987,8 +1028,13 @@ int excluirTabela(char *nomeTabela){
     return SUCCESS;
 }
 
-/***********************************************************************************|
-|* FUNÇÃO: Inicia os atributos utilizados pela FK e PK. Além de erros.             */   
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Inicializa os atributos necessários para a verificação de FK e PK.
+    Parametros: Objeto da tabela, Tabela, Buffer e nome da tabela.
+    Retorno:    INT
+                SUCCESS,
+                ERRO_DE_PARAMETRO,
+   ---------------------------------------------------------------------------------------------*/
 
 int iniciaAtributos(struct fs_objects *objeto, tp_table **tabela, tp_buffer **bufferpoll, char *nomeT){
     
@@ -1005,6 +1051,14 @@ int iniciaAtributos(struct fs_objects *objeto, tp_table **tabela, tp_buffer **bu
 
     return SUCCESS;
 }
+
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Verifica a existência do atributo antes de adicionar na tabela
+    Parametros: Nome da tabela, coluna C.    
+    Retorno:    INT 
+                SUCCESS,
+                ERRO_DE_PARAMETRO
+   ---------------------------------------------------------------------------------------------*/
 
 int existeAtributo(char *nomeTabela, column *c){
     int erro, x;
@@ -1042,8 +1096,14 @@ int existeAtributo(char *nomeTabela, column *c){
     return SUCCESS; 
 }
 
-/***********************************************************************************|
-|* FUNÇÃO: Verifica as condições para chave estrangeira (FK)                       */   
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Gera as verificações em relação a chave FK.
+    Parametros: Nome da Tabela, Coluna C, Nome do Campo, Valor do Campo, Tabela Apontada e Atributo Apontado.
+    Retorno:    INT
+                SUCCESS,
+                ERRO_DE_PARAMETRO,
+                ERRO_CHAVE_ESTRANGEIRA
+   ---------------------------------------------------------------------------------------------*/
 
 int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt){
     int x,j, erro;
@@ -1115,8 +1175,14 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
     return ERRO_CHAVE_ESTRANGEIRA;
 }
 
-/***********************************************************************************|
-|* FUNÇÃO: Verifica as condições para chave primária (PK)                          */   
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Gera as verificações em relação a chave PK.
+    Parametros: Nome da Tabela, Coluna C, Nome do Campo, Valor do Campo
+    Retorno:    INT
+                SUCCESS,
+                ERRO_DE_PARAMETRO,
+                ERRO_CHAVE_PRIMARIA
+   ---------------------------------------------------------------------------------------------*/
 
 int verificaChavePK(char *nomeTabela, column *c, char *nomeCampo, char *valorCampo){
     int j, x, erro;
@@ -1176,8 +1242,11 @@ int verificaChavePK(char *nomeTabela, column *c, char *nomeCampo, char *valorCam
     return SUCCESS;
 }
 
-/***********************************************************************************|
-|* FUNÇÃO: recebe o nome de uma tabela e engloba as funções leObjeto() e leSchema() */   
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   Recebe o nome de uma tabela e engloba as funções leObjeto() e leSchema().
+    Parametros: Nome da Tabela, Objeto da Tabela e tabela.
+    Retorno:    tp_table
+   ---------------------------------------------------------------------------------------------*/
 
 tp_table *abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tabela){
     *objeto     = leObjeto(nomeTabela);
