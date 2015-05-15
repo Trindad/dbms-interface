@@ -488,6 +488,8 @@ int finalizaTabela(table *t){
     fclose(dicionario);
     return SUCCESS;
 }
+
+
 //-----------------------------------------
 // INSERE NA TABELA
 column *insereValor(column *c, char *nomeCampo, char *valorCampo){
@@ -495,21 +497,72 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo){
     column *aux;
     if(c == NULL){ // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
     
-        column *e = (column *)malloc(sizeof(column)*1);
-        e->valorCampo = (char *)malloc(sizeof(char) * (sizeof(valorCampo)));
-        strcpy(e->nomeCampo, nomeCampo); 
-        strcpy(e->valorCampo, valorCampo);
+        column *e = (column *)malloc(sizeof(column));
+
+        if (e == NULL)
+        {
+            return ERRO_DE_ALOCACAO;
+        }
+
+        e->valorCampo = (char *)malloc(sizeof(char) * (strlen(valorCampo)+1));
+        
+        if (e->valorCampo == NULL)
+        {
+            return ERRO_DE_ALOCACAO;
+        }
+
+        int n = strlen(nomeCampo)+1;
+
+        /**
+         * Verifica se o nome ultrapassa o limite, se sim trunca 
+         */
+        if (n > TAMANHO_NOME_CAMPO)
+        {
+           n = TAMANHO_NOME_CAMPO;
+        }
+
+        strncpy(e->nomeCampo, nomeCampo,n); 
+
+        n = strlen(valorCampo)+1;
+        strncpy(e->valorCampo, valorCampo,n);
+
         e->next = NULL;
         c = e;
         return c;
     } else {
         for(aux = c; aux != NULL; aux = aux->next) { // Anda até o final da lista de valores a serem inseridos e adiciona um novo valor.
             if(aux->next == NULL){
-                column *e = (column *)malloc(sizeof(column)*1);
-                e->valorCampo = (char *)malloc(sizeof(char) * (sizeof(valorCampo)));
+
+                column *e = (column *)malloc(sizeof(column));
+
+                if (e == NULL)
+                {
+                    return ERRO_DE_ALOCACAO;
+                }
+
+                e->valorCampo = (char *) malloc (sizeof(char) * (strlen(valorCampo)+1));
+
+                if (e->valorCampo == NULL)
+                {
+                    return ERRO_DE_ALOCACAO;
+                }
+
                 e->next = NULL;
-                strcpy(e->nomeCampo, nomeCampo);
-                strcpy(e->valorCampo, valorCampo);
+
+                 int n = strlen(nomeCampo)+1;
+
+                /**
+                 * Verifica se o nome do campo ultrapassa o limite, se sim trunca 
+                 */
+                if (n > TAMANHO_NOME_CAMPO)
+                {
+                   n = TAMANHO_NOME_CAMPO;
+                }
+
+                strncpy(e->nomeCampo, nomeCampo,n);
+                
+                n = strlen(valorCampo)+1;
+                strncpy(e->valorCampo, valorCampo,n);
                 aux->next = e;
                 return c;
             }
