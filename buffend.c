@@ -1139,7 +1139,7 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
         
        // printf("VALORC: %s\n VC: %s\n", pagina[j].valorCampo, valorCampo); 
 
-        if(strcmp(pagina[j].nomeCampo, nomeCampo) == 0){
+        if(strcmp(pagina[j].nomeCampo, attApt) == 0){
             
             if(pagina[j].tipoCampo == 'S'){     
                 if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
