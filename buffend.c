@@ -52,7 +52,7 @@ tp_table *leSchema (struct fs_objects objeto){
     FILE *schema;
     int i = 0, cod = 0;
     char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_CAMPO);
-    char *tuplaT = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+    char *tuplaT = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA+1);
     tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos); // Aloca esquema com a quantidade de campos necessarios.
 
     if(esquema == NULL){
@@ -522,10 +522,51 @@ int finalizaTabela(table *t){
     return SUCCESS;
 }
 
+int retornaTamanhoValorCampo(char *nomeCampo, table  *tab) {
+    
+    int tam = 0;
+
+    tp_table *temp = tab->esquema;
+
+    while(temp != NULL) {
+
+       if (strcmp(nomeCampo,temp->nome) == 0)
+       {
+            tam = temp->tam;
+
+            return tam;
+       }
+
+       temp = temp->next;
+    }
+
+    return tam;
+}
+
+char retornaTamanhoTipoDoCampo(char *nomeCampo, table  *tab) {
+    
+    char tipo = 0;
+
+    tp_table *temp = tab->esquema;
+
+    while(temp != NULL) {
+
+       if (strcmp(nomeCampo,temp->nome) == 0)
+       {
+            tipo = temp->tipo;
+
+            return tipo;
+       }
+
+       temp = temp->next;
+    }
+
+    return tipo;
+}
 
 //-----------------------------------------
 // INSERE NA TABELA
-column *insereValor(column *c, char *nomeCampo, char *valorCampo){
+column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
     
     column *aux;
     if(c == NULL){ // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
@@ -537,7 +578,17 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo){
             return ERRO_DE_ALOCACAO;
         }
 
-        e->valorCampo = (char *)malloc(sizeof(char) * (strlen(valorCampo)+1));
+        int tam = retornaTamanhoValorCampo(nomeCampo, tab);
+        char tipo = retornaTamanhoTipoDoCampo(nomeCampo,tab); 
+
+        int nTam = strlen(valorCampo);
+
+        if (tipo == 'S')
+        {
+            nTam = tam;
+        }
+
+        e->valorCampo = (char *)malloc(sizeof(char) * (nTam+1));
         
         if (e->valorCampo == NULL)
         {
@@ -556,7 +607,13 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo){
 
         strncpy(e->nomeCampo, nomeCampo,n); 
 
-        n = strlen(valorCampo)+1;
+        n = strlen(valorCampo) + 1;
+        
+        if (n > tam && tipo == 'S')
+        {
+            n = tam;
+        }
+
         strncpy(e->valorCampo, valorCampo,n);
 
         e->next = NULL;
@@ -572,8 +629,17 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo){
                 {
                     return ERRO_DE_ALOCACAO;
                 }
+                int tam = retornaTamanhoValorCampo(nomeCampo, tab);
+                char tipo = retornaTamanhoTipoDoCampo(nomeCampo,tab); 
 
-                e->valorCampo = (char *) malloc (sizeof(char) * (strlen(valorCampo)+1));
+                int nTam = strlen(valorCampo);
+
+                if (tipo == 'S')
+                {
+                    nTam = tam;
+                }
+
+                e->valorCampo = (char *) malloc (sizeof(char) * (nTam+1));
 
                 if (e->valorCampo == NULL)
                 {
@@ -582,7 +648,7 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo){
 
                 e->next = NULL;
 
-                 int n = strlen(nomeCampo)+1;
+                int n = strlen(nomeCampo)+1;
 
                 /**
                  * Verifica se o nome do campo ultrapassa o limite, se sim trunca 
@@ -594,7 +660,12 @@ column *insereValor(column *c, char *nomeCampo, char *valorCampo){
 
                 strncpy(e->nomeCampo, nomeCampo,n);
                 
-                n = strlen(valorCampo)+1;
+                 n = strlen(valorCampo) + 1;
+        
+                if (n > tam && tipo == 'S')
+                {
+                    n = tam;
+                }
                 strncpy(e->valorCampo, valorCampo,n);
                 aux->next = e;
                 return c;
@@ -631,7 +702,7 @@ int finalizaInsert(char *nome, column *c){
                     printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
                     free(c);    // Libera a memoria da estrutura.
 					free(auxT); // Libera a memoria da estrutura.
-					free(temp); // Libera a memoria da estrutura.   
+					//free(temp); // Libera a memoria da estrutura.   
 					free(tab); // Libera a memoria da estrutura.
 					free(tab2); // Libera a memoria da estrutura.
                     exit(1);
@@ -737,14 +808,16 @@ int finalizaInsert(char *nome, column *c){
 					free(tab2); // Libera a memoria da estrutura.
 					free(c);    // Libera a memoria da estrutura.
 					free(auxT); // Libera a memoria da estrutura.
-					free(temp); // Libera a memoria da estrutura.
+					//free(temp); // Libera a memoria da estrutura.
 					fclose(dados);
                     return ERRO_NO_TIPO_INTEIRO;
                 }
                 i++;
             }
 
-            int valorInteiro = convertI(auxC->valorCampo);
+            int valorInteiro = 0;
+            
+            sscanf(auxC->valorCampo,"%d",&valorInteiro);
             fwrite(&valorInteiro,sizeof(valorInteiro),1,dados);
         }
         else if(auxT[t].tipo == 'D'){ // Grava um dado do tipo double.
