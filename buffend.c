@@ -101,13 +101,15 @@ tp_buffer * initbuffer(){
     
     tp_buffer *bp = (tp_buffer*)malloc(sizeof(tp_buffer)*PAGES);
     int i;
+    tp_buffer *temp = bp;
+
     if(bp == NULL)
         return ERRO_DE_ALOCACAO;
     for (i = 0;i < PAGES; i++){
-        bp->db=0;
-        bp->pc=0;
-        bp->nrec=0;
-        bp++;
+        temp->db=0;
+        temp->pc=0;
+        temp->nrec=0;
+        temp++;
     }
 
     return bp;
@@ -831,7 +833,7 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
 // RETORNA PAGINA DO BUFFER
 column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, int page){
     
-    if(page > PAGES)
+    if(page >= PAGES)
         return ERRO_PAGINA_INVALIDA;
 
     if(buffer[page].nrec == 0) //Essa página não possui registros
