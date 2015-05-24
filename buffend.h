@@ -200,7 +200,7 @@ int finalizaTabela(table *t);
 /************************************************************************************************
  ************************************************************************************************/
 
-column *insereValor(column *c, char *nomeCampo, char *valorCampo);
+column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo);
 /*
     Esta função inicia e aloca dinâmicamente uma lista de valores que vão ser inseridos em uma tabela.
     Retorna: 
@@ -366,3 +366,6 @@ tp_table *abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tab
     Parametros: Nome da Tabela, Objeto da Tabela e tabela.
     Retorno:    tp_table
    ---------------------------------------------------------------------------------------------*/
+
+
+int retornaTamanhoValorCampo(char *nomeCampo, table  *tab);
