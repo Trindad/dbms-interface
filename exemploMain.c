@@ -71,7 +71,7 @@ int main(){
     colunas = NULL;
     colunas = insereValor(colunas, "CodInst", "111");
     colunas = insereValor(colunas, "Nome", "UFFS");
-    colunas = insereValor(colunas, "EnderecoKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK", "RuadeTerra");
+    colunas = insereValor(colunas, "Endereco", "RuadeTerra");
     colunas = insereValor(colunas, "Reitor", "MandaChuva");
     finalizaInsert("Inst", colunas);
     
