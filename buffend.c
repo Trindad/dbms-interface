@@ -1237,17 +1237,72 @@ int procuraSchemaArquivo(struct fs_objects objeto){
                 ERRO_LEITURA_DADOS.
    ---------------------------------------------------------------------------------------------*/
 
-int excluirTabela(char *nomeTabela){
-    struct fs_objects objeto;
-    tp_table *esquema;
-    int x,erro;
+int excluirTabela(char *nomeTabela) {
+    struct fs_objects objeto, objeto1;
+    tp_table *esquema, *esquema1;
+    int x,erro, i, j, k, l, qtTable;
     char str[20]; 
     char dat[5] = ".dat";
+
 
     strcpy (str, nomeTabela); 
     strcat (str, dat);              //Concatena e junta o nome com .dat
 
     abreTabela(nomeTabela, &objeto, &esquema);
+    qtTable = quantidadeTabelas();
+
+    char **tupla = malloc(sizeof(char)*qtTable);
+    for(i=0; i<qtTable; i++) {
+        tupla[i] = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+    }
+
+    tp_table *tab2 = (tp_table *)malloc(sizeof(struct tp_table));
+    tab2 = procuraAtributoFK(objeto);   //retorna o tipo de chave que e cada campo
+
+    FILE *dicionario;
+
+    if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
+        return ERRO_ABRIR_ARQUIVO;
+
+    k=0;
+    while(fgetc (dicionario) != EOF){
+        fseek(dicionario, -1, 1);
+
+        //coloca o nome de todas as tabelas em tupla
+        fread(tupla[k], sizeof(char), TAMANHO_NOME_TABELA , dicionario);
+        k++;
+
+        fseek(dicionario, 28, 1);
+    }
+
+    fclose(dicionario);
+    
+    for(i = 0; i < objeto.qtdCampos; i++){
+        if(tab2[i].chave == PK){
+            for(j=0; j<qtTable; j++) {                      //se tiver chave primaria verifica se ela e chave
+                if(strcmp(tupla[j], nomeTabela) != 0) {     //estrangeira em outra tabela
+
+                    abreTabela(tupla[j], &objeto1, &esquema1);
+
+                    tp_table *tab3 = (tp_table *)malloc(sizeof(struct tp_table));
+                    tab3 = procuraAtributoFK(objeto1);
+
+                    for(l=0; l<objeto1.qtdCampos; l++) {
+                        if(tab3[l].chave == FK) {                               //verifica se a outra tabela possui
+                            if(strcmp(nomeTabela, tab3[l].tabelaApt) == 0) {    //chave estrangeira
+                                printf("Exclusao nao permitida!\n");            //se sim, verifica se e da tabela
+                                return ERRO_CHAVE_ESTRANGEIRA;                  //anterior
+                            }
+                        }
+                    }
+                    free(tab3);
+                }
+            }
+        }
+    }
+
+    free(tab2);
+
     tp_buffer *bufferpoll = initbuffer();
 
     if(bufferpoll == ERRO_DE_ALOCACAO){
