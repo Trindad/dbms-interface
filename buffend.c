@@ -105,7 +105,7 @@ tp_table *leSchema (struct fs_objects objeto){
 tp_buffer * initbuffer(){
     
     tp_buffer *bp = (tp_buffer*)malloc(sizeof(tp_buffer)*PAGES);
-    int i;
+    int i = 0;
     tp_buffer *temp = bp;
 
     if(bp == NULL)
@@ -114,6 +114,7 @@ tp_buffer * initbuffer(){
         temp->db=0;
         temp->pc=0;
         temp->nrec=0;
+        temp->position = 0;
         temp++;
     }
 
@@ -408,9 +409,22 @@ table *iniciaTabela(char *nome){
         return ERRO_NOME_TABELA_INVALIDO;
     }
 
-    table *t = (table *)malloc(sizeof(table)*1);
-    strcpy(t->nome,nome); // Inicia a estrutura de tabela com o nome da tabela.
+    table *t = (table *)malloc(sizeof(table));
+
+    if (t == NULL)
+    {
+        return ERRO_DE_ALOCACAO;
+    }
+    int n = strlen(nome);
+
+    if (n > TAMANHO_NOME_TABELA)
+    {
+        n = TAMANHO_NOME_TABELA;
+    }
+
+    strncpy(t->nome,nome,n+1); // Inicia a estrutura de tabela com o nome da tabela.
     t->esquema = NULL; // Inicia o esquema da tabela com NULL.
+    
     return t; // Retorna estrutura para criação de uma tabela.
 }
 
@@ -692,7 +706,7 @@ int finalizaInsert(char *nome, column *c){
     auxT = abreTabela(nome, &dicio, &auxT);
 
     table *tab     = (table *)malloc(sizeof(table));
-    tp_table *tab2 = (tp_table *)malloc(sizeof(struct tp_table)); 
+    tp_table *tab2 = (tp_table *)malloc(sizeof(tp_table)); 
 
     tab->esquema = abreTabela(nome, &objeto, &tab->esquema);
     tab2 = procuraAtributoFK(objeto);
@@ -726,7 +740,7 @@ int finalizaInsert(char *nome, column *c){
                         printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
                         free(c);    // Libera a memoria da estrutura.
 						free(auxT); // Libera a memoria da estrutura.
-						free(temp); // Libera a memoria da estrutura.
+						// free(temp); // Libera a memoria da estrutura.
                         free(tab); // Libera a memoria da estrutura.
 						free(tab2); // Libera a memoria da estrutura.
                         exit(1);
@@ -742,7 +756,7 @@ int finalizaInsert(char *nome, column *c){
         printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
         free(c);    // Libera a memoria da estrutura.
 		free(auxT); // Libera a memoria da estrutura.
-		free(temp); // Libera a memoria da estrutura.
+		// free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
 		free(tab2); // Libera a memoria da estrutura.
         exit(1);
@@ -752,7 +766,7 @@ int finalizaInsert(char *nome, column *c){
         printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
         free(c);    // Libera a memoria da estrutura.
 		free(auxT); // Libera a memoria da estrutura.
-		free(temp); // Libera a memoria da estrutura.
+		// free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
 		free(tab2); // Libera a memoria da estrutura.
         exit(1);
@@ -761,7 +775,7 @@ int finalizaInsert(char *nome, column *c){
         printf("Erro GRAVE! na função finalizaInsert(). Erro de Parametro.\nAbortando...\n");
         free(c);    // Libera a memoria da estrutura.
 		free(auxT); // Libera a memoria da estrutura.
-		free(temp); // Libera a memoria da estrutura.
+		// free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
 		free(tab2); // Libera a memoria da estrutura.
         exit(1);
@@ -771,7 +785,7 @@ int finalizaInsert(char *nome, column *c){
     if((dados = fopen(dicio.nArquivo,"a+b")) == NULL){
 		free(c);    // Libera a memoria da estrutura.
 		free(auxT); // Libera a memoria da estrutura.
-		free(temp); // Libera a memoria da estrutura.
+		// free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
 		free(tab2); // Libera a memoria da estrutura.
         return ERRO_ABRIR_ARQUIVO;
@@ -784,12 +798,12 @@ int finalizaInsert(char *nome, column *c){
 
         if(auxT[t].tipo == 'S'){ // Grava um dado do tipo string.
             
-            if(sizeof(auxC->valorCampo) > auxT[t].tam && sizeof(auxC->valorCampo) != 8){
+            if(strlen(auxC->valorCampo) > auxT[t].tam && strlen(auxC->valorCampo) != 8){
 				free(tab); // Libera a memoria da estrutura.
 				free(tab2); // Libera a memoria da estrutura.
 				free(c);    // Libera a memoria da estrutura.
 				free(auxT); // Libera a memoria da estrutura.
-				free(temp); // Libera a memoria da estrutura.
+				// free(temp); // Libera a memoria da estrutura.
 				fclose(dados);
                 return ERRO_NO_TAMANHO_STRING;
             }
@@ -798,7 +812,7 @@ int finalizaInsert(char *nome, column *c){
 				free(tab2); // Libera a memoria da estrutura.
 				free(c);    // Libera a memoria da estrutura.
 				free(auxT); // Libera a memoria da estrutura.
-				free(temp); // Libera a memoria da estrutura.
+				// free(temp); // Libera a memoria da estrutura.
 				fclose(dados);
                 return ERRO_NOME_CAMPO;
             }
@@ -835,7 +849,7 @@ int finalizaInsert(char *nome, column *c){
 					free(tab2); // Libera a memoria da estrutura.
 					free(c);    // Libera a memoria da estrutura.
 					free(auxT); // Libera a memoria da estrutura.
-					free(temp); // Libera a memoria da estrutura.
+					// free(temp); // Libera a memoria da estrutura.
 					fclose(dados);
                     return ERRO_NO_TIPO_DOUBLE;
                 }
@@ -853,7 +867,7 @@ int finalizaInsert(char *nome, column *c){
 				free(tab2); // Libera a memoria da estrutura.
 				free(c);    // Libera a memoria da estrutura.
 				free(auxT); // Libera a memoria da estrutura.
-				free(temp); // Libera a memoria da estrutura.
+				// free(temp); // Libera a memoria da estrutura.
 				fclose(dados);
                 return ERRO_NO_TIPO_CHAR;
             }
@@ -868,7 +882,7 @@ int finalizaInsert(char *nome, column *c){
 	free(tab2); // Libera a memoria da estrutura.
     free(c);    // Libera a memoria da estrutura.
     free(auxT); // Libera a memoria da estrutura.
-    free(temp); // Libera a memoria da estrutura.
+    // free(temp); // Libera a memoria da estrutura.
     return SUCCESS;
 }
 //----------------------------------------
