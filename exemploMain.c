@@ -110,6 +110,7 @@ int main(){
         colunas = insereValor(tab[2],colunas, "CodInst", "111");
         colunas = insereValor(tab[2],colunas, "Curso", "ADM");
         finalizaInsert("Inscri", colunas);
+
     }
     
     

@@ -798,7 +798,7 @@ int finalizaInsert(char *nome, column *c){
 
         if(auxT[t].tipo == 'S'){ // Grava um dado do tipo string.
             
-            if(strlen(auxC->valorCampo) > auxT[t].tam && strlen(auxC->valorCampo) != 8){
+            if(sizeof(auxC->valorCampo) > auxT[t].tam && sizeof(auxC->valorCampo) != 8){
 				free(tab); // Libera a memoria da estrutura.
 				free(tab2); // Libera a memoria da estrutura.
 				free(c);    // Libera a memoria da estrutura.
@@ -817,7 +817,7 @@ int finalizaInsert(char *nome, column *c){
                 return ERRO_NOME_CAMPO;
             }
             char valorCampo[auxT[t].tam];
-            strcpy(valorCampo, auxC->valorCampo);
+            strcpy(valorCampo,auxC->valorCampo);
             strcat(valorCampo, "\0");
             fwrite(&valorCampo,sizeof(valorCampo),1,dados);
         }
@@ -993,6 +993,7 @@ void imprime(char nomeTabela[]) {
     column *pagina = getPage(bufferpoll, esquema, objeto, 0);
 
     if(pagina == ERRO_PARAMETRO){
+        free(bufferpoll);
          printf("Erro GRAVE ao abrir a TABELA.\nAbortando...\n");
         exit(1);
     }
@@ -1003,22 +1004,29 @@ void imprime(char nomeTabela[]) {
 	while(x){
 	    column *pagina = getPage(bufferpoll, esquema, objeto, p);	
 	    if(pagina == ERRO_PARAMETRO){
+            free(bufferpoll);
             printf("Erro GRAVE ao abrir a TABELA.\nAbortando...\n");
             exit(1);
 	    }
 		for(j=0; j < objeto.qtdCampos*bufferpoll[p].nrec; j++){
-        	if(pagina[j].tipoCampo == 'S')
+        	if(pagina[j].tipoCampo == 'S'){
             	printf("%s: %-15s ", pagina[j].nomeCampo,pagina[j].valorCampo);
+                free(pagina[j].valorCampo);
+            }
         	else if(pagina[j].tipoCampo == 'I'){
             	int *n = (int *)&pagina[j].valorCampo[0];
             	printf("%s: %-15d ",pagina[j].nomeCampo, *n);
+                free(pagina[j].valorCampo);
         	}
         	else if(pagina[j].tipoCampo == 'C'){
             	printf("%s: %-15c ",pagina[j].nomeCampo, pagina[j].valorCampo[0]);
+                free(pagina[j].valorCampo);
         	}
         	else if(pagina[j].tipoCampo == 'D'){
             	double *n = (double *)&pagina[j].valorCampo[0];
    	        	 printf("%s: %-15f ",pagina[j].nomeCampo, *n);
+                 free(pagina[j].valorCampo);
+
         	}
         	if(j>=1 && ((j+1)%objeto.qtdCampos)==0){
             	printf("\n");
@@ -1027,6 +1035,9 @@ void imprime(char nomeTabela[]) {
     	x-=bufferpoll[p++].nrec;
     }
     printf("\n\n");
+   
+    free(pagina);
+    free(bufferpoll);
 }
 
 /* ---------------------------------------------------------------------------------------------- 
@@ -1400,10 +1411,13 @@ int existeAtributo(char *nomeTabela, column *c){
             }
         }
         if(erro != objeto.qtdCampos){
+            free(pagina);
+            free(bufferpoll);
             return ERRO_DE_PARAMETRO;
         }
     }
- 
+    free(pagina);
+    free(bufferpoll);
     return SUCCESS; 
 }
 
@@ -1454,6 +1468,8 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
             
             if(pagina[j].tipoCampo == 'S'){     
                 if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
+                    free(pagina);
+                    free(bufferpoll);
                     return SUCCESS;
                 }
             }
@@ -1461,6 +1477,8 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
             else if(pagina[j].tipoCampo == 'I'){ 
                 int *n = (int *)&pagina[j].valorCampo[0];
                 if(*n == atoi(valorCampo)){
+                    free(pagina);
+                    free(bufferpoll);
                     return SUCCESS;
                 }
             }
@@ -1469,20 +1487,27 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
                 double *nn = (double *)&pagina[j].valorCampo[0];
 
                 if(*nn == atof(valorCampo)){
+                    free(pagina);
+                    free(bufferpoll);
                     return SUCCESS;
                 }
             }
 
             else if(pagina[j].tipoCampo == 'C'){                        
                 if(pagina[j].valorCampo == valorCampo){
+                    free(pagina);
+                    free(bufferpoll);
                     return SUCCESS;
                 }
             }else {
+                free(pagina);
+                free(bufferpoll);
                 return ERRO_CHAVE_ESTRANGEIRA;
             }
         }            
     }
-
+    free(pagina);
+    free(bufferpoll);
     return ERRO_CHAVE_ESTRANGEIRA;
 }
 
@@ -1522,6 +1547,8 @@ int verificaChavePK(char *nomeTabela, column *c, char *nomeCampo, char *valorCam
             
             if(pagina[j].tipoCampo == 'S'){        
                 if(strcmp(pagina[j].valorCampo, valorCampo) == 0){
+                    free(pagina);
+                    free(bufferpoll);
                     return ERRO_CHAVE_PRIMARIA;
                 }
             }
@@ -1530,6 +1557,8 @@ int verificaChavePK(char *nomeTabela, column *c, char *nomeCampo, char *valorCam
                 int *n = (int *)&pagina[j].valorCampo[0];
 
                 if(*n == atoi(valorCampo)){
+                    free(pagina);
+                    free(bufferpoll);
                     return ERRO_CHAVE_PRIMARIA;
                 }
             }
@@ -1538,17 +1567,22 @@ int verificaChavePK(char *nomeTabela, column *c, char *nomeCampo, char *valorCam
                 double *nn = (double *)&pagina[j].valorCampo[0];
 
                 if(*nn == atof(valorCampo)){
+                    free(pagina);
+                    free(bufferpoll);
                     return ERRO_CHAVE_PRIMARIA;
                 }
             }
 
             else if(pagina[j].tipoCampo == 'C'){                        
                 if(pagina[j].valorCampo == valorCampo){
+                    free(bufferpoll);
                     return ERRO_CHAVE_PRIMARIA;
                 }
             }
         }            
     }
+
+    free(bufferpoll);
 
     return SUCCESS;
 }
