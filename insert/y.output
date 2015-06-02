@@ -1,0 +1,2295 @@
+Terminals unused in grammar
+
+   PRINTF
+   INCLUDE
+   DOT
+   OR
+   AND
+   '<'
+   '>'
+
+
+Gramática
+
+    0 $accept: start $end
+
+    1 start: Function
+    2      | Declaration
+
+    3 Declaration: Type Assignment ';'
+    4            | Assignment ';'
+    5            | FunctionCall ';'
+    6            | ArrayUsage ';'
+    7            | Type ArrayUsage ';'
+    8            | StructStmt ';'
+    9            | error
+   10            | returnStmt ';'
+
+   11 Assignment: ID '=' Assignment
+   12           | ID '=' FunctionCall
+   13           | ID '=' ArrayUsage
+   14           | ArrayUsage '=' Assignment
+   15           | ID ',' Assignment
+   16           | NUM ',' Assignment
+   17           | ID '+' Assignment
+   18           | ID '-' Assignment
+   19           | ID '*' Assignment
+   20           | ID '/' Assignment
+   21           | NUM '+' Assignment
+   22           | NUM '-' Assignment
+   23           | NUM '*' Assignment
+   24           | NUM '/' Assignment
+   25           | '\'' Assignment '\''
+   26           | '"' Assignment '"'
+   27           | '(' Assignment ')'
+   28           | '-' '(' Assignment ')'
+   29           | '-' NUM
+   30           | '-' ID
+   31           | NUM
+   32           | ID
+
+   33 statement: CompoundStmt
+   34          | Stmt
+
+   35 arguments: argument functionCallClose
+   36          | argument COMMA arguments
+
+   37 argument: Expr
+
+   38 functionCallClose: ')'
+
+   39 FunctionCall: ID '(' arguments
+
+   40 ArrayUsage: ID '[' Assignment ']'
+
+   41 Function: Type ID '(' ArgListOpt ')' CompoundStmt
+
+   42 ArgListOpt: ArgList
+   43           | /* vazio */
+
+   44 ArgList: ArgList ',' Arg
+   45        | Arg
+
+   46 Arg: Type ID
+
+   47 CompoundStmt: '{' StmtList '}'
+
+   48 StmtList: StmtList Stmt
+   49         | /* vazio */
+
+   50 Stmt: WhileStmt
+   51     | Declaration
+   52     | ForStmt
+   53     | IfStmt
+   54     | ';'
+
+   55 Type: INT
+   56     | FLOAT
+   57     | CHAR
+   58     | DOUBLE
+   59     | VOID
+
+   60 WhileStmt: WHILE '(' Expr ')' statement
+
+   61 ForStmt: FOR '(' Expr ';' Expr ';' Expr ')' statement
+   62        | FOR '(' Expr ')' statement
+
+   63 elseLine: statement ELSE
+
+   64 elseStmt: elseLine statement
+
+   65 IfStmt: IF '(' Expr ')' statement
+   66       | IF '(' Expr ')' elseStmt
+
+   67 StructStmt: STRUCT ID '{' Type Assignment '}'
+
+   68 optionalReturn: Expr
+   69               | FunctionCall
+   70               | ' '
+
+   71 returnStmt: RETURN optionalReturn
+
+   72 Expr: /* vazio */
+   73     | Expr LE Expr
+   74     | Expr GE Expr
+   75     | Expr NE Expr
+   76     | Expr EQ Expr
+   77     | Expr GT Expr
+   78     | Expr LT Expr
+   79     | ID INC
+   80     | ID DEC
+   81     | INC ID
+   82     | DEC ID
+   83     | AMPERSAND ID
+   84     | Assignment
+   85     | ArrayUsage
+   86     | STRING_LITERAL
+
+
+Terminais, com as regras onde eles aparecem
+
+$end (0) 0
+' ' (32) 70
+'"' (34) 26
+'\'' (39) 25
+'(' (40) 27 28 39 41 60 61 62 65 66
+')' (41) 27 28 38 41 60 61 62 65 66
+'*' (42) 19 23
+'+' (43) 17 21
+',' (44) 15 16 44
+'-' (45) 18 22 28 29 30
+'/' (47) 20 24
+';' (59) 3 4 5 6 7 8 10 54 61
+'<' (60)
+'=' (61) 11 12 13 14
+'>' (62)
+'[' (91) 40
+']' (93) 40
+'{' (123) 47 67
+'}' (125) 47 67
+error (256) 9
+INT (258) 55
+FLOAT (259) 56
+CHAR (260) 57
+DOUBLE (261) 58
+VOID (262) 59
+FOR (263) 61 62
+WHILE (264) 60
+IF (265) 65 66
+ELSE (266) 63
+PRINTF (267)
+STRUCT (268) 67
+NUM (269) 16 21 22 23 24 29 31
+ID (270) 11 12 13 15 17 18 19 20 30 32 39 40 41 46 67 79 80 81 82 83
+INCLUDE (271)
+DOT (272)
+COMMA (273) 36
+INC (274) 79 81
+DEC (275) 80 82
+STRING_LITERAL (276) 86
+AMPERSAND (277) 83
+RETURN (278) 71
+LOWER_THAN_COMMA (279)
+LOWER_THAN_ELSE (280)
+OR (281)
+AND (282)
+GT (283) 77
+LT (284) 78
+NE (285) 75
+EQ (286) 76
+GE (287) 74
+LE (288) 73
+
+
+Não-terminais com as regras onde eles aparecem
+
+$accept (52)
+    à esquerda: 0
+start (53)
+    à esquerda: 1 2, à direita: 0
+Declaration (54)
+    à esquerda: 3 4 5 6 7 8 9 10, à direita: 2 51
+Assignment (55)
+    à esquerda: 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27
+    28 29 30 31 32, à direita: 3 4 11 14 15 16 17 18 19 20 21 22 23
+    24 25 26 27 28 40 67 84
+statement (56)
+    à esquerda: 33 34, à direita: 60 61 62 63 64 65
+arguments (57)
+    à esquerda: 35 36, à direita: 36 39
+argument (58)
+    à esquerda: 37, à direita: 35 36
+functionCallClose (59)
+    à esquerda: 38, à direita: 35
+FunctionCall (60)
+    à esquerda: 39, à direita: 5 12 69
+ArrayUsage (61)
+    à esquerda: 40, à direita: 6 7 13 14 85
+Function (62)
+    à esquerda: 41, à direita: 1
+ArgListOpt (63)
+    à esquerda: 42 43, à direita: 41
+ArgList (64)
+    à esquerda: 44 45, à direita: 42 44
+Arg (65)
+    à esquerda: 46, à direita: 44 45
+CompoundStmt (66)
+    à esquerda: 47, à direita: 33 41
+StmtList (67)
+    à esquerda: 48 49, à direita: 47 48
+Stmt (68)
+    à esquerda: 50 51 52 53 54, à direita: 34 48
+Type (69)
+    à esquerda: 55 56 57 58 59, à direita: 3 7 41 46 67
+WhileStmt (70)
+    à esquerda: 60, à direita: 50
+ForStmt (71)
+    à esquerda: 61 62, à direita: 52
+elseLine (72)
+    à esquerda: 63, à direita: 64
+elseStmt (73)
+    à esquerda: 64, à direita: 66
+IfStmt (74)
+    à esquerda: 65 66, à direita: 53
+StructStmt (75)
+    à esquerda: 67, à direita: 8
+optionalReturn (76)
+    à esquerda: 68 69 70, à direita: 71
+returnStmt (77)
+    à esquerda: 71, à direita: 10
+Expr (78)
+    à esquerda: 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86, à direita:
+    37 60 61 62 65 66 68 73 74 75 76 77 78
+
+
+estado 0
+
+    0 $accept: . start $end
+
+    error   deslocar, e ir ao estado 1
+    INT     deslocar, e ir ao estado 2
+    FLOAT   deslocar, e ir ao estado 3
+    CHAR    deslocar, e ir ao estado 4
+    DOUBLE  deslocar, e ir ao estado 5
+    VOID    deslocar, e ir ao estado 6
+    STRUCT  deslocar, e ir ao estado 7
+    NUM     deslocar, e ir ao estado 8
+    ID      deslocar, e ir ao estado 9
+    RETURN  deslocar, e ir ao estado 10
+    '-'     deslocar, e ir ao estado 11
+    '\''    deslocar, e ir ao estado 12
+    '"'     deslocar, e ir ao estado 13
+    '('     deslocar, e ir ao estado 14
+
+    start         ir ao estado 15
+    Declaration   ir ao estado 16
+    Assignment    ir ao estado 17
+    FunctionCall  ir ao estado 18
+    ArrayUsage    ir ao estado 19
+    Function      ir ao estado 20
+    Type          ir ao estado 21
+    StructStmt    ir ao estado 22
+    returnStmt    ir ao estado 23
+
+
+estado 1
+
+    9 Declaration: error .
+
+    $padrão  reduzir usando a regra 9 (Declaration)
+
+
+estado 2
+
+   55 Type: INT .
+
+    $padrão  reduzir usando a regra 55 (Type)
+
+
+estado 3
+
+   56 Type: FLOAT .
+
+    $padrão  reduzir usando a regra 56 (Type)
+
+
+estado 4
+
+   57 Type: CHAR .
+
+    $padrão  reduzir usando a regra 57 (Type)
+
+
+estado 5
+
+   58 Type: DOUBLE .
+
+    $padrão  reduzir usando a regra 58 (Type)
+
+
+estado 6
+
+   59 Type: VOID .
+
+    $padrão  reduzir usando a regra 59 (Type)
+
+
+estado 7
+
+   67 StructStmt: STRUCT . ID '{' Type Assignment '}'
+
+    ID  deslocar, e ir ao estado 24
+
+
+estado 8
+
+   16 Assignment: NUM . ',' Assignment
+   21           | NUM . '+' Assignment
+   22           | NUM . '-' Assignment
+   23           | NUM . '*' Assignment
+   24           | NUM . '/' Assignment
+   31           | NUM .
+
+    ','  deslocar, e ir ao estado 25
+    '+'  deslocar, e ir ao estado 26
+    '-'  deslocar, e ir ao estado 27
+    '*'  deslocar, e ir ao estado 28
+    '/'  deslocar, e ir ao estado 29
+
+    $padrão  reduzir usando a regra 31 (Assignment)
+
+
+estado 9
+
+   11 Assignment: ID . '=' Assignment
+   12           | ID . '=' FunctionCall
+   13           | ID . '=' ArrayUsage
+   15           | ID . ',' Assignment
+   17           | ID . '+' Assignment
+   18           | ID . '-' Assignment
+   19           | ID . '*' Assignment
+   20           | ID . '/' Assignment
+   32           | ID .
+   39 FunctionCall: ID . '(' arguments
+   40 ArrayUsage: ID . '[' Assignment ']'
+
+    '='  deslocar, e ir ao estado 30
+    ','  deslocar, e ir ao estado 31
+    '+'  deslocar, e ir ao estado 32
+    '-'  deslocar, e ir ao estado 33
+    '*'  deslocar, e ir ao estado 34
+    '/'  deslocar, e ir ao estado 35
+    '('  deslocar, e ir ao estado 36
+    '['  deslocar, e ir ao estado 37
+
+    $padrão  reduzir usando a regra 32 (Assignment)
+
+
+estado 10
+
+   71 returnStmt: RETURN . optionalReturn
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 38
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+    ' '             deslocar, e ir ao estado 43
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment      ir ao estado 44
+    FunctionCall    ir ao estado 45
+    ArrayUsage      ir ao estado 46
+    optionalReturn  ir ao estado 47
+    Expr            ir ao estado 48
+
+
+estado 11
+
+   28 Assignment: '-' . '(' Assignment ')'
+   29           | '-' . NUM
+   30           | '-' . ID
+
+    NUM  deslocar, e ir ao estado 49
+    ID   deslocar, e ir ao estado 50
+    '('  deslocar, e ir ao estado 51
+
+
+estado 12
+
+   25 Assignment: '\'' . Assignment '\''
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 53
+    ArrayUsage  ir ao estado 54
+
+
+estado 13
+
+   26 Assignment: '"' . Assignment '"'
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 55
+    ArrayUsage  ir ao estado 54
+
+
+estado 14
+
+   27 Assignment: '(' . Assignment ')'
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 56
+    ArrayUsage  ir ao estado 54
+
+
+estado 15
+
+    0 $accept: start . $end
+
+    $end  deslocar, e ir ao estado 57
+
+
+estado 16
+
+    2 start: Declaration .
+
+    $padrão  reduzir usando a regra 2 (start)
+
+
+estado 17
+
+    4 Declaration: Assignment . ';'
+
+    ';'  deslocar, e ir ao estado 58
+
+
+estado 18
+
+    5 Declaration: FunctionCall . ';'
+
+    ';'  deslocar, e ir ao estado 59
+
+
+estado 19
+
+    6 Declaration: ArrayUsage . ';'
+   14 Assignment: ArrayUsage . '=' Assignment
+
+    '='  deslocar, e ir ao estado 60
+    ';'  deslocar, e ir ao estado 61
+
+
+estado 20
+
+    1 start: Function .
+
+    $padrão  reduzir usando a regra 1 (start)
+
+
+estado 21
+
+    3 Declaration: Type . Assignment ';'
+    7            | Type . ArrayUsage ';'
+   41 Function: Type . ID '(' ArgListOpt ')' CompoundStmt
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 62
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 63
+    ArrayUsage  ir ao estado 64
+
+
+estado 22
+
+    8 Declaration: StructStmt . ';'
+
+    ';'  deslocar, e ir ao estado 65
+
+
+estado 23
+
+   10 Declaration: returnStmt . ';'
+
+    ';'  deslocar, e ir ao estado 66
+
+
+estado 24
+
+   67 StructStmt: STRUCT ID . '{' Type Assignment '}'
+
+    '{'  deslocar, e ir ao estado 67
+
+
+estado 25
+
+   16 Assignment: NUM ',' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 68
+    ArrayUsage  ir ao estado 54
+
+
+estado 26
+
+   21 Assignment: NUM '+' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 69
+    ArrayUsage  ir ao estado 54
+
+
+estado 27
+
+   22 Assignment: NUM '-' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 70
+    ArrayUsage  ir ao estado 54
+
+
+estado 28
+
+   23 Assignment: NUM '*' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 71
+    ArrayUsage  ir ao estado 54
+
+
+estado 29
+
+   24 Assignment: NUM '/' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 72
+    ArrayUsage  ir ao estado 54
+
+
+estado 30
+
+   11 Assignment: ID '=' . Assignment
+   12           | ID '=' . FunctionCall
+   13           | ID '=' . ArrayUsage
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 9
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment    ir ao estado 73
+    FunctionCall  ir ao estado 74
+    ArrayUsage    ir ao estado 75
+
+
+estado 31
+
+   15 Assignment: ID ',' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 76
+    ArrayUsage  ir ao estado 54
+
+
+estado 32
+
+   17 Assignment: ID '+' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 77
+    ArrayUsage  ir ao estado 54
+
+
+estado 33
+
+   18 Assignment: ID '-' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 78
+    ArrayUsage  ir ao estado 54
+
+
+estado 34
+
+   19 Assignment: ID '*' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 79
+    ArrayUsage  ir ao estado 54
+
+
+estado 35
+
+   20 Assignment: ID '/' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 80
+    ArrayUsage  ir ao estado 54
+
+
+estado 36
+
+   39 FunctionCall: ID '(' . arguments
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    arguments   ir ao estado 82
+    argument    ir ao estado 83
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 84
+
+
+estado 37
+
+   40 ArrayUsage: ID '[' . Assignment ']'
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 85
+    ArrayUsage  ir ao estado 54
+
+
+estado 38
+
+   11 Assignment: ID . '=' Assignment
+   12           | ID . '=' FunctionCall
+   13           | ID . '=' ArrayUsage
+   15           | ID . ',' Assignment
+   17           | ID . '+' Assignment
+   18           | ID . '-' Assignment
+   19           | ID . '*' Assignment
+   20           | ID . '/' Assignment
+   32           | ID .
+   39 FunctionCall: ID . '(' arguments
+   40 ArrayUsage: ID . '[' Assignment ']'
+   79 Expr: ID . INC
+   80     | ID . DEC
+
+    INC  deslocar, e ir ao estado 86
+    DEC  deslocar, e ir ao estado 87
+    '='  deslocar, e ir ao estado 30
+    ','  deslocar, e ir ao estado 31
+    '+'  deslocar, e ir ao estado 32
+    '-'  deslocar, e ir ao estado 33
+    '*'  deslocar, e ir ao estado 34
+    '/'  deslocar, e ir ao estado 35
+    '('  deslocar, e ir ao estado 36
+    '['  deslocar, e ir ao estado 37
+
+    $padrão  reduzir usando a regra 32 (Assignment)
+
+
+estado 39
+
+   81 Expr: INC . ID
+
+    ID  deslocar, e ir ao estado 88
+
+
+estado 40
+
+   82 Expr: DEC . ID
+
+    ID  deslocar, e ir ao estado 89
+
+
+estado 41
+
+   86 Expr: STRING_LITERAL .
+
+    $padrão  reduzir usando a regra 86 (Expr)
+
+
+estado 42
+
+   83 Expr: AMPERSAND . ID
+
+    ID  deslocar, e ir ao estado 90
+
+
+estado 43
+
+   70 optionalReturn: ' ' .
+
+    $padrão  reduzir usando a regra 70 (optionalReturn)
+
+
+estado 44
+
+   84 Expr: Assignment .
+
+    $padrão  reduzir usando a regra 84 (Expr)
+
+
+estado 45
+
+   69 optionalReturn: FunctionCall .
+
+    $padrão  reduzir usando a regra 69 (optionalReturn)
+
+
+estado 46
+
+   14 Assignment: ArrayUsage . '=' Assignment
+   85 Expr: ArrayUsage .
+
+    '='  deslocar, e ir ao estado 60
+
+    $padrão  reduzir usando a regra 85 (Expr)
+
+
+estado 47
+
+   71 returnStmt: RETURN optionalReturn .
+
+    $padrão  reduzir usando a regra 71 (returnStmt)
+
+
+estado 48
+
+   68 optionalReturn: Expr .
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    GT  deslocar, e ir ao estado 91
+    LT  deslocar, e ir ao estado 92
+    NE  deslocar, e ir ao estado 93
+    EQ  deslocar, e ir ao estado 94
+    GE  deslocar, e ir ao estado 95
+    LE  deslocar, e ir ao estado 96
+
+    $padrão  reduzir usando a regra 68 (optionalReturn)
+
+
+estado 49
+
+   29 Assignment: '-' NUM .
+
+    $padrão  reduzir usando a regra 29 (Assignment)
+
+
+estado 50
+
+   30 Assignment: '-' ID .
+
+    $padrão  reduzir usando a regra 30 (Assignment)
+
+
+estado 51
+
+   28 Assignment: '-' '(' . Assignment ')'
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 97
+    ArrayUsage  ir ao estado 54
+
+
+estado 52
+
+   11 Assignment: ID . '=' Assignment
+   12           | ID . '=' FunctionCall
+   13           | ID . '=' ArrayUsage
+   15           | ID . ',' Assignment
+   17           | ID . '+' Assignment
+   18           | ID . '-' Assignment
+   19           | ID . '*' Assignment
+   20           | ID . '/' Assignment
+   32           | ID .
+   40 ArrayUsage: ID . '[' Assignment ']'
+
+    '='  deslocar, e ir ao estado 30
+    ','  deslocar, e ir ao estado 31
+    '+'  deslocar, e ir ao estado 32
+    '-'  deslocar, e ir ao estado 33
+    '*'  deslocar, e ir ao estado 34
+    '/'  deslocar, e ir ao estado 35
+    '['  deslocar, e ir ao estado 37
+
+    $padrão  reduzir usando a regra 32 (Assignment)
+
+
+estado 53
+
+   25 Assignment: '\'' Assignment . '\''
+
+    '\''  deslocar, e ir ao estado 98
+
+
+estado 54
+
+   14 Assignment: ArrayUsage . '=' Assignment
+
+    '='  deslocar, e ir ao estado 60
+
+
+estado 55
+
+   26 Assignment: '"' Assignment . '"'
+
+    '"'  deslocar, e ir ao estado 99
+
+
+estado 56
+
+   27 Assignment: '(' Assignment . ')'
+
+    ')'  deslocar, e ir ao estado 100
+
+
+estado 57
+
+    0 $accept: start $end .
+
+    $padrão  aceitar
+
+
+estado 58
+
+    4 Declaration: Assignment ';' .
+
+    $padrão  reduzir usando a regra 4 (Declaration)
+
+
+estado 59
+
+    5 Declaration: FunctionCall ';' .
+
+    $padrão  reduzir usando a regra 5 (Declaration)
+
+
+estado 60
+
+   14 Assignment: ArrayUsage '=' . Assignment
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 101
+    ArrayUsage  ir ao estado 54
+
+
+estado 61
+
+    6 Declaration: ArrayUsage ';' .
+
+    $padrão  reduzir usando a regra 6 (Declaration)
+
+
+estado 62
+
+   11 Assignment: ID . '=' Assignment
+   12           | ID . '=' FunctionCall
+   13           | ID . '=' ArrayUsage
+   15           | ID . ',' Assignment
+   17           | ID . '+' Assignment
+   18           | ID . '-' Assignment
+   19           | ID . '*' Assignment
+   20           | ID . '/' Assignment
+   32           | ID .
+   40 ArrayUsage: ID . '[' Assignment ']'
+   41 Function: Type ID . '(' ArgListOpt ')' CompoundStmt
+
+    '='  deslocar, e ir ao estado 30
+    ','  deslocar, e ir ao estado 31
+    '+'  deslocar, e ir ao estado 32
+    '-'  deslocar, e ir ao estado 33
+    '*'  deslocar, e ir ao estado 34
+    '/'  deslocar, e ir ao estado 35
+    '('  deslocar, e ir ao estado 102
+    '['  deslocar, e ir ao estado 37
+
+    $padrão  reduzir usando a regra 32 (Assignment)
+
+
+estado 63
+
+    3 Declaration: Type Assignment . ';'
+
+    ';'  deslocar, e ir ao estado 103
+
+
+estado 64
+
+    7 Declaration: Type ArrayUsage . ';'
+   14 Assignment: ArrayUsage . '=' Assignment
+
+    '='  deslocar, e ir ao estado 60
+    ';'  deslocar, e ir ao estado 104
+
+
+estado 65
+
+    8 Declaration: StructStmt ';' .
+
+    $padrão  reduzir usando a regra 8 (Declaration)
+
+
+estado 66
+
+   10 Declaration: returnStmt ';' .
+
+    $padrão  reduzir usando a regra 10 (Declaration)
+
+
+estado 67
+
+   67 StructStmt: STRUCT ID '{' . Type Assignment '}'
+
+    INT     deslocar, e ir ao estado 2
+    FLOAT   deslocar, e ir ao estado 3
+    CHAR    deslocar, e ir ao estado 4
+    DOUBLE  deslocar, e ir ao estado 5
+    VOID    deslocar, e ir ao estado 6
+
+    Type  ir ao estado 105
+
+
+estado 68
+
+   16 Assignment: NUM ',' Assignment .
+
+    $padrão  reduzir usando a regra 16 (Assignment)
+
+
+estado 69
+
+   21 Assignment: NUM '+' Assignment .
+
+    $padrão  reduzir usando a regra 21 (Assignment)
+
+
+estado 70
+
+   22 Assignment: NUM '-' Assignment .
+
+    $padrão  reduzir usando a regra 22 (Assignment)
+
+
+estado 71
+
+   23 Assignment: NUM '*' Assignment .
+
+    $padrão  reduzir usando a regra 23 (Assignment)
+
+
+estado 72
+
+   24 Assignment: NUM '/' Assignment .
+
+    $padrão  reduzir usando a regra 24 (Assignment)
+
+
+estado 73
+
+   11 Assignment: ID '=' Assignment .
+
+    $padrão  reduzir usando a regra 11 (Assignment)
+
+
+estado 74
+
+   12 Assignment: ID '=' FunctionCall .
+
+    $padrão  reduzir usando a regra 12 (Assignment)
+
+
+estado 75
+
+   13 Assignment: ID '=' ArrayUsage .
+   14           | ArrayUsage . '=' Assignment
+
+    '='  deslocar, e ir ao estado 60
+
+    $padrão  reduzir usando a regra 13 (Assignment)
+
+
+estado 76
+
+   15 Assignment: ID ',' Assignment .
+
+    $padrão  reduzir usando a regra 15 (Assignment)
+
+
+estado 77
+
+   17 Assignment: ID '+' Assignment .
+
+    $padrão  reduzir usando a regra 17 (Assignment)
+
+
+estado 78
+
+   18 Assignment: ID '-' Assignment .
+
+    $padrão  reduzir usando a regra 18 (Assignment)
+
+
+estado 79
+
+   19 Assignment: ID '*' Assignment .
+
+    $padrão  reduzir usando a regra 19 (Assignment)
+
+
+estado 80
+
+   20 Assignment: ID '/' Assignment .
+
+    $padrão  reduzir usando a regra 20 (Assignment)
+
+
+estado 81
+
+   11 Assignment: ID . '=' Assignment
+   12           | ID . '=' FunctionCall
+   13           | ID . '=' ArrayUsage
+   15           | ID . ',' Assignment
+   17           | ID . '+' Assignment
+   18           | ID . '-' Assignment
+   19           | ID . '*' Assignment
+   20           | ID . '/' Assignment
+   32           | ID .
+   40 ArrayUsage: ID . '[' Assignment ']'
+   79 Expr: ID . INC
+   80     | ID . DEC
+
+    INC  deslocar, e ir ao estado 86
+    DEC  deslocar, e ir ao estado 87
+    '='  deslocar, e ir ao estado 30
+    ','  deslocar, e ir ao estado 31
+    '+'  deslocar, e ir ao estado 32
+    '-'  deslocar, e ir ao estado 33
+    '*'  deslocar, e ir ao estado 34
+    '/'  deslocar, e ir ao estado 35
+    '['  deslocar, e ir ao estado 37
+
+    $padrão  reduzir usando a regra 32 (Assignment)
+
+
+estado 82
+
+   39 FunctionCall: ID '(' arguments .
+
+    $padrão  reduzir usando a regra 39 (FunctionCall)
+
+
+estado 83
+
+   35 arguments: argument . functionCallClose
+   36          | argument . COMMA arguments
+
+    COMMA  deslocar, e ir ao estado 106
+    ')'    deslocar, e ir ao estado 107
+
+    functionCallClose  ir ao estado 108
+
+
+estado 84
+
+   37 argument: Expr .
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    GT  deslocar, e ir ao estado 91
+    LT  deslocar, e ir ao estado 92
+    NE  deslocar, e ir ao estado 93
+    EQ  deslocar, e ir ao estado 94
+    GE  deslocar, e ir ao estado 95
+    LE  deslocar, e ir ao estado 96
+
+    $padrão  reduzir usando a regra 37 (argument)
+
+
+estado 85
+
+   40 ArrayUsage: ID '[' Assignment . ']'
+
+    ']'  deslocar, e ir ao estado 109
+
+
+estado 86
+
+   79 Expr: ID INC .
+
+    $padrão  reduzir usando a regra 79 (Expr)
+
+
+estado 87
+
+   80 Expr: ID DEC .
+
+    $padrão  reduzir usando a regra 80 (Expr)
+
+
+estado 88
+
+   81 Expr: INC ID .
+
+    $padrão  reduzir usando a regra 81 (Expr)
+
+
+estado 89
+
+   82 Expr: DEC ID .
+
+    $padrão  reduzir usando a regra 82 (Expr)
+
+
+estado 90
+
+   83 Expr: AMPERSAND ID .
+
+    $padrão  reduzir usando a regra 83 (Expr)
+
+
+estado 91
+
+   77 Expr: Expr GT . Expr
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 110
+
+
+estado 92
+
+   78 Expr: Expr LT . Expr
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 111
+
+
+estado 93
+
+   75 Expr: Expr NE . Expr
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 112
+
+
+estado 94
+
+   76 Expr: Expr EQ . Expr
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 113
+
+
+estado 95
+
+   74 Expr: Expr GE . Expr
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 114
+
+
+estado 96
+
+   73 Expr: Expr LE . Expr
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 115
+
+
+estado 97
+
+   28 Assignment: '-' '(' Assignment . ')'
+
+    ')'  deslocar, e ir ao estado 116
+
+
+estado 98
+
+   25 Assignment: '\'' Assignment '\'' .
+
+    $padrão  reduzir usando a regra 25 (Assignment)
+
+
+estado 99
+
+   26 Assignment: '"' Assignment '"' .
+
+    $padrão  reduzir usando a regra 26 (Assignment)
+
+
+estado 100
+
+   27 Assignment: '(' Assignment ')' .
+
+    $padrão  reduzir usando a regra 27 (Assignment)
+
+
+estado 101
+
+   14 Assignment: ArrayUsage '=' Assignment .
+
+    $padrão  reduzir usando a regra 14 (Assignment)
+
+
+estado 102
+
+   41 Function: Type ID '(' . ArgListOpt ')' CompoundStmt
+
+    INT     deslocar, e ir ao estado 2
+    FLOAT   deslocar, e ir ao estado 3
+    CHAR    deslocar, e ir ao estado 4
+    DOUBLE  deslocar, e ir ao estado 5
+    VOID    deslocar, e ir ao estado 6
+
+    $padrão  reduzir usando a regra 43 (ArgListOpt)
+
+    ArgListOpt  ir ao estado 117
+    ArgList     ir ao estado 118
+    Arg         ir ao estado 119
+    Type        ir ao estado 120
+
+
+estado 103
+
+    3 Declaration: Type Assignment ';' .
+
+    $padrão  reduzir usando a regra 3 (Declaration)
+
+
+estado 104
+
+    7 Declaration: Type ArrayUsage ';' .
+
+    $padrão  reduzir usando a regra 7 (Declaration)
+
+
+estado 105
+
+   67 StructStmt: STRUCT ID '{' Type . Assignment '}'
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 121
+    ArrayUsage  ir ao estado 54
+
+
+estado 106
+
+   36 arguments: argument COMMA . arguments
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    arguments   ir ao estado 122
+    argument    ir ao estado 83
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 84
+
+
+estado 107
+
+   38 functionCallClose: ')' .
+
+    $padrão  reduzir usando a regra 38 (functionCallClose)
+
+
+estado 108
+
+   35 arguments: argument functionCallClose .
+
+    $padrão  reduzir usando a regra 35 (arguments)
+
+
+estado 109
+
+   40 ArrayUsage: ID '[' Assignment ']' .
+
+    $padrão  reduzir usando a regra 40 (ArrayUsage)
+
+
+estado 110
+
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   77     | Expr GT Expr .
+   78     | Expr . LT Expr
+
+    $padrão  reduzir usando a regra 77 (Expr)
+
+
+estado 111
+
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+   78     | Expr LT Expr .
+
+    $padrão  reduzir usando a regra 78 (Expr)
+
+
+estado 112
+
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   75     | Expr NE Expr .
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    $padrão  reduzir usando a regra 75 (Expr)
+
+
+estado 113
+
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   76     | Expr EQ Expr .
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    $padrão  reduzir usando a regra 76 (Expr)
+
+
+estado 114
+
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   74     | Expr GE Expr .
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    $padrão  reduzir usando a regra 74 (Expr)
+
+
+estado 115
+
+   73 Expr: Expr . LE Expr
+   73     | Expr LE Expr .
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    $padrão  reduzir usando a regra 73 (Expr)
+
+
+estado 116
+
+   28 Assignment: '-' '(' Assignment ')' .
+
+    $padrão  reduzir usando a regra 28 (Assignment)
+
+
+estado 117
+
+   41 Function: Type ID '(' ArgListOpt . ')' CompoundStmt
+
+    ')'  deslocar, e ir ao estado 123
+
+
+estado 118
+
+   42 ArgListOpt: ArgList .
+   44 ArgList: ArgList . ',' Arg
+
+    ','  deslocar, e ir ao estado 124
+
+    $padrão  reduzir usando a regra 42 (ArgListOpt)
+
+
+estado 119
+
+   45 ArgList: Arg .
+
+    $padrão  reduzir usando a regra 45 (ArgList)
+
+
+estado 120
+
+   46 Arg: Type . ID
+
+    ID  deslocar, e ir ao estado 125
+
+
+estado 121
+
+   67 StructStmt: STRUCT ID '{' Type Assignment . '}'
+
+    '}'  deslocar, e ir ao estado 126
+
+
+estado 122
+
+   36 arguments: argument COMMA arguments .
+
+    $padrão  reduzir usando a regra 36 (arguments)
+
+
+estado 123
+
+   41 Function: Type ID '(' ArgListOpt ')' . CompoundStmt
+
+    '{'  deslocar, e ir ao estado 127
+
+    CompoundStmt  ir ao estado 128
+
+
+estado 124
+
+   44 ArgList: ArgList ',' . Arg
+
+    INT     deslocar, e ir ao estado 2
+    FLOAT   deslocar, e ir ao estado 3
+    CHAR    deslocar, e ir ao estado 4
+    DOUBLE  deslocar, e ir ao estado 5
+    VOID    deslocar, e ir ao estado 6
+
+    Arg   ir ao estado 129
+    Type  ir ao estado 120
+
+
+estado 125
+
+   46 Arg: Type ID .
+
+    $padrão  reduzir usando a regra 46 (Arg)
+
+
+estado 126
+
+   67 StructStmt: STRUCT ID '{' Type Assignment '}' .
+
+    $padrão  reduzir usando a regra 67 (StructStmt)
+
+
+estado 127
+
+   47 CompoundStmt: '{' . StmtList '}'
+
+    $padrão  reduzir usando a regra 49 (StmtList)
+
+    StmtList  ir ao estado 130
+
+
+estado 128
+
+   41 Function: Type ID '(' ArgListOpt ')' CompoundStmt .
+
+    $padrão  reduzir usando a regra 41 (Function)
+
+
+estado 129
+
+   44 ArgList: ArgList ',' Arg .
+
+    $padrão  reduzir usando a regra 44 (ArgList)
+
+
+estado 130
+
+   47 CompoundStmt: '{' StmtList . '}'
+   48 StmtList: StmtList . Stmt
+
+    error   deslocar, e ir ao estado 1
+    INT     deslocar, e ir ao estado 2
+    FLOAT   deslocar, e ir ao estado 3
+    CHAR    deslocar, e ir ao estado 4
+    DOUBLE  deslocar, e ir ao estado 5
+    VOID    deslocar, e ir ao estado 6
+    FOR     deslocar, e ir ao estado 131
+    WHILE   deslocar, e ir ao estado 132
+    IF      deslocar, e ir ao estado 133
+    STRUCT  deslocar, e ir ao estado 7
+    NUM     deslocar, e ir ao estado 8
+    ID      deslocar, e ir ao estado 9
+    RETURN  deslocar, e ir ao estado 10
+    ';'     deslocar, e ir ao estado 134
+    '-'     deslocar, e ir ao estado 11
+    '\''    deslocar, e ir ao estado 12
+    '"'     deslocar, e ir ao estado 13
+    '('     deslocar, e ir ao estado 14
+    '}'     deslocar, e ir ao estado 135
+
+    Declaration   ir ao estado 136
+    Assignment    ir ao estado 17
+    FunctionCall  ir ao estado 18
+    ArrayUsage    ir ao estado 19
+    Stmt          ir ao estado 137
+    Type          ir ao estado 138
+    WhileStmt     ir ao estado 139
+    ForStmt       ir ao estado 140
+    IfStmt        ir ao estado 141
+    StructStmt    ir ao estado 22
+    returnStmt    ir ao estado 23
+
+
+estado 131
+
+   61 ForStmt: FOR . '(' Expr ';' Expr ';' Expr ')' statement
+   62        | FOR . '(' Expr ')' statement
+
+    '('  deslocar, e ir ao estado 142
+
+
+estado 132
+
+   60 WhileStmt: WHILE . '(' Expr ')' statement
+
+    '('  deslocar, e ir ao estado 143
+
+
+estado 133
+
+   65 IfStmt: IF . '(' Expr ')' statement
+   66       | IF . '(' Expr ')' elseStmt
+
+    '('  deslocar, e ir ao estado 144
+
+
+estado 134
+
+   54 Stmt: ';' .
+
+    $padrão  reduzir usando a regra 54 (Stmt)
+
+
+estado 135
+
+   47 CompoundStmt: '{' StmtList '}' .
+
+    $padrão  reduzir usando a regra 47 (CompoundStmt)
+
+
+estado 136
+
+   51 Stmt: Declaration .
+
+    $padrão  reduzir usando a regra 51 (Stmt)
+
+
+estado 137
+
+   48 StmtList: StmtList Stmt .
+
+    $padrão  reduzir usando a regra 48 (StmtList)
+
+
+estado 138
+
+    3 Declaration: Type . Assignment ';'
+    7            | Type . ArrayUsage ';'
+
+    NUM   deslocar, e ir ao estado 8
+    ID    deslocar, e ir ao estado 52
+    '-'   deslocar, e ir ao estado 11
+    '\''  deslocar, e ir ao estado 12
+    '"'   deslocar, e ir ao estado 13
+    '('   deslocar, e ir ao estado 14
+
+    Assignment  ir ao estado 63
+    ArrayUsage  ir ao estado 64
+
+
+estado 139
+
+   50 Stmt: WhileStmt .
+
+    $padrão  reduzir usando a regra 50 (Stmt)
+
+
+estado 140
+
+   52 Stmt: ForStmt .
+
+    $padrão  reduzir usando a regra 52 (Stmt)
+
+
+estado 141
+
+   53 Stmt: IfStmt .
+
+    $padrão  reduzir usando a regra 53 (Stmt)
+
+
+estado 142
+
+   61 ForStmt: FOR '(' . Expr ';' Expr ';' Expr ')' statement
+   62        | FOR '(' . Expr ')' statement
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 145
+
+
+estado 143
+
+   60 WhileStmt: WHILE '(' . Expr ')' statement
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 146
+
+
+estado 144
+
+   65 IfStmt: IF '(' . Expr ')' statement
+   66       | IF '(' . Expr ')' elseStmt
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 147
+
+
+estado 145
+
+   61 ForStmt: FOR '(' Expr . ';' Expr ';' Expr ')' statement
+   62        | FOR '(' Expr . ')' statement
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    GT   deslocar, e ir ao estado 91
+    LT   deslocar, e ir ao estado 92
+    NE   deslocar, e ir ao estado 93
+    EQ   deslocar, e ir ao estado 94
+    GE   deslocar, e ir ao estado 95
+    LE   deslocar, e ir ao estado 96
+    ';'  deslocar, e ir ao estado 148
+    ')'  deslocar, e ir ao estado 149
+
+
+estado 146
+
+   60 WhileStmt: WHILE '(' Expr . ')' statement
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    GT   deslocar, e ir ao estado 91
+    LT   deslocar, e ir ao estado 92
+    NE   deslocar, e ir ao estado 93
+    EQ   deslocar, e ir ao estado 94
+    GE   deslocar, e ir ao estado 95
+    LE   deslocar, e ir ao estado 96
+    ')'  deslocar, e ir ao estado 150
+
+
+estado 147
+
+   65 IfStmt: IF '(' Expr . ')' statement
+   66       | IF '(' Expr . ')' elseStmt
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    GT   deslocar, e ir ao estado 91
+    LT   deslocar, e ir ao estado 92
+    NE   deslocar, e ir ao estado 93
+    EQ   deslocar, e ir ao estado 94
+    GE   deslocar, e ir ao estado 95
+    LE   deslocar, e ir ao estado 96
+    ')'  deslocar, e ir ao estado 151
+
+
+estado 148
+
+   61 ForStmt: FOR '(' Expr ';' . Expr ';' Expr ')' statement
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 152
+
+
+estado 149
+
+   62 ForStmt: FOR '(' Expr ')' . statement
+
+    error   deslocar, e ir ao estado 1
+    INT     deslocar, e ir ao estado 2
+    FLOAT   deslocar, e ir ao estado 3
+    CHAR    deslocar, e ir ao estado 4
+    DOUBLE  deslocar, e ir ao estado 5
+    VOID    deslocar, e ir ao estado 6
+    FOR     deslocar, e ir ao estado 131
+    WHILE   deslocar, e ir ao estado 132
+    IF      deslocar, e ir ao estado 133
+    STRUCT  deslocar, e ir ao estado 7
+    NUM     deslocar, e ir ao estado 8
+    ID      deslocar, e ir ao estado 9
+    RETURN  deslocar, e ir ao estado 10
+    ';'     deslocar, e ir ao estado 134
+    '-'     deslocar, e ir ao estado 11
+    '\''    deslocar, e ir ao estado 12
+    '"'     deslocar, e ir ao estado 13
+    '('     deslocar, e ir ao estado 14
+    '{'     deslocar, e ir ao estado 127
+
+    Declaration   ir ao estado 136
+    Assignment    ir ao estado 17
+    statement     ir ao estado 153
+    FunctionCall  ir ao estado 18
+    ArrayUsage    ir ao estado 19
+    CompoundStmt  ir ao estado 154
+    Stmt          ir ao estado 155
+    Type          ir ao estado 138
+    WhileStmt     ir ao estado 139
+    ForStmt       ir ao estado 140
+    IfStmt        ir ao estado 141
+    StructStmt    ir ao estado 22
+    returnStmt    ir ao estado 23
+
+
+estado 150
+
+   60 WhileStmt: WHILE '(' Expr ')' . statement
+
+    error   deslocar, e ir ao estado 1
+    INT     deslocar, e ir ao estado 2
+    FLOAT   deslocar, e ir ao estado 3
+    CHAR    deslocar, e ir ao estado 4
+    DOUBLE  deslocar, e ir ao estado 5
+    VOID    deslocar, e ir ao estado 6
+    FOR     deslocar, e ir ao estado 131
+    WHILE   deslocar, e ir ao estado 132
+    IF      deslocar, e ir ao estado 133
+    STRUCT  deslocar, e ir ao estado 7
+    NUM     deslocar, e ir ao estado 8
+    ID      deslocar, e ir ao estado 9
+    RETURN  deslocar, e ir ao estado 10
+    ';'     deslocar, e ir ao estado 134
+    '-'     deslocar, e ir ao estado 11
+    '\''    deslocar, e ir ao estado 12
+    '"'     deslocar, e ir ao estado 13
+    '('     deslocar, e ir ao estado 14
+    '{'     deslocar, e ir ao estado 127
+
+    Declaration   ir ao estado 136
+    Assignment    ir ao estado 17
+    statement     ir ao estado 156
+    FunctionCall  ir ao estado 18
+    ArrayUsage    ir ao estado 19
+    CompoundStmt  ir ao estado 154
+    Stmt          ir ao estado 155
+    Type          ir ao estado 138
+    WhileStmt     ir ao estado 139
+    ForStmt       ir ao estado 140
+    IfStmt        ir ao estado 141
+    StructStmt    ir ao estado 22
+    returnStmt    ir ao estado 23
+
+
+estado 151
+
+   65 IfStmt: IF '(' Expr ')' . statement
+   66       | IF '(' Expr ')' . elseStmt
+
+    error   deslocar, e ir ao estado 1
+    INT     deslocar, e ir ao estado 2
+    FLOAT   deslocar, e ir ao estado 3
+    CHAR    deslocar, e ir ao estado 4
+    DOUBLE  deslocar, e ir ao estado 5
+    VOID    deslocar, e ir ao estado 6
+    FOR     deslocar, e ir ao estado 131
+    WHILE   deslocar, e ir ao estado 132
+    IF      deslocar, e ir ao estado 133
+    STRUCT  deslocar, e ir ao estado 7
+    NUM     deslocar, e ir ao estado 8
+    ID      deslocar, e ir ao estado 9
+    RETURN  deslocar, e ir ao estado 10
+    ';'     deslocar, e ir ao estado 134
+    '-'     deslocar, e ir ao estado 11
+    '\''    deslocar, e ir ao estado 12
+    '"'     deslocar, e ir ao estado 13
+    '('     deslocar, e ir ao estado 14
+    '{'     deslocar, e ir ao estado 127
+
+    Declaration   ir ao estado 136
+    Assignment    ir ao estado 17
+    statement     ir ao estado 157
+    FunctionCall  ir ao estado 18
+    ArrayUsage    ir ao estado 19
+    CompoundStmt  ir ao estado 154
+    Stmt          ir ao estado 155
+    Type          ir ao estado 138
+    WhileStmt     ir ao estado 139
+    ForStmt       ir ao estado 140
+    elseLine      ir ao estado 158
+    elseStmt      ir ao estado 159
+    IfStmt        ir ao estado 141
+    StructStmt    ir ao estado 22
+    returnStmt    ir ao estado 23
+
+
+estado 152
+
+   61 ForStmt: FOR '(' Expr ';' Expr . ';' Expr ')' statement
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    GT   deslocar, e ir ao estado 91
+    LT   deslocar, e ir ao estado 92
+    NE   deslocar, e ir ao estado 93
+    EQ   deslocar, e ir ao estado 94
+    GE   deslocar, e ir ao estado 95
+    LE   deslocar, e ir ao estado 96
+    ';'  deslocar, e ir ao estado 160
+
+
+estado 153
+
+   62 ForStmt: FOR '(' Expr ')' statement .
+
+    $padrão  reduzir usando a regra 62 (ForStmt)
+
+
+estado 154
+
+   33 statement: CompoundStmt .
+
+    $padrão  reduzir usando a regra 33 (statement)
+
+
+estado 155
+
+   34 statement: Stmt .
+
+    $padrão  reduzir usando a regra 34 (statement)
+
+
+estado 156
+
+   60 WhileStmt: WHILE '(' Expr ')' statement .
+
+    $padrão  reduzir usando a regra 60 (WhileStmt)
+
+
+estado 157
+
+   63 elseLine: statement . ELSE
+   65 IfStmt: IF '(' Expr ')' statement .
+
+    ELSE  deslocar, e ir ao estado 161
+
+    $padrão  reduzir usando a regra 65 (IfStmt)
+
+
+estado 158
+
+   64 elseStmt: elseLine . statement
+
+    error   deslocar, e ir ao estado 1
+    INT     deslocar, e ir ao estado 2
+    FLOAT   deslocar, e ir ao estado 3
+    CHAR    deslocar, e ir ao estado 4
+    DOUBLE  deslocar, e ir ao estado 5
+    VOID    deslocar, e ir ao estado 6
+    FOR     deslocar, e ir ao estado 131
+    WHILE   deslocar, e ir ao estado 132
+    IF      deslocar, e ir ao estado 133
+    STRUCT  deslocar, e ir ao estado 7
+    NUM     deslocar, e ir ao estado 8
+    ID      deslocar, e ir ao estado 9
+    RETURN  deslocar, e ir ao estado 10
+    ';'     deslocar, e ir ao estado 134
+    '-'     deslocar, e ir ao estado 11
+    '\''    deslocar, e ir ao estado 12
+    '"'     deslocar, e ir ao estado 13
+    '('     deslocar, e ir ao estado 14
+    '{'     deslocar, e ir ao estado 127
+
+    Declaration   ir ao estado 136
+    Assignment    ir ao estado 17
+    statement     ir ao estado 162
+    FunctionCall  ir ao estado 18
+    ArrayUsage    ir ao estado 19
+    CompoundStmt  ir ao estado 154
+    Stmt          ir ao estado 155
+    Type          ir ao estado 138
+    WhileStmt     ir ao estado 139
+    ForStmt       ir ao estado 140
+    IfStmt        ir ao estado 141
+    StructStmt    ir ao estado 22
+    returnStmt    ir ao estado 23
+
+
+estado 159
+
+   66 IfStmt: IF '(' Expr ')' elseStmt .
+
+    $padrão  reduzir usando a regra 66 (IfStmt)
+
+
+estado 160
+
+   61 ForStmt: FOR '(' Expr ';' Expr ';' . Expr ')' statement
+
+    NUM             deslocar, e ir ao estado 8
+    ID              deslocar, e ir ao estado 81
+    INC             deslocar, e ir ao estado 39
+    DEC             deslocar, e ir ao estado 40
+    STRING_LITERAL  deslocar, e ir ao estado 41
+    AMPERSAND       deslocar, e ir ao estado 42
+    '-'             deslocar, e ir ao estado 11
+    '\''            deslocar, e ir ao estado 12
+    '"'             deslocar, e ir ao estado 13
+    '('             deslocar, e ir ao estado 14
+
+    $padrão  reduzir usando a regra 72 (Expr)
+
+    Assignment  ir ao estado 44
+    ArrayUsage  ir ao estado 46
+    Expr        ir ao estado 163
+
+
+estado 161
+
+   63 elseLine: statement ELSE .
+
+    $padrão  reduzir usando a regra 63 (elseLine)
+
+
+estado 162
+
+   64 elseStmt: elseLine statement .
+
+    $padrão  reduzir usando a regra 64 (elseStmt)
+
+
+estado 163
+
+   61 ForStmt: FOR '(' Expr ';' Expr ';' Expr . ')' statement
+   73 Expr: Expr . LE Expr
+   74     | Expr . GE Expr
+   75     | Expr . NE Expr
+   76     | Expr . EQ Expr
+   77     | Expr . GT Expr
+   78     | Expr . LT Expr
+
+    GT   deslocar, e ir ao estado 91
+    LT   deslocar, e ir ao estado 92
+    NE   deslocar, e ir ao estado 93
+    EQ   deslocar, e ir ao estado 94
+    GE   deslocar, e ir ao estado 95
+    LE   deslocar, e ir ao estado 96
+    ')'  deslocar, e ir ao estado 164
+
+
+estado 164
+
+   61 ForStmt: FOR '(' Expr ';' Expr ';' Expr ')' . statement
+
+    error   deslocar, e ir ao estado 1
+    INT     deslocar, e ir ao estado 2
+    FLOAT   deslocar, e ir ao estado 3
+    CHAR    deslocar, e ir ao estado 4
+    DOUBLE  deslocar, e ir ao estado 5
+    VOID    deslocar, e ir ao estado 6
+    FOR     deslocar, e ir ao estado 131
+    WHILE   deslocar, e ir ao estado 132
+    IF      deslocar, e ir ao estado 133
+    STRUCT  deslocar, e ir ao estado 7
+    NUM     deslocar, e ir ao estado 8
+    ID      deslocar, e ir ao estado 9
+    RETURN  deslocar, e ir ao estado 10
+    ';'     deslocar, e ir ao estado 134
+    '-'     deslocar, e ir ao estado 11
+    '\''    deslocar, e ir ao estado 12
+    '"'     deslocar, e ir ao estado 13
+    '('     deslocar, e ir ao estado 14
+    '{'     deslocar, e ir ao estado 127
+
+    Declaration   ir ao estado 136
+    Assignment    ir ao estado 17
+    statement     ir ao estado 165
+    FunctionCall  ir ao estado 18
+    ArrayUsage    ir ao estado 19
+    CompoundStmt  ir ao estado 154
+    Stmt          ir ao estado 155
+    Type          ir ao estado 138
+    WhileStmt     ir ao estado 139
+    ForStmt       ir ao estado 140
+    IfStmt        ir ao estado 141
+    StructStmt    ir ao estado 22
+    returnStmt    ir ao estado 23
+
+
+estado 165
+
+   61 ForStmt: FOR '(' Expr ';' Expr ';' Expr ')' statement .
+
+    $padrão  reduzir usando a regra 61 (ForStmt)
