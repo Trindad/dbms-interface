@@ -11,10 +11,12 @@ int main(){
     
     object      = existeArquivo("fs_object.dat");
     schema      = existeArquivo("fs_schema.dat");
+    
     nTabela[0]  = existeArquivo("Aluno.dat");
     nTabela[1]  = existeArquivo("Inst.dat");
     nTabela[2]  = existeArquivo("Inscri.dat");
-     if(!object || !schema){
+    
+    if(!object || !schema){
     
         if(!nTabela[0]){                                                                    //Se ainda não existe a Aluno, a mesma é criada
             tab[0] = iniciaTabela("Aluno");                                                 //Cria a tabela 

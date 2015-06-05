@@ -5,6 +5,78 @@
 #include "../../buffend.h"
 #include "semantic.h"
 
+/**
+ * Insere campos correspondente a coluna 
+ * Verica se o tipo do valor é igual
+ * Se sim insere
+ * Do contrário lança erro
+ */
+void insertFields(table *t,Datas datas,char *type , int r) {
+
+	// printf("INSERRE CAMPOSHD %d\n",r);
+	// int  c = 0, it = 0; //indice da coluna com o nome do campo a ser inserido
+	column *columns = NULL;
+
+	// /**
+	//  * Insere um conjunto de dados de cada vez
+	//  */
+	// printf("numberOfColumns %d R %d\n", datas.numberOfColumns[r],r);
+	// while(c < datas.numberOfColumns[r])
+	// {
+	// 	printf("TIPO AQUI KKKK %c %c\n",datas.insert[r][c+1].t_char,type[it]);
+	// 	if (datas.insert[r][c+1].t_char == type[it])
+	// 	{
+	// 		printf("IMPRIME %s = %s\n",datas.insert[1][it].str,datas.insert[r][c].str );
+	// 		columns = insereValor(t,columns,datas.insert[1][it].str,datas.insert[r][c].str);
+	// 	}
+	// 	else
+	// 	{
+	// 		fprintf(stderr, "Campo com valor %s não corresponde ao tipo da coluna %s\n",datas.insert[r][c].str,datas.insert[1][c].str);
+	// 	}
+	// 	printf("\n-----------------------------------------\n");
+	// 	it++;
+	// 	c += 2;
+	// }
+	// columns = NULL;     
+    columns = insereValor(t,columns, "CPF", "15976");
+    columns = insereValor(t,columns, "Nome", "Luana df");
+    columns = insereValor(t,columns, "Endereco", " ");
+    columns = insereValor(t,columns, "Peso", " ");
+	finalizaInsert(datas.insert[0][0].str, columns); 
+
+}
+
+table *start(char *name) 
+{
+	table *t = (table *)malloc(sizeof(table));
+
+    if (t == NULL)
+    {
+        fprintf(stderr, "Erro na alocação de memória.\n");
+    }
+
+    int n = strlen(name);
+
+    if (n > TAMANHO_NOME_TABELA)
+    {
+        n = TAMANHO_NOME_TABELA;
+    }
+
+    strncpy(t->nome,name,n+1); // Inicia a estrutura de tabela com o nome da tabela.
+   
+	struct fs_objects  object = leObjeto(t->nome);    
+    
+    tp_table *schema = leSchema( object);
+
+    if (schema == ERRO_ABRIR_ESQUEMA)
+    {
+    	fprintf(stderr, "Erro ao ler esquema da tabela %s\n",t->nome);
+    }
+
+    t->esquema = schema;
+
+    return t;
+}
 
 /**
  * Função para analisar a string de entrada para inserir no banco
@@ -14,22 +86,80 @@
  */
 void analyze(char *sql)
 {
-	union TOKEN **insert = execute(sql);
 
-	char *file = strdup(insert[0][0].str);
+	Datas datas = execute(sql);
+	int rows = 0,columns = 0;
+
+	char *file = strdup(datas.insert[rows][columns].str);
+	
 	strcat(file,".dat");
+	printf("Arquivo %s\n",file);
+
 	int exist  = existeArquivo(file);
+	
+	rows++;
 
 	/**
 	 * Verifica possiveis erros semanticos
 	 */
 	if (exist)
 	{
+		table  *t = start(datas.insert[0][0].str);
+		/**
+		 * Insere na ordem do insert os campos
+		 */
+		char *type = (char*) malloc (sizeof(char)*datas.numberOfColumns[rows]);
+
+		if (type == NULL)
+		{
+			fprintf(stderr, "Erro de alocação de memória.\n");
+		}
+
+		int it = 0;
+		printf("Columns %d %d %s\n",columns, datas.numberOfColumns[rows],datas.insert[0][0].str );
+		
+		while(it < datas.numberOfColumns[rows])
+		{
+			printf("%s\n",datas.insert[rows][it].str );
+			type[it] = retornaTipoDoCampo(datas.insert[rows][it].str,t);
+			printf("Tipo campo %c\n",type[it] );
+			it++;
+		}
+		printf("numberOfColumns CCCC %d\n", datas.numberOfColumns[rows]);
+
+		rows++;
+		
+		// for (it = rows; it < datas.numberOfRows; it++)
+		// {
+			printf(" numberOfRows RRRR %d\n",datas.numberOfRows );
+			insertFields(t,datas,type,it);
+		// }
+
+		/**
+		 * Insere na ordem do banco
+		 */
+		if (it == 0)
+		{
+			printf("Insere na ordem do banco\n");
+		}
 		
 	}
 	else
 	{
-		fprintf(stderr, "Tabela %s não existe\n",insert[0][0]);
+		fprintf(stderr, "Tabela %s não existe\n",datas.insert[0][0]);
 	}
 
+	for (rows = 0; rows < datas.numberOfRows; rows++)
+	{
+		
+		free(datas.insert[rows]);
+	}
+
+	free(datas.insert);
+}
+
+int main(int argc, char  *argv[])
+{
+	analyze(argv[1]);
+	return 0;
 }

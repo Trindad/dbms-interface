@@ -280,7 +280,7 @@ int excluirTabela(char *nomeTabela);
                 ERRO_LEITURA_DADOS.
    ---------------------------------------------------------------------------------------------*/
 
-int existeArquivo(const char* filename);
+int existeArquivo(char* filename);
 /* ---------------------------------------------------------------------------------------------- 
     Objetivo:   Verificação de existência de um arquivo.
     Parametros: Nome do arquivo.    
@@ -369,3 +369,5 @@ tp_table *abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tab
 
 
 int retornaTamanhoValorCampo(char *nomeCampo, table  *tab);
+
+char retornaTipoDoCampo(char *nomeCampo, table  *tab);

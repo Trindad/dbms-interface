@@ -38,7 +38,6 @@ struct fs_objects leObjeto(char *nTabela){
             fread(&cod,sizeof(int),1,dicionario);
             objeto.qtdCampos = cod;
             
-            free(tupla);
             return objeto;
         }
         fseek(dicionario, 28, 1); // Pula a quantidade de caracteres para a proxima verificacao(4B do codigo, 20B do nome do arquivo e 4B da quantidade de campos).
@@ -49,6 +48,7 @@ struct fs_objects leObjeto(char *nTabela){
 }
 
 tp_table *leSchema (struct fs_objects objeto){
+   
     FILE *schema;
     int i = 0, cod = 0;
     char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_CAMPO);
@@ -91,6 +91,11 @@ tp_table *leSchema (struct fs_objects objeto){
                 i++;
             } else {
                 fseek(schema, 109, 1); // Pula a quantidade de caracteres para a proxima verificacao (40B do nome, 1B do tipo e 4B do tamanho,4B da chave, 20B do nome da Tabela Apontada e 40B do atributo apontado).
+            }
+
+            if (i >= 1 )
+            {
+                esquema[i-1].next = &esquema[i];
             }
         }
     }
@@ -310,7 +315,7 @@ int verificaNomeTabela(char *nomeTabela)
         fseek(dicionario, -1, 1);
 
         fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
-
+        printf("TUPLA %s %s\n",tupla,nomeTabela );
         if(strcmp(tupla, nomeTabela) == 0){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
             free(tupla);
             return 1;
@@ -405,6 +410,7 @@ int colocaTuplaBuffer(tp_buffer *buffer, int from, tp_table *campos, struct fs_o
 //----------------------------------------
 // CRIA TABELA
 table *iniciaTabela(char *nome){
+
     if(verificaNomeTabela(nome)){   // Se o nome já existir no dicionario, retorna erro.
         return ERRO_NOME_TABELA_INVALIDO;
     }
@@ -434,8 +440,7 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
         return ERRO_ESTRUTURA_TABELA_NULA;
     tp_table *aux;  
     if(t->esquema == NULL){ // Se o campo for o primeiro a ser adicionado, adiciona campo no esquema.
-        
-        
+    
         tp_table *e = (tp_table *)malloc(sizeof(tp_table));
         memset(e, 0, sizeof(*e));
         if (e == NULL)
@@ -464,7 +469,9 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
         t->esquema = e; 
 
         return t; // Retorna a estrutura
-    } else { 
+
+    } 
+    else { 
         for(aux = t->esquema; aux != NULL; aux = aux->next){ // Anda até o final da estrutura de campos.
             if(aux->next == NULL){ // Adiciona um campo no final.   
                 tp_table *e = (tp_table *)malloc(sizeof(tp_table));
@@ -564,14 +571,21 @@ int retornaTamanhoValorCampo(char *nomeCampo, table  *tab) {
     return tam;
 }
 
-char retornaTamanhoTipoDoCampo(char *nomeCampo, table  *tab) {
+char retornaTipoDoCampo(char *nomeCampo, table  *tab) {
     
+    printf("%s %s\n",nomeCampo,tab->nome );
     char tipo = 0;
 
     tp_table *temp = tab->esquema;
 
+    if (temp == NULL)
+    {
+        fprintf(stderr, "Erro ao abrir esquema\n" ); 
+    }
+
     while(temp != NULL) {
 
+        printf("\nnomeCampo %s Esquema %s\n", nomeCampo,temp->nome);
        if (strcmp(nomeCampo,temp->nome) == 0)
        {
             tipo = temp->tipo;
@@ -600,7 +614,7 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
         }
 
         int tam = retornaTamanhoValorCampo(nomeCampo, tab);
-        char tipo = retornaTamanhoTipoDoCampo(nomeCampo,tab); 
+        char tipo = retornaTipoDoCampo(nomeCampo,tab); 
 
         int nTam = strlen(valorCampo);
 
@@ -651,7 +665,7 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
                     return ERRO_DE_ALOCACAO;
                 }
                 int tam = retornaTamanhoValorCampo(nomeCampo, tab);
-                char tipo = retornaTamanhoTipoDoCampo(nomeCampo,tab); 
+                char tipo = retornaTipoDoCampo(nomeCampo,tab); 
 
                 int nTam = strlen(valorCampo);
 
@@ -689,6 +703,7 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
                 }
                 strncpy(e->valorCampo, valorCampo,n);
                 aux->next = e;
+                
                 return c;
             }
         }
@@ -718,6 +733,7 @@ int finalizaInsert(char *nome, column *c){
                 break;
 
             case PK:
+                printf("NOME %s TEMP NOME Campo %s\n", nome,temp->nomeCampo);
                 erro = verificaChavePK(nome, temp , temp->nomeCampo, temp->valorCampo);
                 if(erro == ERRO_CHAVE_PRIMARIA){
                     printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
@@ -1046,8 +1062,10 @@ void imprime(char nomeTabela[]) {
     Retorno:    INT 1 (existe) , 0 (não existe).
    ---------------------------------------------------------------------------------------------*/
     
-int existeArquivo(const char* filename){
+int existeArquivo(char* filename){
+    
     FILE* fptr = fopen(filename, "r");
+
     if (fptr != NULL){
         fclose(fptr);
         
