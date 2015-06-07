@@ -276,9 +276,3 @@ void analyze(char *sql)
 
 	free(datas.insert);
 }
-
-int main(int argc, char  *argv[])
-{
-	analyze(argv[1]);
-	return 0;
-}
