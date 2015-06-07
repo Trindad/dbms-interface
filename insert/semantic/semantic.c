@@ -100,6 +100,7 @@ void insertFields(table *t,Datas datas,char *type , int r) {
 	}
 
 	printf("\n-----------------------------------------\n");
+	
 	// columns = NULL;     
     // columns = insereValor(t,columns, "CPF", "22222");
     // columns = insereValor(t,columns, "Nome", "Carol df");
@@ -184,41 +185,42 @@ void analyze(char *sql)
 	if (exist)
 	{
 		table  *t = start(datas.insert[0][0].str);
-		/**
-		 * Insere na ordem do insert os campos
-		 */
-		char *type = (char*) malloc (sizeof(char)*datas.numberOfColumns[rows]);
 
-		if (type == NULL)
+		if (datas.numberOfColumns[1] >= 1)
 		{
-			fprintf(stderr, "Erro de alocação de memória.\n");
+			/**
+			 * Insere na ordem do insert os campos
+			 */
+			char *type = (char*) malloc (sizeof(char)*datas.numberOfColumns[rows]);
+
+			if (type == NULL)
+			{
+				fprintf(stderr, "Erro de alocação de memória.\n");
+			}
+
+			int it = 0;
+			// printf("Columns %d %d %s\n",columns, datas.numberOfColumns[rows],datas.insert[0][0].str );
+			
+			while(it < datas.numberOfColumns[rows])
+			{
+				// printf("%s\n",datas.insert[rows][it].str );
+				type[it] = retornaTipoDoCampo(datas.insert[rows][it].str,t);
+				// printf("Tipo campo %c\n",type[it] );
+				it++;
+			}
+			// printf("numberOfColumns CCCC %d\n", datas.numberOfColumns[rows]);
+
+			rows++;
+			
+			for (it = rows; it < datas.numberOfRows; it++)
+			{
+				// printf(" numberOfRows RRRR %d\n",datas.numberOfRows );
+				insertFields(t,datas,type,it);
+			}
 		}
-
-		int it = 0;
-		// printf("Columns %d %d %s\n",columns, datas.numberOfColumns[rows],datas.insert[0][0].str );
-		
-		while(it < datas.numberOfColumns[rows])
+		else
 		{
-			// printf("%s\n",datas.insert[rows][it].str );
-			type[it] = retornaTipoDoCampo(datas.insert[rows][it].str,t);
-			// printf("Tipo campo %c\n",type[it] );
-			it++;
-		}
-		// printf("numberOfColumns CCCC %d\n", datas.numberOfColumns[rows]);
 
-		rows++;
-		
-		for (it = rows; it < datas.numberOfRows; it++)
-		{
-			// printf(" numberOfRows RRRR %d\n",datas.numberOfRows );
-			insertFields(t,datas,type,it);
-		}
-
-		/**
-		 * Insere na ordem do banco
-		 */
-		if (it == 0)
-		{
 			printf("Insere na ordem do banco\n");
 		}
 		
