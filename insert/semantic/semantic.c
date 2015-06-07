@@ -158,6 +158,7 @@ table *start(char *name)
     return t;
 }
 
+
 /**
  * Função para analisar a string de entrada para inserir no banco
  * Analise léxica,sintática e semântica, caso ocorra algum erro, 
@@ -186,7 +187,7 @@ void analyze(char *sql)
 	{
 		table  *t = start(datas.insert[0][0].str);
 
-		if (datas.numberOfColumns[1] >= 1)
+		if (datas.numberOfColumns[rows] >= 1)
 		{
 			/**
 			 * Insere na ordem do insert os campos
@@ -217,10 +218,46 @@ void analyze(char *sql)
 				// printf(" numberOfRows RRRR %d\n",datas.numberOfRows );
 				insertFields(t,datas,type,it);
 			}
+			free(type);
 		}
 		else
 		{
+			tp_table *e = t->esquema;
+			int it = 0;
 
+			//insere campos na ordem do banco
+			while(e != NULL)
+			{
+				datas.insert[rows][it].str = strdup(e->nome);
+				e = e->next;
+				it++;
+			}
+
+			datas.numberOfColumns[rows] = it;
+
+			char *type = (char*) malloc (sizeof(char)*datas.numberOfColumns[rows]);
+
+			if (type == NULL)
+			{
+				fprintf(stderr, "Erro de alocação de memória.\n");
+			}
+
+			it = 0;
+
+			while(it < datas.numberOfColumns[rows])
+			{
+				type[it] = retornaTipoDoCampo(datas.insert[rows][it].str,t);
+				
+				it++;
+			}
+
+			rows++;
+
+			for (it = rows; it < datas.numberOfRows; it++)
+			{
+				insertFields(t,datas,type,it);
+			}
+			free(type);
 			printf("Insere na ordem do banco\n");
 		}
 		
@@ -235,6 +272,7 @@ void analyze(char *sql)
 		
 		free(datas.insert[rows]);
 	}
+
 
 	free(datas.insert);
 }
