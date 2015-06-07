@@ -5,8 +5,10 @@
 #include "../../buffend.h"
 #include "semantic.h"
 
+int nColumns;
+
 /**
- * Insere campos correspondente a coluna 
+ * Insere campos correspondente a uma tupla
  * Verica se o tipo do valor é igual
  * Se sim insere
  * Do contrário lança erro
@@ -14,35 +16,106 @@
 void insertFields(table *t,Datas datas,char *type , int r) {
 
 	// printf("INSERRE CAMPOSHD %d\n",r);
-	// int  c = 0, it = 0; //indice da coluna com o nome do campo a ser inserido
+	int  c = 0, it = 0; //indice da coluna com o nome do campo a ser inserido
 	column *columns = NULL;
-
-	// /**
-	//  * Insere um conjunto de dados de cada vez
-	//  */
+	char *nameColumns[nColumns]; //vetor com nome das colunas para controle de nulos
+	/**
+	 * Insere um conjunto de dados de cada vez
+	 */
 	// printf("numberOfColumns %d R %d\n", datas.numberOfColumns[r],r);
-	// while(c < datas.numberOfColumns[r])
-	// {
-	// 	printf("TIPO AQUI KKKK %c %c\n",datas.insert[r][c+1].t_char,type[it]);
-	// 	if (datas.insert[r][c+1].t_char == type[it])
-	// 	{
-	// 		printf("IMPRIME %s = %s\n",datas.insert[1][it].str,datas.insert[r][c].str );
-	// 		columns = insereValor(t,columns,datas.insert[1][it].str,datas.insert[r][c].str);
-	// 	}
-	// 	else
-	// 	{
-	// 		fprintf(stderr, "Campo com valor %s não corresponde ao tipo da coluna %s\n",datas.insert[r][c].str,datas.insert[1][c].str);
-	// 	}
-	// 	printf("\n-----------------------------------------\n");
-	// 	it++;
-	// 	c += 2;
-	// }
+	while(c < datas.numberOfColumns[r])
+	{
+		// printf("TIPO AQUI  %c %c\n",datas.insert[r][c+1].t_char,type[it]);
+		if (datas.insert[r][c+1].t_char == type[it])
+		{
+			printf("IMPRIME %s = %s\n",datas.insert[1][it].str,datas.insert[r][c].str );
+			columns = insereValor(t,columns,datas.insert[1][it].str,datas.insert[r][c].str);
+		}
+		else
+		{
+			fprintf(stderr, "Campo com valor %s não corresponde ao tipo da coluna %s\n",datas.insert[r][c].str,datas.insert[1][c].str);
+		}
+		it++;
+		c += 2;
+	}
+
+	/**
+	 * Insere nulo nos campos que não foram passados 
+	 * como parâmetro no insert.
+	 */
+	if (datas.numberOfColumns[1] < nColumns)
+	{
+		printf("Insere valores nulos %d %d\n", datas.numberOfColumns[1],nColumns);
+		int index = 0;
+
+			// printf("aqui?\n");
+		tp_table *temp = t->esquema;
+		int count = 0;//adiciona 1 se já foi inserido valor
+		
+		while(temp != NULL && temp->nome != NULL)
+		{
+			for(it = 0; it < datas.numberOfColumns[1]; it++)
+			{
+				if (strcmp(temp->nome,datas.insert[1][it].str) == 0)
+				{
+					count = 1;
+					break;
+				}
+			}
+			
+
+			if (count == 0)
+			{
+				printf("VALOR do esquema %s\n",temp->nome );
+				nameColumns[index] = strdup(temp->nome);
+				index++;
+			}
+			count = 0;
+			temp = temp->next;
+		}
+		it = 0;
+
+		while(it < index)
+		{
+			char type = retornaTipoDoCampo(nameColumns[it],t);
+			printf("INSERE VALORES NULOS %s %c\n",nameColumns[it],type);
+
+			if (type == 'S')
+			{
+				columns = insereValor(t,columns,nameColumns[it]," ");
+			}
+			else if (type == 'D')
+			{
+				columns = insereValor(t,columns,nameColumns[it],"0.0");
+			}
+			else if (type == 'I')
+			{
+				columns = insereValor(t,columns,nameColumns[it],"0");
+			}
+
+			free(nameColumns[it]);
+
+			it++;
+		}
+	}
+
+	printf("\n-----------------------------------------\n");
 	// columns = NULL;     
-    columns = insereValor(t,columns, "CPF", "15976");
-    columns = insereValor(t,columns, "Nome", "Luana df");
-    columns = insereValor(t,columns, "Endereco", " ");
-    columns = insereValor(t,columns, "Peso", " ");
-	finalizaInsert(datas.insert[0][0].str, columns); 
+    // columns = insereValor(t,columns, "CPF", "22222");
+    // columns = insereValor(t,columns, "Nome", "Carol df");
+    // columns = insereValor(t,columns, "Endereco", " ");
+    // columns = insereValor(t,columns, "Peso", "0.0");
+    
+	it = finalizaInsert(datas.insert[0][0].str, columns); 
+
+	if (it == SUCCESS)
+	{
+		printf("INSERIU COM SUCESSO...\n");
+	}
+	else
+	{
+		printf("NÃO INSERIU COM SUCESSO...%d\n", it);
+	}
 
 }
 
@@ -66,6 +139,8 @@ table *start(char *name)
    
 	struct fs_objects  object = leObjeto(t->nome);    
     
+	nColumns = object.qtdCampos; //recebe o número de colunas da tabela, para saber quais campos adicionar nulo
+
     tp_table *schema = leSchema( object);
 
     if (schema == ERRO_ABRIR_ESQUEMA)
@@ -75,6 +150,10 @@ table *start(char *name)
 
     t->esquema = schema;
 
+    if (t->esquema == NULL)
+    {
+    	fprintf(stderr, "Erro ao ler esquema da tabela %s\n",t->nome);
+    }
     return t;
 }
 
@@ -116,24 +195,24 @@ void analyze(char *sql)
 		}
 
 		int it = 0;
-		printf("Columns %d %d %s\n",columns, datas.numberOfColumns[rows],datas.insert[0][0].str );
+		// printf("Columns %d %d %s\n",columns, datas.numberOfColumns[rows],datas.insert[0][0].str );
 		
 		while(it < datas.numberOfColumns[rows])
 		{
-			printf("%s\n",datas.insert[rows][it].str );
+			// printf("%s\n",datas.insert[rows][it].str );
 			type[it] = retornaTipoDoCampo(datas.insert[rows][it].str,t);
-			printf("Tipo campo %c\n",type[it] );
+			// printf("Tipo campo %c\n",type[it] );
 			it++;
 		}
-		printf("numberOfColumns CCCC %d\n", datas.numberOfColumns[rows]);
+		// printf("numberOfColumns CCCC %d\n", datas.numberOfColumns[rows]);
 
 		rows++;
 		
-		// for (it = rows; it < datas.numberOfRows; it++)
-		// {
-			printf(" numberOfRows RRRR %d\n",datas.numberOfRows );
+		for (it = rows; it < datas.numberOfRows; it++)
+		{
+			// printf(" numberOfRows RRRR %d\n",datas.numberOfRows );
 			insertFields(t,datas,type,it);
-		// }
+		}
 
 		/**
 		 * Insere na ordem do banco

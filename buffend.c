@@ -87,18 +87,20 @@ tp_table *leSchema (struct fs_objects objeto){
 
                 fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
                 strcpy(esquema[i].attApt,tupla);
+                if (i >= 1 )
+                {
+                    esquema[i-1].next = &esquema[i];
+                }
+                esquema[i].next = NULL;
 
                 i++;
             } else {
                 fseek(schema, 109, 1); // Pula a quantidade de caracteres para a proxima verificacao (40B do nome, 1B do tipo e 4B do tamanho,4B da chave, 20B do nome da Tabela Apontada e 40B do atributo apontado).
             }
 
-            if (i >= 1 )
-            {
-                esquema[i-1].next = &esquema[i];
-            }
         }
     }
+
     free(tupla);
     free(tuplaT);
     fclose(schema);
@@ -315,7 +317,7 @@ int verificaNomeTabela(char *nomeTabela)
         fseek(dicionario, -1, 1);
 
         fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
-        printf("TUPLA %s %s\n",tupla,nomeTabela );
+        // printf("TUPLA %s %s\n",tupla,nomeTabela );
         if(strcmp(tupla, nomeTabela) == 0){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
             free(tupla);
             return 1;
@@ -507,6 +509,7 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
 
     return t; //Retorna estrutura atualizada.
 }
+
 int finalizaTabela(table *t){
     if(t == NULL)
         return ERRO_DE_PARAMETRO;
@@ -540,6 +543,7 @@ int finalizaTabela(table *t){
     strcpy(nomeArquivo, t->nome);
     strcat(nomeArquivo, ".dat\0");
     strcat(t->nome, "\0");
+
     // Salva dados sobre a tabela no dicionario.
     fwrite(&t->nome,sizeof(t->nome),1,dicionario);
     fwrite(&codTbl,sizeof(codTbl),1,dicionario);
@@ -573,7 +577,7 @@ int retornaTamanhoValorCampo(char *nomeCampo, table  *tab) {
 
 char retornaTipoDoCampo(char *nomeCampo, table  *tab) {
     
-    printf("%s %s\n",nomeCampo,tab->nome );
+    // printf("%s %s\n",nomeCampo,tab->nome );
     char tipo = 0;
 
     tp_table *temp = tab->esquema;
@@ -585,7 +589,7 @@ char retornaTipoDoCampo(char *nomeCampo, table  *tab) {
 
     while(temp != NULL) {
 
-        printf("\nnomeCampo %s Esquema %s\n", nomeCampo,temp->nome);
+        // printf("\nnomeCampo %s Esquema %s\n", nomeCampo,temp->nome);
        if (strcmp(nomeCampo,temp->nome) == 0)
        {
             tipo = temp->tipo;
@@ -713,7 +717,7 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
 }
 int finalizaInsert(char *nome, column *c){
     column *auxC, *temp;
-    int i = 0, x = 0, t, erro, j = 0;
+    int i = 0, x = 0, t = 0, erro, j = 0;
     FILE *dados;
 
     struct fs_objects objeto,dicio; // Le dicionario
@@ -733,10 +737,10 @@ int finalizaInsert(char *nome, column *c){
                 break;
 
             case PK:
-                printf("NOME %s TEMP NOME Campo %s\n", nome,temp->nomeCampo);
+                // printf("NOME %s TEMP NOME Campo %s\n", nome,temp->nomeCampo);
                 erro = verificaChavePK(nome, temp , temp->nomeCampo, temp->valorCampo);
                 if(erro == ERRO_CHAVE_PRIMARIA){
-                    printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
+                     printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
                     free(c);    // Libera a memoria da estrutura.
 					free(auxT); // Libera a memoria da estrutura.
 					//free(temp); // Libera a memoria da estrutura.   
@@ -808,90 +812,96 @@ int finalizaInsert(char *nome, column *c){
         
 	}
     
-    for(auxC = c, t = 0; auxC != NULL; auxC = auxC->next, t++){
-        if(t >= dicio.qtdCampos)
-            t = 0;
+    auxC = c;
+    t = 0;
+    while(t < dicio.qtdCampos) 
+    {        
+         printf("nome Campo %s %s\n",auxC->nomeCampo,auxT[t].nome );
+        if (strcmp(auxC->nomeCampo, auxT[t].nome) == 0)
+        {
+            if(t >= dicio.qtdCampos)
+                t = 0;
 
-        if(auxT[t].tipo == 'S'){ // Grava um dado do tipo string.
-            
-            if(sizeof(auxC->valorCampo) > auxT[t].tam && sizeof(auxC->valorCampo) != 8){
-				free(tab); // Libera a memoria da estrutura.
-				free(tab2); // Libera a memoria da estrutura.
-				free(c);    // Libera a memoria da estrutura.
-				free(auxT); // Libera a memoria da estrutura.
-				// free(temp); // Libera a memoria da estrutura.
-				fclose(dados);
-                return ERRO_NO_TAMANHO_STRING;
-            }
-            if(strcmp(auxC->nomeCampo, auxT[t].nome) != 0){
-				free(tab); // Libera a memoria da estrutura.
-				free(tab2); // Libera a memoria da estrutura.
-				free(c);    // Libera a memoria da estrutura.
-				free(auxT); // Libera a memoria da estrutura.
-				// free(temp); // Libera a memoria da estrutura.
-				fclose(dados);
-                return ERRO_NOME_CAMPO;
-            }
-            char valorCampo[auxT[t].tam];
-            strcpy(valorCampo,auxC->valorCampo);
-            strcat(valorCampo, "\0");
-            fwrite(&valorCampo,sizeof(valorCampo),1,dados);
-        }
-        else if(auxT[t].tipo == 'I'){ // Grava um dado do tipo inteiro.
-            i = 0;
-            while (i < strlen(auxC->valorCampo)){
-                if(auxC->valorCampo[i] < 48 || auxC->valorCampo[i] > 57){ 
-					free(tab); // Libera a memoria da estrutura.
-					free(tab2); // Libera a memoria da estrutura.
-					free(c);    // Libera a memoria da estrutura.
-					free(auxT); // Libera a memoria da estrutura.
-					//free(temp); // Libera a memoria da estrutura.
-					fclose(dados);
-                    return ERRO_NO_TIPO_INTEIRO;
+            if(auxT[t].tipo == 'S'){ // Grava um dado do tipo string.
+                
+                if(sizeof(auxC->valorCampo) > auxT[t].tam && sizeof(auxC->valorCampo) != 8){
+                    free(tab); // Libera a memoria da estrutura.
+                    free(tab2); // Libera a memoria da estrutura.
+                    free(c);    // Libera a memoria da estrutura.
+                    free(auxT); // Libera a memoria da estrutura.
+                    // free(temp); // Libera a memoria da estrutura.
+                    fclose(dados);
+                    return ERRO_NO_TAMANHO_STRING;
                 }
-                i++;
-            }
-
-            int valorInteiro = 0;
-            
-            sscanf(auxC->valorCampo,"%d",&valorInteiro);
-            fwrite(&valorInteiro,sizeof(valorInteiro),1,dados);
-        }
-        else if(auxT[t].tipo == 'D'){ // Grava um dado do tipo double.
-            x = 0;
-            while (x < strlen(auxC->valorCampo)){
-                if((auxC->valorCampo[x] < 48 || auxC->valorCampo[x] > 57) && (auxC->valorCampo[x] != 46)){ 
-					free(tab); // Libera a memoria da estrutura.
-					free(tab2); // Libera a memoria da estrutura.
-					free(c);    // Libera a memoria da estrutura.
-					free(auxT); // Libera a memoria da estrutura.
-					// free(temp); // Libera a memoria da estrutura.
-					fclose(dados);
-                    return ERRO_NO_TIPO_DOUBLE;
+                if(strcmp(auxC->nomeCampo, auxT[t].nome) != 0){
+                    free(tab); // Libera a memoria da estrutura.
+                    free(tab2); // Libera a memoria da estrutura.
+                    free(c);    // Libera a memoria da estrutura.
+                    free(auxT); // Libera a memoria da estrutura.
+                    // free(temp); // Libera a memoria da estrutura.
+                    fclose(dados);
+                    return ERRO_NOME_CAMPO;
                 }
-                x++;
+                char valorCampo[auxT[t].tam];
+                strcpy(valorCampo,auxC->valorCampo);
+                strcat(valorCampo, "\0");
+                fwrite(&valorCampo,sizeof(valorCampo),1,dados);
+            }
+            else if(auxT[t].tipo == 'I'){ // Grava um dado do tipo inteiro.
+                int valorInteiro = 0;
+                
+                sscanf(auxC->valorCampo,"%d",&valorInteiro);
+                fwrite(&valorInteiro,sizeof(valorInteiro),1,dados);
+            }
+            else if(auxT[t].tipo == 'D'){ // Grava um dado do tipo double.
+                x = 0;
+                while (x < strlen(auxC->valorCampo)){
+                    if((auxC->valorCampo[x] < 48 || auxC->valorCampo[x] > 57) && (auxC->valorCampo[x] != 46)){ 
+                        free(tab); // Libera a memoria da estrutura.
+                        free(tab2); // Libera a memoria da estrutura.
+                        free(c);    // Libera a memoria da estrutura.
+                        free(auxT); // Libera a memoria da estrutura.
+                        // free(temp); // Libera a memoria da estrutura.
+                        fclose(dados);
+                        return ERRO_NO_TIPO_DOUBLE;
+                    }
+                    x++;
+                }
+
+                double valorDouble = convertD(auxC->valorCampo);
+                fwrite(&valorDouble,sizeof(valorDouble),1,dados);
+            }
+            else if(auxT[t].tipo == 'C'){ // Grava um dado do tipo char.
+
+                if(strlen(auxC->valorCampo) > (sizeof(char)))
+                {
+                    free(tab); // Libera a memoria da estrutura.
+                    free(tab2); // Libera a memoria da estrutura.
+                    free(c);    // Libera a memoria da estrutura.
+                    free(auxT); // Libera a memoria da estrutura.
+                    // free(temp); // Libera a memoria da estrutura.
+                    fclose(dados);
+                    return ERRO_NO_TIPO_CHAR;
+                }
+                char valorChar = auxC->valorCampo[0];
+                fwrite(&valorChar,sizeof(valorChar),1,dados);           
             }
 
-            double valorDouble = convertD(auxC->valorCampo);
-            fwrite(&valorDouble,sizeof(valorDouble),1,dados);
-        }
-        else if(auxT[t].tipo == 'C'){ // Grava um dado do tipo char.
+            auxC = c;
+            t++;
 
-            if(strlen(auxC->valorCampo) > (sizeof(char)))
+        }
+        else
+        {
+            auxC = auxC->next;
+
+            if (auxC == NULL)
             {
-				free(tab); // Libera a memoria da estrutura.
-				free(tab2); // Libera a memoria da estrutura.
-				free(c);    // Libera a memoria da estrutura.
-				free(auxT); // Libera a memoria da estrutura.
-				// free(temp); // Libera a memoria da estrutura.
-				fclose(dados);
-                return ERRO_NO_TIPO_CHAR;
+                auxC = c;
             }
-            char valorChar = auxC->valorCampo[0];
-            fwrite(&valorChar,sizeof(valorChar),1,dados);           
         }
-
     }
+   
     
     fclose(dados);
     free(tab); // Libera a memoria da estrutura.
