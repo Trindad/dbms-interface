@@ -1672,12 +1672,7 @@ int checkCreateDB(char *nome){
 	strcat(buffer,"\0");
 	printf("nome lido: %s",nomeLido);
 	
-	/*while((fscanf(arq,"%d %s\n", &id, nomeLido))!=EOF ){//leitura formatada do arquivo
-		printf("leitura: %d %s\n", id, nomeLido);
-		if(strcmp(nomeLido,nome)==0)//banco já foi criado
-			return 1;
-	}*/
-		
+	
 	fclose(arq);
 	
 	//não existindo nome igual já criado, o nome nome será guardado no arquivo

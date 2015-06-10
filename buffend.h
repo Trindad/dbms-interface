@@ -375,7 +375,6 @@ tp_table *abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tab
     Retorno:    tp_table
    ---------------------------------------------------------------------------------------------*/
 
-
 int retornaTamanhoValorCampo(char *nomeCampo, table  *tab);
 
 char retornaTipoDoCampo(char *nomeCampo, table  *tab);

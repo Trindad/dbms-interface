@@ -27,8 +27,7 @@ int main(){
 		else
 			printf("Finaliso\n");
 	}
-
-
+	
     int nrTabelas = 3;
     int nTabela[nrTabelas];
     table  *tab[nrTabelas]; 

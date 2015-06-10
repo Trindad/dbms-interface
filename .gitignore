@@ -1,2 +1,9 @@
 prog
 *.dat
+*.h.gch
+/fs_database~
+/fs_database.dat~
+/exemploMain.o
+/exemploMain.c~
+/buffend.o
+*.h~
