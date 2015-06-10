@@ -18,14 +18,35 @@ int main(){
 			printf("sobrou  %s\n",dividido);
 			resultado = checkCreateDB(dividido);//verifica a existência do nome e grava-o no arquivo
 	
-		}		
+			if(resultado==-1)
+				printf("erro ao tentar criar arquivo fs_database\n");
+			if(resultado==1)
+				printf("Banco de dados já existente no sistema");
+			else
+				printf("Finaliso\n");
+		}
+				
+		if(strcmp(operacao,"conectdb\0")==0){
+			//CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É CONECTDB E CHAMAA A RESPECTIVA FUNÇÃO PRA FAZER ISSO
+		}
+		if(strcmp(operacao,"createtable\0")==0){
+			//NAO VAI SER CRIADO, MAS NOSSA IDEIA É QUE AO ESCREVER SOMENTE ISSO, CHAME UMA FUNÇÃO PARA TESTE,
+			//ESTA FUNÇAO DE TESTE DEVERIA CONTER O QUE ESTA NO RESTO DESTA MAIN, E NESTA MAIN POSSUIR APENAS O SHELL
+		}	
+		if(strcmp(operacao,"insert\0")==0){
+			//VER COM A SILVANA COMO PODEMOS FAZER ESSA PARTE, POIS A IDEIA É QUE O INSERT DELA SEJA CHAMADA A PARTIR DESTE SHELL
+		}
+		if(strcmp(operacao,"*d\0")==0){
+			//CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É *D E CHAMAA A RESPECTIVA FUNÇÃO PRA LISTAR TABELAS
+		}	
+		if(strcmp(operacao,"*l\0")==0){
+			//CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É *L E CHAMAA A RESPECTIVA FUNÇÃO PRA LISTAR BANCOS
+		}	
+		if(strcmp(operacao,"exit\0")==0){
+			break;
+		}	
 		
-		if(resultado==-1)
-			printf("erro ao tentar criar arquivo fs_database\n");
-		if(resultado==1)
-			printf("Banco de dados já existente no sistema");
-		else
-			printf("Finaliso\n");
+		//TODAS AS FUNÇÕES ESTAO SENDO CRIADAS NO buffend.c E buffend.h, MAS A IDEIA DE SEPARAR CONTINUA, SÓ QUE DEPOIS
 	}
 	
     int nrTabelas = 3;
