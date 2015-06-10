@@ -3,6 +3,32 @@
 #include "buffend.h"
 
 int main(){
+	char entrada[50], *dividido=NULL, operacao[12];
+	int resultado=0;
+	
+	while(1){
+		fgets(entrada,50,stdin);
+		dividido = strtok(entrada," ");
+		
+		strcpy(operacao,dividido);
+		
+		if(strcmp(operacao,"createdb\0")==0){
+			printf("deu certo %s\n",operacao);//o nome dado ao banco será guardado
+			dividido = strtok('\0'," ");
+			printf("sobrou  %s\n",dividido);
+			resultado = checkCreateDB(dividido);//verifica a existência do nome e grava-o no arquivo
+	
+		}		
+		
+		if(resultado==-1)
+			printf("erro ao tentar criar arquivo fs_database\n");
+		if(resultado==1)
+			printf("Banco de dados já existente no sistema");
+		else
+			printf("Finaliso\n");
+	}
+
+
     int nrTabelas = 3;
     int nTabela[nrTabelas];
     table  *tab[nrTabelas]; 

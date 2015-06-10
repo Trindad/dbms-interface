@@ -8,6 +8,12 @@
 #define TAMANHO_NOME_CAMPO 40 	// Tamanho do nome dos campos de uma tabela.
 #define TAMANHO_NOME_TABELA 20 	// Tamanho do nome da tabela.
 #define TAMANHO_NOME_ARQUIVO 20 // Tamanho do nome do arquivo.
+#define TAMANHO_NOME_DATABASE 30 // Tamanho do nome do arquivo.
+
+typedef struct fs_database{//Estrutura que guarda os nomes dos bancos
+	char nome[TAMANHO_NOME_DATABASE]; // nome do bd	
+	int cod;//código do banco
+} fs_database;
 
 
 struct fs_objects { // Estrutura usada para carregar fs_objects.dat
@@ -15,6 +21,7 @@ struct fs_objects { // Estrutura usada para carregar fs_objects.dat
 	int cod;							// Código da tabela.
 	char nArquivo[TAMANHO_NOME_ARQUIVO];// Nome do arquivo onde estão armazenados os dados da tabela.
 	int qtdCampos;						// Quantidade de campos da tabela.
+	fs_database bd;						//banco de dados ao qual o objeto pertence
 };
 
 typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
@@ -25,6 +32,7 @@ typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
 	char tabelaApt[TAMANHO_NOME_TABELA]; //Nome da Tabela Apontada        20bytes 
 	char attApt[TAMANHO_NOME_CAMPO];	//Nome do Atributo Apontado       40bytes
 	struct tp_table *next;			// Encadeamento para o próximo campo.
+	struct fs_objects objetos;				//objetos que pertence a um esquema
 }tp_table;
 
 typedef struct column{ // Estrutura utilizada para inserir em uma tabela, excluir uma tupla e retornar valores de uma página.
@@ -371,3 +379,8 @@ tp_table *abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tab
 int retornaTamanhoValorCampo(char *nomeCampo, table  *tab);
 
 char retornaTipoDoCampo(char *nomeCampo, table  *tab);
+
+int checkCreateDB(char *nome);
+/*
+ Objetivo: verificar se o nome do banco já existe e se não guarda-lo no arquivo fs_database.dat
+ */

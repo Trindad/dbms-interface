@@ -37,6 +37,7 @@ struct fs_objects leObjeto(char *nTabela){
             strcpy(objeto.nArquivo, tupla);
             fread(&cod,sizeof(int),1,dicionario);
             objeto.qtdCampos = cod;
+            //objeto var bd recebe nome bd de bd
             
             return objeto;
         }
@@ -717,7 +718,7 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
 }
 int finalizaInsert(char *nome, column *c){
     column *auxC, *temp;
-    int i = 0, x = 0, t = 0, erro, j = 0;
+    int x = 0, t = 0, erro, j = 0;
     FILE *dados;
 
     struct fs_objects objeto,dicio; // Le dicionario
@@ -1626,4 +1627,60 @@ tp_table *abreTabela(char *nomeTabela, struct fs_objects *objeto, tp_table **tab
     *tabela     = leSchema(*objeto);
 
     return *tabela;
+}
+
+
+int checkCreateDB(char *nome){
+	FILE *arq=NULL;
+	int codLido=0,indi_palavra,cod=1;
+	char nomeLido[TAMANHO_NOME_DATABASE],buffer[40],caracter='a';
+	
+	
+	if(!existeArquivo("fs_database.dat")){//se o arquivo com os nomes dos bancos não existir ele é criado.
+		arq = fopen("fs_database.dat", "wb");							//criacao de arquivo com nome passado por parametro
+		//arq = fopen("fs_database.dat", "w");							//criacao de arquivo binario
+		if (arq == NULL)												//verificação da criação do arquivo
+			return -1;
+		printf("ARQUIVO CRIADO");
+		//strcat(buffer,"1 ");
+		fwrite(&cod,sizeof(int),1,arq);
+		strcat(buffer,nome);
+		strcat(buffer,"\n");
+		strcat(buffer,"\0");
+		printf("buffer %s",buffer);
+		fwrite (nome, sizeof(char), strlen(buffer), arq);	//arquivo não dos nomes existia então posso gravar o nome do banco criado
+		fclose(arq);
+		return 0;
+	}
+	//verificando se o nome do banco já existe em fs_database.dat
+	arq = fopen("fs_database.dat", "rb");//abre para leitura
+	//arq = fopen("fs_database.dat", "rb");//abre para leitura de arquivo binário
+	
+	//-------------------------------------------------------------------------------------como fazer leitura de arquivo binário
+	fseek(arq, 0, SEEK_SET);
+	fread(&codLido,sizeof(int),1,arq);
+	printf("cod id: %d\n",codLido);
+	
+	caracter=fgetc(arq);
+	indi_palavra = 0;
+		while(caracter != '\0'){
+			nomeLido[indi_palavra]=caracter;
+			indi_palavra++;
+			//fread(&caracter,sizeof(char),1,metadados);
+			caracter=fgetc(arq);
+		}
+	strcat(buffer,"\0");
+	printf("nome lido: %s",nomeLido);
+	
+	/*while((fscanf(arq,"%d %s\n", &id, nomeLido))!=EOF ){//leitura formatada do arquivo
+		printf("leitura: %d %s\n", id, nomeLido);
+		if(strcmp(nomeLido,nome)==0)//banco já foi criado
+			return 1;
+	}*/
+		
+	fclose(arq);
+	
+	//não existindo nome igual já criado, o nome nome será guardado no arquivo
+	//fwrite (nome, sizeof(char), 30, arq);	//gravando nome do novo banco no fs_database.dat
+	return 0;
 }
