@@ -1,6 +1,5 @@
 #include "shell.h"
 
-
 int main(){
     char entrada[50], *dividido=NULL, operacao[12], nomeBD[TAM_NOME_BANCO], nomeaux[TAM_NOME_BANCO];
 	int resultado=0, codDB=0;

@@ -135,6 +135,7 @@ void cria_campo(int tam, int header, char *val, int x){
     char aux[30];
 
     if(header){
+
         for(i = 0; i <= 30 && val[i] != '\0'; i++){
             aux[i] = val[i];
         }
@@ -718,7 +719,7 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
 }
 int finalizaInsert(char *nome, column *c){
     column *auxC, *temp;
-    int x = 0, t = 0, erro, j = 0;
+    int x = 0, t = 0, erro = 0, j = 0;
     FILE *dados;
 
     struct fs_objects objeto,dicio; // Le dicionario
