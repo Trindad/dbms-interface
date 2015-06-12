@@ -3,11 +3,24 @@
 #include "buffend.h"
 
 int main(){
-	char entrada[50], *dividido=NULL, operacao[12];
-	int resultado=0;
+    char entrada[50], *dividido=NULL, operacao[12], nomeBD[30], nomeaux[30];
+	int resultado=0, codDB=0;
 	
-	while(1){
-		fgets(entrada,50,stdin);
+	nomeBD[0]=NULL;
+	
+	while(1){		
+		/*printf("\n-----------------------------\n");
+		printf("| Voce ta ja no nosso shell |\n");
+		printf("-----------------------------\n");
+		printf("| Só digita os comando teu: |\n");
+		printf("-----------------------------\n\n");*/
+		
+		if(nomeBD[0] == NULL)
+			printf("> ");
+		else
+			printf("%s> ", nomeBD);
+        
+        fgets(entrada,50,stdin);
 		dividido = strtok(entrada," ");
 		
 		strcpy(operacao,dividido);
@@ -28,7 +41,18 @@ int main(){
 				
 		if(strcmp(operacao,"conectdb\0")==0){
 			//CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É CONECTDB E CHAMAA A RESPECTIVA FUNÇÃO PRA FAZER ISSO
-		}
+					
+			dividido = strtok('\0'," ;");				//apaga a palavra conectdb e passa para dividido a sobra, que seria o nome do bd
+			strcpy(nomeaux, dividido);					//só copia o nome do banco para nomeaux, para depois impressao
+				
+			codDB = busca(dividido);					//função chamada para conecção no banco, retorna o codigo do banco ao conectar
+			
+			if (codDB != 0)
+				strcpy(nomeBD, nomeaux);				//passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
+			else
+				printf("\nBanco %s não cadastrado!\n", nomeaux);
+        
+        }
 		if(strcmp(operacao,"createtable\0")==0){
 			//NAO VAI SER CRIADO, MAS NOSSA IDEIA É QUE AO ESCREVER SOMENTE ISSO, CHAME UMA FUNÇÃO PARA TESTE,
 			//ESTA FUNÇAO DE TESTE DEVERIA CONTER O QUE ESTA NO RESTO DESTA MAIN, E NESTA MAIN POSSUIR APENAS O SHELL
