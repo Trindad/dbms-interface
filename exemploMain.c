@@ -1,21 +1,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "buffend.h"
+#include "funcoes.h"
+
 
 int main(){
-    char entrada[50], *dividido=NULL, operacao[12], nomeBD[30], nomeaux[30];
+    char entrada[50], *dividido=NULL, operacao[12], nomeBD[TAM_NOME_BANCO], nomeaux[TAM_NOME_BANCO];
 	int resultado=0, codDB=0;
 	
-	nomeBD[0]=NULL;
+		nomeBD[0]='\0';
 	
 	while(1){		
-		/*printf("\n-----------------------------\n");
-		printf("| Voce ta ja no nosso shell |\n");
-		printf("-----------------------------\n");
-		printf("| Só digita os comando teu: |\n");
-		printf("-----------------------------\n\n");*/
 		
-		if(nomeBD[0] == NULL)
+		if(nomeBD[0] == '\0')
 			printf("> ");
 		else
 			printf("%s> ", nomeBD);
@@ -45,7 +42,7 @@ int main(){
 			dividido = strtok('\0'," ;");				//apaga a palavra conectdb e passa para dividido a sobra, que seria o nome do bd
 			strcpy(nomeaux, dividido);					//só copia o nome do banco para nomeaux, para depois impressao
 				
-			codDB = busca(dividido);					//função chamada para conecção no banco, retorna o codigo do banco ao conectar
+			codDB = busca(dividido,1);					//função chamada para conecção no banco, retorna o codigo do banco ao conectar
 			
 			if (codDB != 0)
 				strcpy(nomeBD, nomeaux);				//passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
@@ -63,10 +60,11 @@ int main(){
 		if(strcmp(operacao,"*d\0")==0){
 			//CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É *D E CHAMAA A RESPECTIVA FUNÇÃO PRA LISTAR TABELAS
 		}	
-		if(strcmp(operacao,"*l\0")==0){
+		if(strcmp(operacao,"*l\n")==0){
 			//CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É *L E CHAMAA A RESPECTIVA FUNÇÃO PRA LISTAR BANCOS
+			busca(operacao,2);
 		}	
-		if(strcmp(operacao,"exit\0")==0){
+		if(strcmp(operacao,"exit\n")==0){
 			break;
 		}	
 		
