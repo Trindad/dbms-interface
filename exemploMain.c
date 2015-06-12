@@ -1,7 +1,5 @@
-#include <stdlib.h>
-#include <string.h>
 #include "buffend.h"
-#include "funcoes.h"
+#include "database.h"
 
 
 int main(){
