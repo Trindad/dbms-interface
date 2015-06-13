@@ -4,4 +4,6 @@
 
 void analyze(char *str);
 
+void insertFields(table *t,Datas datas,char *type , int r);
 
+table *start(char *name);
