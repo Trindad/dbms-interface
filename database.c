@@ -5,7 +5,13 @@ int cod_id_banco(){
     int cod_id = 0;
     FILE *file;
     char ch = '\0';
-    db *database = (db *)malloc(sizeof(db));
+    db *database = (db *) malloc (sizeof(db));
+
+    if (database == NULL)
+    {
+        fprintf(stderr, "Alocação de memória para o banco de dados falhou.\n");
+        exit(1);
+    }
 
     file = fopen("fs_database.dat","r");
     if(file != NULL){

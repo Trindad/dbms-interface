@@ -4,7 +4,7 @@ void shell()
 {
 	int option = 0;
 
-	while(true)
+	while(1)
 	{
 		if (option > 1)
 		{

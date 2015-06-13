@@ -1,10 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../sintatic/c.tab.c"
-#include "../../buffend.h"
 #include "semantic.h"
-
 int nColumns;
 
 /**
@@ -165,7 +160,7 @@ table *start(char *name)
  * o mesmo será lançado na tela e parado a execução;
  * segue a estrutura básica de inserção no banco em relação aos existentes
  */
-void analyze(char *sql)
+void insert(char *sql)
 {
 
 	Datas datas = execute(sql);

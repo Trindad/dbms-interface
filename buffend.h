@@ -1,3 +1,5 @@
+#ifndef BUFFEND_H
+#define BUFFEND_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -383,3 +385,5 @@ int checkCreateDB(char *nome);
 /*
  Objetivo: verificar se o nome do banco já existe e se não guarda-lo no arquivo fs_database.dat
  */
+
+#endif
