@@ -101,6 +101,7 @@ void grava_banco(char *str){
 }
 
 int checkCreateDB(char *nome){
+    
     int resultado=0;
     
     if(!existeArquivo("fs_database.dat")){//se o arquivo com os nomes dos bancos não existir ele é criado.

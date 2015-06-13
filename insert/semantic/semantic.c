@@ -169,7 +169,7 @@ void insert(char *sql)
 	char *file = strdup(datas.insert[rows][columns].str);
 	
 	strcat(file,".dat");
-	printf("Arquivo %s\n",file);
+	// printf("Arquivo %s\n",file);
 
 	int exist  = existeArquivo(file);
 	

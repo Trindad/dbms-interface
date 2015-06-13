@@ -1,76 +1,11 @@
+/**
+ * gcc *.c insert/sintatic/c.tab.c -o bf -g -ll -ly
+ */
 #include "shell.h"
 
 int main(){
-    char entrada[50], *dividido=NULL, operacao[12], nomeBD[TAM_NOME_BANCO], nomeaux[TAM_NOME_BANCO];
-    int resultado=0, codDB=-1;
     
-        nomeBD[0]='\0';
-    
-    while(1){       
-        
-        if(nomeBD[0] == '\0')
-            printf("> ");
-        else
-            printf("%s> ", nomeBD);
-        
-        fgets(entrada,50,stdin);
-        dividido = strtok(entrada," ");
-        
-        strcpy(operacao,dividido);
-        
-        if(strcmp(operacao,"createdb\0")==0){
-            printf("deu certo %s\n",operacao);//o nome dado ao banco será guardado
-            dividido = strtok('\0'," ");
-            printf("sobrou  %s\n",dividido);
-            resultado = checkCreateDB(dividido);//verifica a existência do nome e grava-o no arquivo
-            printf("%d\n",resultado);
-            
-            if(resultado==-1)
-                printf("erro ao tentar criar arquivo fs_database\n");
-            if(resultado==-3)
-                printf("Ja existente banco com esse nome");
-            else
-                printf("Finaliso\n");
-        }
-                
-        if(strcmp(operacao,"conectdb\0")==0){
-            //CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É CONECTDB E CHAMAA A RESPECTIVA FUNÇÃO PRA FAZER ISSO
-                    
-            dividido = strtok('\0'," ;");               //apaga a palavra conectdb e passa para dividido a sobra, que seria o nome do bd
-            strcat(dividido,"\n");                      //concatena o \n para comparação na conectdb
-            strcpy(nomeaux, dividido);                  //só copia o nome do banco para nomeaux, para depois impressao
-                
-            codDB = busca(dividido,1);                  //função chamada para conecção no banco, retorna o codigo do banco ao conectar
-            printf("%d",codDB);
-            if (codDB >= 0)
-                strcpy(nomeBD, nomeaux);                //passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
-            else
-                printf("\nBanco %s não cadastrado!\n", nomeaux);
-            
-        
-        }
-        if(strcmp(operacao,"createtable\0")==0){
-            //NAO VAI SER CRIADO, MAS NOSSA IDEIA É QUE AO ESCREVER SOMENTE ISSO, CHAME UMA FUNÇÃO PARA TESTE,
-            //ESTA FUNÇAO DE TESTE DEVERIA CONTER O QUE ESTA NO RESTO DESTA MAIN, E NESTA MAIN POSSUIR APENAS O SHELL
-        }   
-        if(strcmp(operacao,"insert\0")==0){
-            //VER COM A SILVANA COMO PODEMOS FAZER ESSA PARTE, POIS A IDEIA É QUE O INSERT DELA SEJA CHAMADA A PARTIR DESTE SHELL
-        }
-        if(strcmp(operacao,"*d\0")==0){
-            //CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É *D E CHAMAA A RESPECTIVA FUNÇÃO PRA LISTAR TABELAS
-        }   
-        if(strcmp(operacao,"*l\n")==0){
-            //LISTA os bancos existentes
-            resultado = busca(operacao,2);
-            if(resultado==-1)
-                printf("Nao existem bancos cadastrados\n");
-        }   
-        if(strcmp(operacao,"exit\n")==0){
-            break;
-        }   
-        
-        //TODAS AS FUNÇÕES ESTAO SENDO CRIADAS NO buffend.c E buffend.h, MAS A IDEIA DE SEPARAR CONTINUA, SÓ QUE DEPOIS
-    }
+    shell();//excuta interface
     
     int nrTabelas = 3;
     int nTabela[nrTabelas];
