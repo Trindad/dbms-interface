@@ -112,13 +112,7 @@ void shell()
             	continue;
             }
             //LISTA os bancos existentes
-            resultado = busca(tokens[0],2);
-            
-            if(resultado==-1) 
-            {
-                printf("No database created.\n");
-                continue;
-            }
+            listaBancos();
         }   
         else if(strcmp(strtolower(tokens[0]),"exit")==0)
         {
@@ -214,10 +208,8 @@ void example()
 
 	current_database = busca("UFFS",1);
 
-	printf("%d %d\n",ok,current_database );
 	if (!ok)
 	{	
-		printf("jkjlkjlkjkljlkjkljkl\n");
 	    int nrTabelas = 3;
 	    int nTabela[nrTabelas];
 	    table  *tab[nrTabelas]; 
@@ -237,7 +229,7 @@ void example()
 	    if(!object || !schema)
 	    {
 	        if(!nTabela[0]){ 
-	    		printf("hjkhkjhkjhjk\n");
+	    		
 	            tab[0] = iniciaTabela(table_name_real("Aluno",current_database));                                                 //Cria a tabela 
 	            tab[0] = adicionaCampo(tab[0], "CPF"     , 'I', (sizeof(int))   ,PK,"","");     //Cria os atributos
 	            tab[0] = adicionaCampo(tab[0], "Nome"    , 'S', 20              ,NPK,"","");        
@@ -264,8 +256,6 @@ void example()
 	            tab[2] = adicionaCampo(tab[2], "Curso"   , 'S',  20  ,NPK, "","");
 	            finalizaTabela(tab[2],current_database);
 	        }
-	       
-	       	printf("AQUI\n");
 	         
 	         //Inserção de tuplas na tabela1   
 	        colunas = NULL;     
@@ -339,10 +329,10 @@ void example()
 	    }
 	}
     
-    imprime(table_name_real("Aluno",current_database));        //Imprime os atributos da tabela "Aluno"
-    imprime(table_name_real("Inst",current_database));
+    // imprime(table_name_real("Aluno",current_database));        //Imprime os atributos da tabela "Aluno"
+    // imprime(table_name_real("Inst",current_database));
     // //excluirTabela("Inst");   //Exclui os dados da tabela do dicionario e remove-a do disco
-    imprime(table_name_real("Inscri",current_database));
+    // imprime(table_name_real("Inscri",current_database));
     // //excluirTabela("Inscri");
     
     current_database = -1;//não existe nenhum banco logado

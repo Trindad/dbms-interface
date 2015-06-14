@@ -24,7 +24,7 @@ int cod_id_banco(){
             ch = getc(file);
         }
     }
-    else printf("\nErro leitura arquivo fs_database");
+    else printf("\nCannot read fs_database");
     fclose(file);
     return cod_id;
 }
@@ -72,13 +72,13 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
             }
             if(identificacao==2)
             {
-                printf("\nBanco de dados: %s", database->nome);
+                printf("\nDatabase: %s", database->nome);
             }
        }
     }
     else 
     {
-        printf("\nImpossivel acessar fs_database!\n");
+        printf("\nCannot open fs_database!\n");
     }
     
     fclose(file);
@@ -127,3 +127,39 @@ int checkCreateDB(char *nome){
     
 }
 
+void listaBancos() 
+{
+    FILE *file;
+    db *database = (db *)malloc(sizeof(db));
+
+    if (database == NULL)
+    {
+        printf("Out of memory.\n");
+        exit(1);
+    }
+    
+    if(!existeArquivo("fs_database.dat")) {
+        printf("No database created.\n");
+    }
+    
+    int cod = (cod_id_banco()), cont = 1;
+
+    file = fopen("fs_database.dat", "r");  
+         
+    if(file != NULL)
+    {
+       for(; cont < cod; cont++){
+           
+            fread(&database->cod,sizeof(int),1,file);
+            fread(&database->nome,sizeof(char),TAM_NOME_BANCO,file);
+
+            printf("%s\n", database->nome);
+       }
+    }
+    else 
+    {
+        printf("\nCannot open fs_database!\n");
+    }
+    
+    fclose(file);
+}

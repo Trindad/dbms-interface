@@ -14,6 +14,8 @@ int cod_id_banco();
 
 int busca(char *str, int identificacao);
 
+void listaBancos();
+
 void grava_banco(char *str);
 
 int checkCreateDB(char *nome);

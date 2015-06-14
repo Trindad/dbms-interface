@@ -10,8 +10,7 @@ struct fs_objects leObjeto(char *nTabela){
     dicionario = fopen("fs_object.dat", "a+b"); // Abre o dicionario de dados.
 
     struct fs_objects objeto;
-
-    printf("%s\n",nTabela );
+    
     if(!verificaNomeTabela(nTabela)){
         printf("Erro GRAVE! na função leObjeto(). Nome da tabela inválido.\nAbortando...\n");
 		free(tupla);
