@@ -76,7 +76,7 @@ insert_in : table_name
 
 ident : ID {
 	datas.insert[i][j].str = strdup($1);
-	printf("nome tabela[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
+	//printf("nome tabela[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
 	i++;
 	j = 0;
 	datas.numberOfColumns[i]++;
@@ -85,7 +85,7 @@ ident : ID {
 	;
 column: ID {
 	datas.insert[i][j].str = strdup($1);
-	printf("nome coluna[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
+	//printf("nome coluna[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
 	datas.numberOfColumns[i]++;
 	countColumn++;
 	j++;
@@ -99,7 +99,7 @@ columns: {
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
-		fprintf(stderr, "Erro de allocação\n");
+		fprintf(stderr, "Out of memory.\n");
 	datas.numberOfColumns[i] = countColumn = 0;
 	datas.numberOfRows++;
 	}insertOrder 
@@ -108,7 +108,7 @@ columns: {
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
-		fprintf(stderr, "Erro de allocação\n");
+		fprintf(stderr, "Out of memory.\n");
 	datas.numberOfColumns[i] = countColumn = 0;
 	datas.numberOfRows++;
 	}'('column_names')' insertOrder 
@@ -126,7 +126,7 @@ insertStart: '(' insertValues ')' {i++; j =0;} continue
 
 insertValues: type %prec LOWERTHANCOMMA {
 	if( (countField > countColumn || countField < countColumn) && count == 0)
-		fprintf(stderr, "Número de campos %d não compatível com número de colunas %d.\n",countField,countColumn);
+		fprintf(stderr, "Number of fields %d specified doesn't match number of columns %d.\n",countField,countColumn);
 	else countField = 0;
 	}
 	|type values_plus %prec COMMA 
@@ -140,7 +140,7 @@ continue:  ',' {
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
-		fprintf(stderr, "Erro de allocação\n");
+		fprintf(stderr, "Out of memory.\n");
 	datas.numberOfRows++;
 	datas.numberOfColumns[i] = 0;
 	} insertStart {
@@ -237,7 +237,7 @@ Datas execute(char *sql)
 
 	if (datas.insert == NULL)
 	{
-		fprintf(stderr, "Erro na alocação de memória.\n");
+		fprintf(stderr, "Out of memory.\n");
 	}
 	int it = 0;
 
@@ -247,7 +247,7 @@ Datas execute(char *sql)
 
 		if (datas.insert[it] == NULL)
 		{
-		  fprintf(stderr, "Erro na alocação de memória.\n");
+		  fprintf(stderr, "Out of memory.\n");
 		}
 	}
 

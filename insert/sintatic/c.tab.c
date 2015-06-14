@@ -58,7 +58,65 @@
 
 
 
-#include "c.tab.h"
+
+/* Tokens.  */
+#ifndef YYTOKENTYPE
+# define YYTOKENTYPE
+   /* Put the tokens into the symbol table, so that GDB and other debuggers
+      know about them.  */
+   enum yytokentype {
+     INT = 258,
+     INSERT = 259,
+     INTO = 260,
+     NUM = 261,
+     PONTOFLUTUANTE = 262,
+     VALUES = 263,
+     SELECT = 264,
+     FROM = 265,
+     BOOL = 266,
+     WHERE = 267,
+     ID = 268,
+     CHAR = 269,
+     DATE = 270,
+     STRING_LITERAL = 271,
+     LOWERTHANCOMMA = 272,
+     COMMA = 273
+   };
+#endif
+
+
+#ifndef YYSTYPE
+typedef union YYSTYPE
+{
+
+/* Line 214 of glr.c  */
+#line 1 "c.y"
+
+	char *str;
+	int  num;
+	char t_char;
+	double t_double;
+
+
+
+/* Line 214 of glr.c  */
+#line 104 "c.tab.c"
+} YYSTYPE;
+# define YYSTYPE_IS_TRIVIAL 1
+#endif
+
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE
+{
+
+  char yydummy;
+
+} YYLTYPE;
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
+
+
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -122,7 +180,7 @@ char *str_replace(char *search , char *replace , char *subject);
 
 
 /* Line 243 of glr.c  */
-#line 126 "c.tab.c"
+#line 184 "c.tab.c"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -892,7 +950,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 #line 77 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
-	printf("nome tabela[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
+	//printf("nome tabela[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
 	i++;
 	j = 0;
 	datas.numberOfColumns[i]++;
@@ -906,7 +964,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 #line 86 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
-	printf("nome coluna[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
+	//printf("nome coluna[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
 	datas.numberOfColumns[i]++;
 	countColumn++;
 	j++;
@@ -923,7 +981,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
-		fprintf(stderr, "Erro de allocação\n");
+		fprintf(stderr, "Out of memory.\n");
 	datas.numberOfColumns[i] = countColumn = 0;
 	datas.numberOfRows++;
 	}
@@ -938,7 +996,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
-		fprintf(stderr, "Erro de allocação\n");
+		fprintf(stderr, "Out of memory.\n");
 	datas.numberOfColumns[i] = countColumn = 0;
 	datas.numberOfRows++;
 	}
@@ -964,7 +1022,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 #line 127 "c.y"
     {
 	if( (countField > countColumn || countField < countColumn) && count == 0)
-		fprintf(stderr, "Número de campos %d não compatível com número de colunas %d.\n",countField,countColumn);
+		fprintf(stderr, "Number of fields %d specified doesn't match number of columns %d.\n",countField,countColumn);
 	else countField = 0;
 	}
     break;
@@ -979,7 +1037,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
-		fprintf(stderr, "Erro de allocação\n");
+		fprintf(stderr, "Out of memory.\n");
 	datas.numberOfRows++;
 	datas.numberOfColumns[i] = 0;
 	}
@@ -1008,7 +1066,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 #line 161 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
-	printf("INT[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
+	//printf("INT[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
 	j++;
 	datas.insert[i][j].t_char = 'I';
 	j++;
@@ -1025,7 +1083,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 
 	char *c = str_replace("\"","", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	datas.insert[i][j].str = strdup(c);
-	printf("STRING[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
+	//printf("STRING[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
 	j++;
 	datas.insert[i][j].t_char = 'S';
 	j++;
@@ -1041,7 +1099,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
     {
 	char *c = str_replace("\"","", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.str));
 	datas.insert[i][j].str = strdup(c);
-	printf("FIELD[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
+	//printf("FIELD[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
 	j++;
 	datas.insert[i][j].t_char = 'S';
 	j++;
@@ -1056,7 +1114,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 #line 191 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
-	printf("DOUBLE[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
+	//printf("DOUBLE[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
 	j++;
 	datas.insert[i][j].t_char = 'D';
 	j++;
@@ -1071,7 +1129,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 #line 200 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
-	printf("BOOL[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
+	//printf("BOOL[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
 	j++;
 	datas.insert[i][j].t_char = 'I';
 	j++;
@@ -1087,7 +1145,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
     {
 	char *c = str_replace("\'","", (((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	datas.insert[i][j].str = strdup(c);
-	printf("BOOL[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
+	//printf("BOOL[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
 	j++;
 	datas.insert[i][j].t_char = 'C';
 	j++;
@@ -1099,7 +1157,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 
 
 /* Line 936 of glr.c  */
-#line 1103 "c.tab.c"
+#line 1161 "c.tab.c"
       default: break;
     }
 
@@ -2777,7 +2835,7 @@ Datas execute(char *sql)
 
 	if (datas.insert == NULL)
 	{
-		fprintf(stderr, "Erro na alocação de memória.\n");
+		fprintf(stderr, "Out of memory.\n");
 	}
 	int it = 0;
 
@@ -2787,7 +2845,7 @@ Datas execute(char *sql)
 
 		if (datas.insert[it] == NULL)
 		{
-		  fprintf(stderr, "Erro na alocação de memória.\n");
+		  fprintf(stderr, "Out of memory.\n");
 		}
 	}
 
@@ -2848,3 +2906,4 @@ char *str_replace(char *search , char *replace , char *subject)
      
     return new_subject;
 }
+

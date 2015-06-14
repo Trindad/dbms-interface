@@ -3,7 +3,7 @@
 
 void shell()
 {
-	char entrada[1000], operacao[12], nomeBD[TAM_NOME_BANCO], nomeaux[TAM_NOME_BANCO];
+	char entrada[1000], nomeBD[TAM_NOME_BANCO], nomeaux[TAM_NOME_BANCO];
     int resultado=0, codDB=-1;
     nomeBD[0]='\0';
 
@@ -33,9 +33,13 @@ void shell()
 	     			printf("Invalid number of arguments.\n");
 	     			continue;
 	     		}
+	     		else if (strlen(tokens[2]) > TAM_NOME_BANCO )
+	     		{
+	     			printf("Database name too big.\n");
+	     			continue;
+	     		}
 
 	            resultado = checkCreateDB(tokens[2]);//verifica a existência do nome e grava-o no arquivo
-	            printf("%s\n",tokens[2]);
 	            
 	            if(resultado==-1) 
 	            {

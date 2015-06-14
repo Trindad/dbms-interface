@@ -818,7 +818,6 @@ int finalizaInsert(char *nome, column *c){
     t = 0;
     while(t < dicio.qtdCampos) 
     {        
-         printf("nome Campo %s %s\n",auxC->nomeCampo,auxT[t].nome );
         if (strcmp(auxC->nomeCampo, auxT[t].nome) == 0)
         {
             if(t >= dicio.qtdCampos)

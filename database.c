@@ -30,17 +30,6 @@ int cod_id_banco(){
 
 //busca por nome do banco se estiver cadastrado retorna a id dele
 int busca(char *str, int identificacao){//a identificacao indicara qual if será executado
-    
-    //strcat(str,"\n");
-    int i;
-    
-    for(i=0;i<strlen(str);i++){
-            if(str[i]=='\0')        
-                    printf(",");
-            else
-                printf("%c",str[i]);
-                    
-    }
    
     FILE *file;
     db *database = (db *)malloc(sizeof(db));
@@ -77,8 +66,9 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
                 printf("\nBanco de dados: %s", database->nome);
        }
     }
-    else 
+    else {
         printf("\nImpossivel acessar fs_database!\n");
+    }
     
     fclose(file);
     return -2;
