@@ -11,6 +11,7 @@ struct fs_objects leObjeto(char *nTabela){
 
     struct fs_objects objeto;
 
+    printf("%s\n",nTabela );
     if(!verificaNomeTabela(nTabela)){
         printf("Erro GRAVE! na função leObjeto(). Nome da tabela inválido.\nAbortando...\n");
 		free(tupla);
@@ -307,9 +308,9 @@ double convertD(char u[])
 }
 int verificaNomeTabela(char *nomeTabela)
 {
-
     FILE *dicionario;
     char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL){
 		free(tupla);
         return ERRO_ABRIR_ARQUIVO;
@@ -512,9 +513,12 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
     return t; //Retorna estrutura atualizada.
 }
 
-int finalizaTabela(table *t){
-    if(t == NULL)
+int finalizaTabela(table *t, int database){
+    
+    if(t == NULL) 
+    {
         return ERRO_DE_PARAMETRO;
+    }
 
     FILE *esquema, *dicionario;
     tp_table *aux;
@@ -542,10 +546,27 @@ int finalizaTabela(table *t){
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
         return ERRO_ABRIR_ARQUIVO;
 
+    // char *table_name = (char*) malloc (sizeof(char)*1000);
+
+    // if (!table_name)
+    // {
+    //     printf("Out of memory.\n");
+    // }
+
+    // sprintf(table_name,"%d",database);
+
+    // strcat(table_name,"_");
+    // char *name = strdup(t->nome);
+    // strcat(table_name,name);
+    // strcat(table_name,".dat");
+    // free(table_name);
+    // free(name);
+
     strcpy(nomeArquivo, t->nome);
     strcat(nomeArquivo, ".dat\0");
     strcat(t->nome, "\0");
 
+    printf("nomeArquivo %s\n",nomeArquivo );
     // Salva dados sobre a tabela no dicionario.
     fwrite(&t->nome,sizeof(t->nome),1,dicionario);
     fwrite(&codTbl,sizeof(codTbl),1,dicionario);

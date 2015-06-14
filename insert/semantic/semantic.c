@@ -147,18 +147,31 @@ table *start(char *name)
  * o mesmo será lançado na tela e parado a execução;
  * segue a estrutura básica de inserção no banco em relação aos existentes
  */
-void insert(char *sql)
+void insert(char *sql,int current_database)
 {
 
 	Datas datas = execute(sql);
 	int rows = 0,columns = 0;
 
-	char *file = strdup(datas.insert[rows][columns].str);
+	char *table_name = (char*) malloc (sizeof(char)*1000);
+
+    if (!table_name)
+    {
+    	printf("Out of memory.\n");
+    	exit(1);
+    }
+
+    sprintf(table_name,"%d",current_database);
+
+    strcat(table_name,"_");
+    strcat(table_name,datas.insert[rows][columns].str);
+
+	char *file = strdup(table_name);
 	
 	strcat(file,".dat");
 
 	int exist  = existeArquivo(file);
-	
+
 	rows++;
 
 	/**
@@ -249,6 +262,7 @@ void insert(char *sql)
 		free(datas.insert[rows]);
 	}
 
-
+	free(file);
+	free(table_name);
 	free(datas.insert);
 }

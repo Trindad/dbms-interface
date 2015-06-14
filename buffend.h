@@ -196,7 +196,7 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
 /************************************************************************************************
  ************************************************************************************************/
 
-int finalizaTabela(table *t);
+int finalizaTabela(table *t,int database);
 /*
     Esta função finaliza a tabela preveamente estrutura pelas funcoes iniciaTabela() e adicionaCampo(). 
     Escreve nos arquivos fs_object.dat e fs_schema.dat, a estrutura passada.

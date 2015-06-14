@@ -1,8 +1,11 @@
 #include <ctype.h>
 #include "shell.h"
 
+int current_database = -1;
+
 void shell()
 {
+	current_database = -1;
 	char entrada[1000], nomeBD[TAM_NOME_BANCO], nomeaux[TAM_NOME_BANCO];
     int resultado=0, codDB=-1;
     nomeBD[0]='\0';
@@ -24,7 +27,8 @@ void shell()
 
         	if(strcmp(strtolower(tokens[1]),"table")==0)
 	        {
-	           
+	           printf("Invalid command.\n");
+	           continue;
 	        }
 	        else if(strcmp(strtolower(tokens[1]),"database")==0)
 	        {
@@ -57,6 +61,7 @@ void shell()
 	        else
 	       	{
 	       		printf("Invalid command.\n");
+	       		continue;
 	       	}   
         }
         else if(strcmp(strtolower(tokens[0]),"\\c") == 0){
@@ -74,18 +79,19 @@ void shell()
             {
                 strcpy(nomeBD, tokens[1]);  //passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
                 current_db_name = strdup(tokens[1]);
-                
+                current_database = codDB;
                 strcat(current_db_name,"=#"); 
             }
             else
             {
                 printf("\nNo such database '%s'.\n", tokens[1]);
+                continue;
             }
         }
       
         else if(strcmp(strtolower(tokens[0]),"insert")==0)
         {
-            insert(entrada);
+            insert(entrada,current_database);
         }
         else if(strcmp(strtolower(tokens[0]),"\\d")==0)
         {
@@ -111,6 +117,7 @@ void shell()
             if(resultado==-1) 
             {
                 printf("No database created.\n");
+                continue;
             }
         }   
         else if(strcmp(strtolower(tokens[0]),"exit")==0)
@@ -120,6 +127,7 @@ void shell()
         else
         {
         	printf("Invalid command.\n");
+        	continue;
         }  
     }
 }
@@ -198,4 +206,162 @@ char *remove_newline(char *str)
   temp[pos] = '\0';
 
   return temp;
+}
+
+void example()
+{
+	int ok = checkCreateDB("UFFS");//cria banco caso não exista
+
+	current_database = busca("UFFS",1);
+
+	printf("%d %d\n",ok,current_database );
+	if (!ok)
+	{	
+		printf("jkjlkjlkjkljlkjkljkl\n");
+	    int nrTabelas = 3;
+	    int nTabela[nrTabelas];
+	    table  *tab[nrTabelas]; 
+	    column *colunas;
+	    int object, schema;
+	    
+	    object      = existeArquivo("fs_object.dat");
+	    schema      = existeArquivo("fs_schema.dat");
+	   
+	    nTabela[0]  = existeArquivo(table_name_real("Aluno",current_database));
+	    
+	    nTabela[1]  = existeArquivo(table_name_real("Inst",current_database));
+
+	    nTabela[2]  = existeArquivo(table_name_real("Inscri",current_database));
+
+	    
+	    if(!object || !schema)
+	    {
+	        if(!nTabela[0]){ 
+	    		printf("hjkhkjhkjhjk\n");
+	            tab[0] = iniciaTabela(table_name_real("Aluno",current_database));                                                 //Cria a tabela 
+	            tab[0] = adicionaCampo(tab[0], "CPF"     , 'I', (sizeof(int))   ,PK,"","");     //Cria os atributos
+	            tab[0] = adicionaCampo(tab[0], "Nome"    , 'S', 20              ,NPK,"","");        
+	            tab[0] = adicionaCampo(tab[0], "Endereco", 'S', 20              ,NPK,"","");
+	            tab[0] = adicionaCampo(tab[0], "Peso"    , 'D', (sizeof(double)),NPK,"","");
+	            finalizaTabela(tab[0],current_database);
+	            
+	         }
+	         if(!nTabela[1]){   
+	         	
+	            tab[1] = iniciaTabela(table_name_real("Inst",current_database)); 
+	            tab[1] = adicionaCampo(tab[1], "CodInst"  , 'I', (sizeof(int))   ,PK , "","");
+	            tab[1] = adicionaCampo(tab[1], "Nome"     , 'S', 20              ,NPK, "","");
+	            tab[1] = adicionaCampo(tab[1], "Endereco" , 'S', 20              ,NPK, "","");
+	            tab[1] = adicionaCampo(tab[1], "Reitor"   , 'S', 10              ,NPK, "","");
+	            finalizaTabela(tab[1],current_database);
+	        }
+	        if(!nTabela[2]){
+	        	
+	            tab[2] = iniciaTabela(table_name_real("Inscri",current_database)); 
+	            tab[2] = adicionaCampo(tab[2], "CodMat"     , 'I', (sizeof(int))  ,PK, "","");
+	            tab[2] = adicionaCampo(tab[2], "CPF"        , 'I', (sizeof(int))  ,FK, table_name_real("Aluno",current_database),"CPF");
+	            tab[2] = adicionaCampo(tab[2], "CodInst"    , 'I', (sizeof(int))  ,FK , table_name_real("Inst",current_database),"CodInst");
+	            tab[2] = adicionaCampo(tab[2], "Curso"   , 'S',  20  ,NPK, "","");
+	            finalizaTabela(tab[2],current_database);
+	        }
+	       
+	       	printf("AQUI\n");
+	         
+	         //Inserção de tuplas na tabela1   
+	        colunas = NULL;     
+	        colunas = insereValor(tab[0],colunas, "CPF", "123456");
+	        colunas = insereValor(tab[0],colunas, "Nome", "Rogerio");
+	        colunas = insereValor(tab[0],colunas, "Endereco", "Rua Marechal");
+	        colunas = insereValor(tab[0],colunas, "Peso", "81.4");
+	        finalizaInsert(table_name_real("Aluno",current_database), colunas); 
+	        
+	        colunas = NULL;     
+	        colunas = insereValor(tab[0],colunas, "CPF", "654321");
+	        colunas = insereValor(tab[0],colunas, "Nome", "Ricardo");
+	        colunas = insereValor(tab[0],colunas, "Endereco", "RuaClevela");
+	        colunas = insereValor(tab[0],colunas, "Peso", "88.9");
+	        finalizaInsert(table_name_real("Aluno",current_database), colunas); 
+
+	        colunas = NULL;     
+	        colunas = insereValor(tab[0],colunas, "CPF", "1234567");
+	        colunas = insereValor(tab[0],colunas, "Nome", "Natan");
+	        colunas = insereValor(tab[0],colunas, "Endereco", "RuaDelmi");
+	        colunas = insereValor(tab[0],colunas, "Peso", "58.9");
+	        finalizaInsert(table_name_real("Aluno",current_database), colunas); 
+	            
+	        
+	        //Inserção de tuplas na tabela2 
+	        colunas = NULL;
+	        colunas = insereValor(tab[1],colunas, "CodInst", "111");
+	        colunas = insereValor(tab[1],colunas, "Nome", "UFFS");
+	        colunas = insereValor(tab[1],colunas, "Endereco", "RuadeTerra");
+	        colunas = insereValor(tab[1],colunas, "Reitor", "MandaChuva");
+	        finalizaInsert(table_name_real("Inst",current_database), colunas);
+	        
+	        colunas = NULL;
+	        colunas = insereValor(tab[1],colunas, "CodInst", "222");
+	        colunas = insereValor(tab[1],colunas, "Nome", "CEFET");
+	        colunas = insereValor(tab[1],colunas, "Endereco", "RuadePedra");
+	        colunas = insereValor(tab[1],colunas, "Reitor", "MandaVento");
+	        finalizaInsert(table_name_real("Inst",current_database), colunas);
+
+	        colunas = NULL;
+	        colunas = insereValor(tab[1],colunas, "CodInst", "333");
+	        colunas = insereValor(tab[1],colunas, "Nome", "UNOESC");
+	        colunas = insereValor(tab[1],colunas, "Endereco", "RuadeAsfal");
+	        colunas = insereValor(tab[1],colunas, "Reitor", "MandaAgua");
+	        finalizaInsert(table_name_real("Inst",current_database), colunas);
+	        
+	        
+	        
+	        //Inserção de tupla na tabela3
+	        colunas = NULL;
+	        colunas = insereValor(tab[2],colunas, "CodMat", "1401");
+	        colunas = insereValor(tab[2],colunas, "CPF", "123456");
+	        colunas = insereValor(tab[2],colunas, "CodInst", "333");
+	        colunas = insereValor(tab[2],colunas, "Curso", "CC");
+	        finalizaInsert(table_name_real("Inscri",current_database), colunas);
+	        
+	        colunas = NULL;
+	        colunas = insereValor(tab[2],colunas, "CodMat", "1402");
+	        colunas = insereValor(tab[2],colunas, "CPF", "654321");
+	        colunas = insereValor(tab[2],colunas, "CodInst", "222");
+	        colunas = insereValor(tab[2],colunas, "Curso", "CC");
+	        finalizaInsert(table_name_real("Inscri",current_database), colunas);
+	        
+	        colunas = NULL;
+	        colunas = insereValor(tab[2],colunas, "CodMat", "1403");
+	        colunas = insereValor(tab[2],colunas, "CPF", "1234567");
+	        colunas = insereValor(tab[2],colunas, "CodInst", "111");
+	        colunas = insereValor(tab[2],colunas, "Curso", "ADM");
+	        finalizaInsert(table_name_real("Inscri",current_database), colunas);
+
+	    }
+	}
+    
+    imprime(table_name_real("Aluno",current_database));        //Imprime os atributos da tabela "Aluno"
+    imprime(table_name_real("Inst",current_database));
+    // //excluirTabela("Inst");   //Exclui os dados da tabela do dicionario e remove-a do disco
+    imprime(table_name_real("Inscri",current_database));
+    // //excluirTabela("Inscri");
+    
+    current_database = -1;//não existe nenhum banco logado
+}
+
+
+char *table_name_real(char *name,int database)
+{
+	char *table_name = (char*) malloc (sizeof(char)*1000);
+
+	if (table_name == NULL)
+	{
+		printf("Out of memory.\n");
+		exit(1);
+	}
+
+	sprintf(table_name,"%d",current_database);
+    strcat(table_name,"_");
+    strcat(table_name,name);
+
+    return table_name;
 }

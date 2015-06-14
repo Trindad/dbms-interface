@@ -9,11 +9,12 @@ int cod_id_banco(){
 
     if (database == NULL)
     {
-        fprintf(stderr, "Alocação de memória para o banco de dados falhou.\n");
+        fprintf(stderr, "Out of memory.\n");
         exit(1);
     }
 
     file = fopen("fs_database.dat","r");
+    
     if(file != NULL){
         while(ch!=EOF){
             ungetc(ch,file);
@@ -33,21 +34,29 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
    
     FILE *file;
     db *database = (db *)malloc(sizeof(db));
+
+    if (database == NULL)
+    {
+        printf("Out of memory.\n");
+        exit(1);
+    }
     
     if(!existeArquivo("fs_database.dat"))
         return -1;
     
-    int cod= (cod_id_banco()), cont = 1;
+    int cod = (cod_id_banco()), cont = 1;
 
     file = fopen("fs_database.dat", "r");  
          
-    if(file != NULL){
+    if(file != NULL)
+    {
        for(; cont < cod; cont++){
            
             fread(&database->cod,sizeof(int),1,file);
             fread(&database->nome,sizeof(char),TAM_NOME_BANCO,file);
 
-            if(identificacao==1){
+            if(identificacao==1)
+            {
                     /*for(i=0;i<strlen(database->nome);i++){
                         if(database->nome[i]=='\n')
                             printf(",");
@@ -61,12 +70,14 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
                     return database->cod;
                 }
             }
-            
             if(identificacao==2)
+            {
                 printf("\nBanco de dados: %s", database->nome);
+            }
        }
     }
-    else {
+    else 
+    {
         printf("\nImpossivel acessar fs_database!\n");
     }
     
@@ -92,7 +103,7 @@ void grava_banco(char *str){
 
 int checkCreateDB(char *nome){
     
-    int resultado=0;
+    int id = -2;
     
     if(!existeArquivo("fs_database.dat")){//se o arquivo com os nomes dos bancos não existir ele é criado.
         grava_banco(nome);
@@ -100,14 +111,19 @@ int checkCreateDB(char *nome){
     }
     
     //verificando se o nome do banco já existe em fs_database.dat
-    resultado = busca(nome,1);//se encontrar o banco já cadastrado retorna seu id
-    
-    if(resultado==-2)//retorno de funcao indicando sucesso
+    id = busca(nome,1);//se encontrar o banco já cadastrado retorna seu id
+   
+    //retorno de funcao indicando sucesso
+    if(id == -2)
+    {
         grava_banco(nome);
-        
+    }  
     else
+    {
         return -3;
+    }
     
     return 0;
     
 }
+

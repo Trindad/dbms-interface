@@ -5,7 +5,7 @@
 #include <string.h>
 #include "../../buffend.h"
 
-void insert(char *str);
+void insert(char *str, int current_database);
 
 table *start(char *name);
 

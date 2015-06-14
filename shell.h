@@ -11,11 +11,15 @@ void executeLine(int option);
 
 char *strtolower(char *str);//converte para minuscolos as letras
 
-int count_ocurrences(char *str, char delim);
+int count_ocurrences(char *str, char delim);//verifica a ocorência de um caracter na string passado pela variável delim
 
-char **tokenize(char *str, char delim, int *size);
+char **tokenize(char *str, char delim, int *size);//quebra string 
 
-char *remove_newline(char *str);
+char *remove_newline(char *str);//remove \n da sting
+
+void example();//cria banco e tabelas, colunas e insere valores.
+
+char *table_name_real(char *name,int database);//retorna o nome real da tabela gravada no banco
 
 #endif
 
