@@ -16,9 +16,13 @@ int busca(char *str, int identificacao);
 
 void listaBancos();
 
+void listaTabelas(int database);
+
 void grava_banco(char *str);
 
 int checkCreateDB(char *nome);
+
+extern char **tokenize(char *str, char delim, int *size);//quebra string 
 /*
  Objetivo: verificar se o nome do banco já existe e se não guarda-lo no arquivo fs_database.dat
  */

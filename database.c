@@ -120,6 +120,9 @@ int checkCreateDB(char *nome){
     
 }
 
+/**
+ * Imprime o nome dos banco de dados existentes.
+ */
 void listaBancos() 
 {
     FILE *file;
@@ -155,4 +158,48 @@ void listaBancos()
     }
     
     fclose(file);
+}
+
+/**
+ * Imprime tabelas do banco passado como indice
+ */
+void listaTabelas(int database)
+{
+    FILE *dicionario;
+    int i = 0;
+    char *nome_tabela = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+
+    if((dicionario = fopen("fs_object.dat","a+b")) == NULL){
+        free(nome_tabela);
+        printf("No table created.\n");
+        return;
+    }
+
+    while(fgetc (dicionario) != EOF)
+    {
+        fseek(dicionario, -1, 1);
+
+        fread(nome_tabela, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
+        int n = 0;
+        char **str = tokenize(nome_tabela,'_',&n);
+        if (n >= 2) {
+            n = atoi(str[0]);
+
+            if(n == database){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
+                char *temp = nome_tabela;
+                for (i = 0; i < strlen(str[0]); i++)
+                {
+                    temp++;
+                }
+
+                temp++;
+
+                printf("%s\n",temp);
+            }
+        }
+        
+        fseek(dicionario, 28, 1);
+    }
+
+    fclose(dicionario);
 }

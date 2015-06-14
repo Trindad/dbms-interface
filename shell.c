@@ -101,6 +101,8 @@ void shell()
 
             	continue;
             }
+
+            listaTabelas(current_database);
            
         }   
         else if(strcmp(strtolower(tokens[0]),"\\l")==0)

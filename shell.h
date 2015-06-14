@@ -13,7 +13,7 @@ char *strtolower(char *str);//converte para minuscolos as letras
 
 int count_ocurrences(char *str, char delim);//verifica a ocorência de um caracter na string passado pela variável delim
 
-char **tokenize(char *str, char delim, int *size);//quebra string 
+extern char **tokenize(char *str, char delim, int *size);//quebra string 
 
 char *remove_newline(char *str);//remove \n da sting
 

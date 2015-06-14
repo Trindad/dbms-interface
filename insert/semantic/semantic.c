@@ -103,6 +103,9 @@ void insertFields(table *t,Datas datas,char *type , int r) {
 
 }
 
+/**
+ * Inicializa esquema 
+ */
 table *start(char *name) 
 {
 	table *t = (table *)malloc(sizeof(table));
@@ -255,7 +258,9 @@ void insert(char *sql,int index_database)
 	free(datas.insert);
 }
 
-
+/**
+ * Concatena nome da tabela com id do banco
+ */
 char *table_name_cat(char *name,int database)
 {
 	char *table_name = (char*) malloc (sizeof(char)*1000);
