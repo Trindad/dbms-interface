@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include "shell.h"
 
 void shell()
@@ -19,13 +20,17 @@ void shell()
 
         strcpy(operacao,dividido);
         
-        if (strcmp(operacao,"create\0")==0)
+        if (strcmp(strtolower(operacao),"create\0")==0)
         {
-        	if(strcmp(operacao,"table\0")==0)
+        	dividido = strtok(temp," ");
+
+        	strcpy(operacao,dividido);
+
+        	if(strcmp(strtolower(operacao),"table\0")==0)
 	        {
 	           
 	        }
-	        else if(strcmp(operacao,"database\0")==0)
+	        else if(strcmp(strtolower(operacao),"database\0")==0)
 	        {
 	            printf("deu certo %s\n",operacao);//o nome dado ao banco será guardado
 	            dividido = strtok('\0'," ");
@@ -42,15 +47,14 @@ void shell()
 	                fprintf(stderr, "Banco já existe com este nome %s\n",dividido);
 	            }
 	            else
-	                printf("Database created successfully\n");
+	                printf("Database created successfully.\n");
 	        } 
 	        else
 	       	{
-	       		printf("Invalid command\n");
+	       		printf("Invalid command.\n");
 	       	}   
         }
-        
-        else if(strcmp(operacao,"connect\0")==0){
+        else if(strcmp(strtolower(operacao),"connect\0")==0){
             //CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É CONECTDB E CHAMAA A RESPECTIVA FUNÇÃO PRA FAZER ISSO
                     
             dividido = strtok('\0'," ;");               //apaga a palavra conectdb e passa para dividido a sobra, que seria o nome do bd
@@ -74,15 +78,15 @@ void shell()
             }
         }
       
-        else if(strcmp(operacao,"insert\0")==0)
+        else if(strcmp(strtolower(operacao),"insert\0")==0)
         {
             insert(entrada);
         }
-        else if(strcmp(operacao,"\\d\0")==0)
+        else if(strcmp(strtolower(operacao),"\\d\0")==0)
         {
             //CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É *D E CHAMAA A RESPECTIVA FUNÇÃO PRA LISTAR TABELAS
         }   
-        else if(strcmp(operacao,"\\l\n")==0)
+        else if(strcmp(strtolower(operacao),"\\l\n")==0)
         {
             //LISTA os bancos existentes
             resultado = busca(operacao,2);
@@ -92,7 +96,7 @@ void shell()
                 printf("Não existem bancos cadastrados.\n");
             }
         }   
-        else if(strcmp(operacao,"exit\n")==0)
+        else if(strcmp(strtolower(operacao),"exit\n")==0)
         {
             break;
         } 
@@ -101,4 +105,19 @@ void shell()
         	fprintf(stderr, "Comando inválido %s\n",entrada);
         }  
     }
+}
+
+
+char *strtolower(char *str)
+{
+  char *temp = strdup(str);
+  int i;
+
+  for (i = 0; i < strlen(temp) && temp[i] != '\0'; i++)
+  {
+    printf("%c\n", temp[i]);
+    temp[i] = tolower(temp[i]);
+  }
+
+  return temp;
 }

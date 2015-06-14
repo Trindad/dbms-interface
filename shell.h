@@ -9,5 +9,7 @@ void shell();
 
 void executeLine(int option);
 
+char *strtolower(char *str);//converte para minuscolos as letras
+
 #endif
 
