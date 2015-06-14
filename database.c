@@ -57,15 +57,8 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
 
             if(identificacao==1)
             {
-                    /*for(i=0;i<strlen(database->nome);i++){
-                        if(database->nome[i]=='\n')
-                            printf(",");
-                        else
-                            printf("%c",database->nome[i]);
-                    }*/
-
-                if(!strcmp(str,database->nome)){
-                    //printf("\n--> banco encontrado\n");
+                if(!strcmp(str,database->nome))
+                {
                     fclose(file);
                     return database->cod;
                 }

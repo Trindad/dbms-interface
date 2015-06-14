@@ -1,6 +1,7 @@
 #include "../sintatic/c.tab.c"
 #include "semantic.h"
 int nColumns;
+int database;
 
 /**
  * Insere campos correspondente a uma tupla
@@ -72,15 +73,15 @@ void insertFields(table *t,Datas datas,char *type , int r) {
 
 			if (type == 'S')
 			{
-				columns = insereValor(t,columns,nameColumns[it]," ");
+				columns = insereValor(t,columns, nameColumns[it]," ");
 			}
 			else if (type == 'D')
 			{
-				columns = insereValor(t,columns,nameColumns[it],"0.0");
+				columns = insereValor(t,columns, nameColumns[it],"0.0");
 			}
 			else if (type == 'I')
 			{
-				columns = insereValor(t,columns,nameColumns[it],"0");
+				columns = insereValor(t,columns, nameColumns[it],"0");
 			}
 
 			free(nameColumns[it]);
@@ -89,7 +90,7 @@ void insertFields(table *t,Datas datas,char *type , int r) {
 		}
 	}
     
-	it = finalizaInsert(datas.insert[0][0].str, columns); 
+	it = finalizaInsert( table_name_cat(datas.insert[0][0].str,database), columns); 
 
 	if (it == SUCCESS)
 	{
@@ -147,29 +148,16 @@ table *start(char *name)
  * o mesmo será lançado na tela e parado a execução;
  * segue a estrutura básica de inserção no banco em relação aos existentes
  */
-void insert(char *sql,int current_database)
+void insert(char *sql,int index_database)
 {
+	database = index_database;
 
 	Datas datas = execute(sql);
 	int rows = 0,columns = 0;
 
-	char *table_name = (char*) malloc (sizeof(char)*1000);
+    char *file = table_name_cat(datas.insert[rows][columns].str,database);
 
-    if (!table_name)
-    {
-    	printf("Out of memory.\n");
-    	exit(1);
-    }
-
-    sprintf(table_name,"%d",current_database);
-
-    strcat(table_name,"_");
-    strcat(table_name,datas.insert[rows][columns].str);
-
-	char *file = strdup(table_name);
-	
-	strcat(file,".dat");
-
+    strcat(file,".dat");
 	int exist  = existeArquivo(file);
 
 	rows++;
@@ -179,7 +167,7 @@ void insert(char *sql,int current_database)
 	 */
 	if (exist)
 	{
-		table  *t = start(datas.insert[0][0].str);
+		table  *t = start(table_name_cat(datas.insert[0][0].str,database) );
 
 		if (datas.numberOfColumns[rows] >= 1)
 		{
@@ -247,6 +235,7 @@ void insert(char *sql,int current_database)
 			{
 				insertFields(t,datas,type,it);
 			}
+
 			free(type);
 		}
 		
@@ -263,6 +252,23 @@ void insert(char *sql,int current_database)
 	}
 
 	free(file);
-	free(table_name);
 	free(datas.insert);
+}
+
+
+char *table_name_cat(char *name,int database)
+{
+	char *table_name = (char*) malloc (sizeof(char)*1000);
+
+	if (table_name == NULL)
+	{
+		printf("Out of memory.\n");
+		exit(1);
+	}
+
+	sprintf(table_name,"%d",database);
+    strcat(table_name,"_");
+    strcat(table_name,name);
+
+    return table_name;
 }

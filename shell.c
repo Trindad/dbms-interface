@@ -349,7 +349,7 @@ char *table_name_real(char *name,int database)
 		exit(1);
 	}
 
-	sprintf(table_name,"%d",current_database);
+	sprintf(table_name,"%d",database);
     strcat(table_name,"_");
     strcat(table_name,name);
 
