@@ -1,5 +1,5 @@
 /**
- * gcc *.c insert/sintatic/c.tab.c -o bf -g -ll -ly
+* gcc *.c insert/semantic/semantic.c -o bf -g -ll -ly
  */
 #include "shell.h"
 

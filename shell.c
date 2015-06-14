@@ -6,7 +6,7 @@ void shell()
     int resultado=0, codDB=-1;
     nomeBD[0]='\0';
 
-    char *current_db_name = ">";
+    char *current_db_name = ">";//inicializa com nenhum banco conectado
 
     while(1){       
         
@@ -19,25 +19,38 @@ void shell()
 
         strcpy(operacao,dividido);
         
-        if(strcmp(operacao,"createdb\0")==0){
-            printf("deu certo %s\n",operacao);//o nome dado ao banco será guardado
-            dividido = strtok('\0'," ");
-            printf("sobrou  %s\n",dividido);
-            resultado = checkCreateDB(dividido);//verifica a existência do nome e grava-o no arquivo
-            printf("%d\n",resultado);
-            
-            if(resultado==-1) 
-            {
-                fprintf(stderr,"erro ao tentar criar arquivo do banco de dados %s\n",dividido);
-            }
-            if(resultado==-3) 
-            {
-                fprintf(stderr, "Banco já existe com este nome %s\n",dividido);
-            }
-            else
-                printf("Finaliso\n");
-        } 
-        else if(strcmp(operacao,"connectdb\0")==0){
+        if (strcmp(operacao,"create\0")==0)
+        {
+        	if(strcmp(operacao,"table\0")==0)
+	        {
+	           
+	        }
+	        else if(strcmp(operacao,"database\0")==0)
+	        {
+	            printf("deu certo %s\n",operacao);//o nome dado ao banco será guardado
+	            dividido = strtok('\0'," ");
+	            printf("sobrou  %s\n",dividido);
+	            resultado = checkCreateDB(dividido);//verifica a existência do nome e grava-o no arquivo
+	            printf("%d\n",resultado);
+	            
+	            if(resultado==-1) 
+	            {
+	                fprintf(stderr,"erro ao tentar criar arquivo do banco de dados %s\n",dividido);
+	            }
+	            if(resultado==-3) 
+	            {
+	                fprintf(stderr, "Banco já existe com este nome %s\n",dividido);
+	            }
+	            else
+	                printf("Database created successfully\n");
+	        } 
+	        else
+	       	{
+	       		printf("Invalid command\n");
+	       	}   
+        }
+        
+        else if(strcmp(operacao,"connect\0")==0){
             //CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É CONECTDB E CHAMAA A RESPECTIVA FUNÇÃO PRA FAZER ISSO
                     
             dividido = strtok('\0'," ;");               //apaga a palavra conectdb e passa para dividido a sobra, que seria o nome do bd
@@ -60,21 +73,16 @@ void shell()
                 printf("\nBanco %s não cadastrado!\n", nomeaux);
             }
         }
-        else if(strcmp(operacao,"createtable\0")==0)
-        {
-            //NAO VAI SER CRIADO, MAS NOSSA IDEIA É QUE AO ESCREVER SOMENTE ISSO, CHAME UMA FUNÇÃO PARA TESTE,
-            //ESTA FUNÇAO DE TESTE DEVERIA CONTER O QUE ESTA NO RESTO DESTA MAIN, E NESTA MAIN POSSUIR APENAS O SHELL
-        }   
+      
         else if(strcmp(operacao,"insert\0")==0)
         {
-        	printf("%s\n",entrada );
             insert(entrada);
         }
-        else if(strcmp(operacao,"*d\0")==0)
+        else if(strcmp(operacao,"\\d\0")==0)
         {
             //CRIAR AQUI PARTE DO CODIGO QUE IDENTIFICARA QUE A OPERAÇÃO É *D E CHAMAA A RESPECTIVA FUNÇÃO PRA LISTAR TABELAS
         }   
-        else if(strcmp(operacao,"*l\n")==0)
+        else if(strcmp(operacao,"\\l\n")==0)
         {
             //LISTA os bancos existentes
             resultado = busca(operacao,2);
@@ -93,5 +101,4 @@ void shell()
         	fprintf(stderr, "Comando inválido %s\n",entrada);
         }  
     }
-		
 }
