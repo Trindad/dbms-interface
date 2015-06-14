@@ -3,7 +3,7 @@
 
 void shell()
 {
-	char entrada[1000], *dividido=NULL, operacao[12], nomeBD[TAM_NOME_BANCO], nomeaux[TAM_NOME_BANCO];
+	char entrada[1000], operacao[12], nomeBD[TAM_NOME_BANCO], nomeaux[TAM_NOME_BANCO];
     int resultado=0, codDB=-1;
     nomeBD[0]='\0';
 
@@ -28,7 +28,12 @@ void shell()
 	        }
 	        else if(strcmp(strtolower(tokens[1]),"database")==0)
 	        {
-	     	
+	     		if (nTokens != 3)
+	     		{
+	     			printf("Invalid number of arguments.\n");
+	     			continue;
+	     		}
+
 	            resultado = checkCreateDB(tokens[2]);//verifica a existência do nome e grava-o no arquivo
 	            printf("%s\n",tokens[2]);
 	            
@@ -52,13 +57,20 @@ void shell()
         }
         else if(strcmp(strtolower(tokens[0]),"\\c") == 0){
                 
+            if (nTokens != 2)
+            {
+            	printf("Invalid number of arguments.\n");
+
+            	continue;
+            }
+
             codDB = busca(tokens[1],1);     //função chamada para conecção no banco, retorna o codigo do banco ao conectar
            
             if (codDB >= 0)
             {
                 strcpy(nomeBD, tokens[1]);  //passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
                 current_db_name = strdup(tokens[1]);
-                printf("\n\n%s\n",tokens[1]);
+                
                 strcat(current_db_name,"=#"); 
             }
             else
@@ -73,10 +85,22 @@ void shell()
         }
         else if(strcmp(strtolower(tokens[0]),"\\d")==0)
         {
+        	if (nTokens != 1)
+            {
+            	printf("Invalid number of arguments.\n");
+
+            	continue;
+            }
            
         }   
         else if(strcmp(strtolower(tokens[0]),"\\l")==0)
         {
+        	if (nTokens != 1)
+            {
+            	printf("Invalid number of arguments.\n");
+
+            	continue;
+            }
             //LISTA os bancos existentes
             resultado = busca(tokens[0],2);
             
