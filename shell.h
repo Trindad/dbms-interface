@@ -15,6 +15,7 @@ int count_ocurrences(char *str, char delim);
 
 char **tokenize(char *str, char delim, int *size);
 
+char *remove_newline(char *str);
 
 #endif
 

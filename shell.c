@@ -17,22 +17,20 @@ void shell()
         
         fgets(entrada,1000,stdin);
 
-        char **tokens = tokenize(entrada,' ',&nTokens);
+        char **tokens = tokenize(remove_newline(entrada),' ',&nTokens);
         
-        if (strcmp(strtolower(tokens[0]),"create\0")==0)
+        if (strcmp(strtolower(tokens[0]),"create")==0)
         {
 
-        	if(strcmp(strtolower(tokens[1]),"table\0")==0)
+        	if(strcmp(strtolower(tokens[1]),"table")==0)
 	        {
 	           
 	        }
-	        else if(strcmp(strtolower(tokens[1]),"database\0")==0)
+	        else if(strcmp(strtolower(tokens[1]),"database")==0)
 	        {
-	            printf("deu certo %s\n",tokens[0]);//o nome dado ao banco será guardado
-	            dividido = strtok('\0'," ");
-	            printf("sobrou  %s\n",dividido);
-	            resultado = checkCreateDB(dividido);//verifica a existência do nome e grava-o no arquivo
-	            printf("%d\n",resultado);
+	     	
+	            resultado = checkCreateDB(tokens[2]);//verifica a existência do nome e grava-o no arquivo
+	            printf("%s\n",tokens[2]);
 	            
 	            if(resultado==-1) 
 	            {
@@ -52,16 +50,15 @@ void shell()
 	       		printf("Invalid command.\n");
 	       	}   
         }
-        else if(strcmp(strtolower(tokens[0]),"connect\0") == 0){
+        else if(strcmp(strtolower(tokens[0]),"\\c") == 0){
                 
             codDB = busca(tokens[1],1);     //função chamada para conecção no banco, retorna o codigo do banco ao conectar
-            printf("%d",codDB);
-
+           
             if (codDB >= 0)
             {
                 strcpy(nomeBD, tokens[1]);  //passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
                 current_db_name = strdup(tokens[1]);
-                printf("%s\n",tokens[1]);
+                printf("\n\n%s\n",tokens[1]);
                 strcat(current_db_name,"=#"); 
             }
             else
@@ -70,15 +67,15 @@ void shell()
             }
         }
       
-        else if(strcmp(strtolower(tokens[0]),"insert\0")==0)
+        else if(strcmp(strtolower(tokens[0]),"insert")==0)
         {
             insert(entrada);
         }
-        else if(strcmp(strtolower(tokens[0]),"\\d\0")==0)
+        else if(strcmp(strtolower(tokens[0]),"\\d")==0)
         {
            
         }   
-        else if(strcmp(strtolower(tokens[0]),"\\l\n")==0)
+        else if(strcmp(strtolower(tokens[0]),"\\l")==0)
         {
             //LISTA os bancos existentes
             resultado = busca(tokens[0],2);
@@ -88,7 +85,7 @@ void shell()
                 printf("No database created.\n");
             }
         }   
-        else if(strcmp(strtolower(tokens[0]),"exit\n")==0)
+        else if(strcmp(strtolower(tokens[0]),"exit")==0)
         {
             break;
         } 
@@ -156,4 +153,21 @@ char **tokenize(char *str, char delim, int *size)
   tokens[current] = strdup(accumulate);
 
   return tokens;
+}
+
+
+char *remove_newline(char *str)
+{
+  char *temp = (char*) malloc (sizeof(char) * strlen(str));
+
+  int i, pos = 0;
+  for (i = 0; i < strlen(str); i++) {
+    if (str[i] != '\n') {
+      temp[pos++] = str[i];
+    }
+  }
+
+  temp[pos] = '\0';
+
+  return temp;
 }
