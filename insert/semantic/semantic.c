@@ -10,25 +10,24 @@ int nColumns;
  */
 void insertFields(table *t,Datas datas,char *type , int r) {
 
-	// printf("INSERRE CAMPOSHD %d\n",r);
+	
 	int  c = 0, it = 0; //indice da coluna com o nome do campo a ser inserido
 	column *columns = NULL;
 	char *nameColumns[nColumns]; //vetor com nome das colunas para controle de nulos
 	/**
 	 * Insere um conjunto de dados de cada vez
 	 */
-	// printf("numberOfColumns %d R %d\n", datas.numberOfColumns[r],r);
+	
 	while(c < datas.numberOfColumns[r])
 	{
-		// printf("TIPO AQUI  %c %c\n",datas.insert[r][c+1].t_char,type[it]);
 		if (datas.insert[r][c+1].t_char == type[it])
 		{
-			printf("IMPRIME %s = %s\n",datas.insert[1][it].str,datas.insert[r][c].str );
 			columns = insereValor(t,columns,datas.insert[1][it].str,datas.insert[r][c].str);
 		}
 		else
 		{
-			fprintf(stderr, "Campo com valor %s não corresponde ao tipo da coluna %s\n",datas.insert[r][c].str,datas.insert[1][c].str);
+			fprintf(stderr, "Value %s doesn't match the column %s's type.\n",datas.insert[r][c].str,datas.insert[1][c].str);
+			return;
 		}
 		it++;
 		c += 2;
@@ -40,10 +39,8 @@ void insertFields(table *t,Datas datas,char *type , int r) {
 	 */
 	if (datas.numberOfColumns[1] < nColumns)
 	{
-		printf("Insere valores nulos %d %d\n", datas.numberOfColumns[1],nColumns);
 		int index = 0;
 
-			// printf("aqui?\n");
 		tp_table *temp = t->esquema;
 		int count = 0;//adiciona 1 se já foi inserido valor
 		
@@ -61,7 +58,6 @@ void insertFields(table *t,Datas datas,char *type , int r) {
 
 			if (count == 0)
 			{
-				printf("VALOR do esquema %s\n",temp->nome );
 				nameColumns[index] = strdup(temp->nome);
 				index++;
 			}
@@ -73,7 +69,6 @@ void insertFields(table *t,Datas datas,char *type , int r) {
 		while(it < index)
 		{
 			char type = retornaTipoDoCampo(nameColumns[it],t);
-			printf("INSERE VALORES NULOS %s %c\n",nameColumns[it],type);
 
 			if (type == 'S')
 			{
@@ -93,24 +88,16 @@ void insertFields(table *t,Datas datas,char *type , int r) {
 			it++;
 		}
 	}
-
-	printf("\n-----------------------------------------\n");
-	
-	// columns = NULL;     
-    // columns = insereValor(t,columns, "CPF", "22222");
-    // columns = insereValor(t,columns, "Nome", "Carol df");
-    // columns = insereValor(t,columns, "Endereco", " ");
-    // columns = insereValor(t,columns, "Peso", "0.0");
     
 	it = finalizaInsert(datas.insert[0][0].str, columns); 
 
 	if (it == SUCCESS)
 	{
-		printf("INSERIU COM SUCESSO...\n");
+		printf("Insert successful.\n");
 	}
 	else
 	{
-		printf("NÃO INSERIU COM SUCESSO...%d\n", it);
+		printf("Insert failed.\n");
 	}
 
 }
@@ -121,7 +108,7 @@ table *start(char *name)
 
     if (t == NULL)
     {
-        fprintf(stderr, "Erro na alocação de memória.\n");
+        fprintf(stderr, "Out of memory.\n");
     }
 
     int n = strlen(name);
@@ -141,14 +128,14 @@ table *start(char *name)
 
     if (schema == ERRO_ABRIR_ESQUEMA)
     {
-    	fprintf(stderr, "Erro ao ler esquema da tabela %s\n",t->nome);
+    	fprintf(stderr, "Error while reading database schema %s\n",t->nome);
     }
 
     t->esquema = schema;
 
     if (t->esquema == NULL)
     {
-    	fprintf(stderr, "Erro ao ler esquema da tabela %s\n",t->nome);
+    	fprintf(stderr, "Error while reading database schema %s\n",t->nome);
     }
     return t;
 }
@@ -169,7 +156,6 @@ void insert(char *sql)
 	char *file = strdup(datas.insert[rows][columns].str);
 	
 	strcat(file,".dat");
-	// printf("Arquivo %s\n",file);
 
 	int exist  = existeArquivo(file);
 	
@@ -191,26 +177,22 @@ void insert(char *sql)
 
 			if (type == NULL)
 			{
-				fprintf(stderr, "Erro de alocação de memória.\n");
+				fprintf(stderr, "Out of memory.\n");
 			}
 
 			int it = 0;
-			// printf("Columns %d %d %s\n",columns, datas.numberOfColumns[rows],datas.insert[0][0].str );
 			
 			while(it < datas.numberOfColumns[rows])
 			{
-				// printf("%s\n",datas.insert[rows][it].str );
 				type[it] = retornaTipoDoCampo(datas.insert[rows][it].str,t);
-				// printf("Tipo campo %c\n",type[it] );
+				
 				it++;
 			}
-			// printf("numberOfColumns CCCC %d\n", datas.numberOfColumns[rows]);
 
 			rows++;
 			
 			for (it = rows; it < datas.numberOfRows; it++)
 			{
-				// printf(" numberOfRows RRRR %d\n",datas.numberOfRows );
 				insertFields(t,datas,type,it);
 			}
 			free(type);
@@ -234,7 +216,7 @@ void insert(char *sql)
 
 			if (type == NULL)
 			{
-				fprintf(stderr, "Erro de alocação de memória.\n");
+				fprintf(stderr, "Out of memory.\n");
 			}
 
 			it = 0;
@@ -253,13 +235,12 @@ void insert(char *sql)
 				insertFields(t,datas,type,it);
 			}
 			free(type);
-			printf("Insere na ordem do banco\n");
 		}
 		
 	}
 	else
 	{
-		fprintf(stderr, "Tabela %s não existe\n",datas.insert[0][0]);
+		fprintf(stderr, "Table %s doesn't exist.\n",datas.insert[0][0]);
 	}
 
 	for (rows = 0; rows < datas.numberOfRows; rows++)

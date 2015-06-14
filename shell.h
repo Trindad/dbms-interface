@@ -11,5 +11,10 @@ void executeLine(int option);
 
 char *strtolower(char *str);//converte para minuscolos as letras
 
+int count_ocurrences(char *str, char delim);
+
+char **tokenize(char *str, char delim, int *size);
+
+
 #endif
 
