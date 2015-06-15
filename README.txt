@@ -370,7 +370,7 @@ Comandos do Shell:
 
 
 SHELL
-* Apenas os comandos de insertion usam ponto e vírgula ";".
+* Todos os comandos aceitam ponto e vírgula ";" no final, com exceção do \d e \l.
 
 	Conectar no banco
 		\c <database_name>
