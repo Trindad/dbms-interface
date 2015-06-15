@@ -423,28 +423,32 @@ Mesmo que o programa seja recompilado por completo os bancos criados permanecem 
 
  - inserts:
 Para realizar um insert em uma tabela é utilizado o comando insert, este possuindo quatro sintaxes diferentes, mas todas obedecendo as mesmas restrições: 
- a ordem dos atributos e valores no insert deve estar na mesma ordem dos atributos da tabela, é necessário o caracter “;” (ponto e vírgula) 
- no fim do comando e deve-se estar conectado ao banco que contém a tabela na qual desejasse realizar o insert.
-As palavras insert, into e values podem estar escritas em letras maiúsculas ou minúsculas, mas nunca misturadas (ex: Insert, inTo, Values).  
-A nomenclatura da tabela e os seus atributos devem ser respeitados.
-Para valores cujo o atributo da tabela é do tipo String (S) e char (C) é necessário que o valor passado no insert esteja entra aspas duplas (ex: “valor”, “A”).
-Para os valores cujo o atributo da tabela é do tipo Double (D) é necessário que o valor passado no insert esteja no formato valor.casaDecimal, 
- onde um ponto separa o valor da sua casa decimal (ex: 100.0, 246.273).
-Para o comando insert existem quatro sintaxes diferentes: Insert indicando nome dos atributos e seus respectivos valores:
-	Sintaxe: insert into nome_tabela(<colunas>) values (<valores>);
-	Ex: insert INTO Aluno (CPF,Nome,Endereco,Peso) values (0444, "Joca", "Rua dos martins", 258.0);
+	As palavras insert, into e values podem estar escritas em letras maiúsculas ou minúsculas, mas nunca misturadas (ex: Insert, inTo, Values).  
+	A nomenclatura da tabela e os seus atributos devem ser respeitados.
+	Para valores cujo o atributo da tabela é do tipo String (S) e char (C) é necessário que o valor passado no insert esteja entra aspas duplas (ex: “valor”, “A”).
+	Para os valores cujo o atributo da tabela é do tipo Double (D) é necessário que o valor passado no insert esteja no formato valor.casaDecimal, 
+	onde um ponto separa o valor da sua casa decimal (ex: 100.0, 246.273).
+	Para o comando insert existem quatro sintaxes diferentes: Insert indicando nome dos atributos e seus respectivos valores. 
+	No final do comando sempre deve ser inserido ';'. A seguir podemos ver a sintaxe:
+	*Sintaxe onde usuário insere somente uma tupla para n colunas, podendo n ser de 1 até o número de colunas do banco:
+		insert into nome_tabela(<colunas>) values (<valores>);
+		insert INTO Aluno (CPF,Nome,Endereco,Peso) values (0444, "Joca", "Rua dos martins", 258.0);
+		
+	*Insert indicando somente os valores dos atributos, estes devem estar na ordem das tabelas no banco:
+		Sintaxe: insert into nome_tabela values (<valores_na_ordem_do_bd>);
+		Ex: insert INTO Aluno values (4571, "Joca", "Rua dos martins", 258.0);
+		
+	Insert com inserção de múltiplas tuplas:
+		Sintaxe: insert into nome_tabela values (<valores_na_ordem_do_bd>), (<valores_na_ordem_do_bd>);
+		Ex: insert into Aluno values (8079, "Joca", "Rua dos martins", 258.0),(100000, "Joao", "Rua dos capitaes", 70.0);
+		
+	Insert com inserção de múltiplas tuplas indicando os atributos e valores:
+		Sintaxe: insert into nome_tabela(<colunas>) values (<valores>),(<valores>);
+		Ex: insert into Aluno (CPF,Nome,Endereco,Peso) values (2138, "Joca", "Rua dos martins", 258.0),(6778, "Joao", "Rua dos capitaes", 70.0);
 	
-Insert indicando somente os valores dos atributos:
-	Sintaxe: insert into nome_tabela values (<valores_na_ordem_do_bd>);
-	Ex: insert INTO Aluno values (4571, "Joca", "Rua dos martins", 258.0);
-	
-Insert com inserção de múltiplas tuplas:
-	Sintaxe: insert into nome_tabela values (<valores_na_ordem_do_bd>), (<valores_na_ordem_do_bd>);
-	Ex: insert into Aluno values (8079, "Joca", "Rua dos martins", 258.0),(100000, "Joao", "Rua dos capitaes", 70.0);
-	
-Insert com inserção de múltiplas tuplas indicando os atributos e valores:
-	Sintaxe: insert into nome_tabela(<colunas>) values (<valores>),(<valores>);
-	Ex: insert into Aluno (CPF,Nome,Endereco,Peso) values (2138, "Joca", "Rua dos martins", 258.0),(6778, "Joao", "Rua dos capitaes", 70.0);
+	Para o desenvolvimento do insert foi feito a análise léxica, semântica e sintática do comando sql. O código pode ser encontrado no diretório insert
+	onde contêm dois diretórios, o sintátic e semantic. O código desenvolvido básicamente recebe uma string com o comando sql, verifica a questão léxica, em seguida a análise semântica utiliza de expressões para verificar a string passada que deve seguir o padrão dos exemplos anteriores, caso algum erro ocorra então é lançado uma mensagem de erro, as mensagens são geradas com o padrão do bison. 
+	Na análise semântica, é verificado se os tipos estão corretos, se a tabela existe para o banco logado, estando tudo certo ele faz a inserção das tuplas na tabela.
 
  - exit
 Comando para saída do shell, simplesmente verifica o token de entrada é exit, da um break e encerra o programa.
