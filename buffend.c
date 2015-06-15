@@ -370,6 +370,7 @@ char *getTupla(tp_table *campos,struct fs_objects objeto, int from){ //Pega uma 
         return ERRO_DE_LEITURA;
 
     fseek(dados, from, 1);
+    
     if(fgetc (dados) != EOF){
         fseek(dados, -1, 1);
         fread(linha, sizeof(char), tamTpl, dados); //Traz a tupla inteira do arquivo

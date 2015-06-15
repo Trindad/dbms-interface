@@ -116,6 +116,15 @@ void shell()
 
  			char *t = table_name_real(tokens[1],current_database);
 
+ 			char *file = t;
+ 			strcat(file,".dat");
+
+ 			if (existeArquivo(file) == 0)
+ 			{
+ 				printf("Table doesn't exist.\n" );
+ 				continue;
+ 			}
+
         	imprime(t);
         }  
         else if(strcmp(strtolower(tokens[0]),"\\l")==0)
