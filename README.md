@@ -1,7 +1,7 @@
 <b>BANCO DE DADOS II</b><br>
-<i>Trabalho de implementação de chaves primárias/estrangeiras</i>
+<i>Implementação de Insert e funções do shell relacionadas diretamente ao banco de dados</i>
 
-Alunos: Natan J. Mai, Ricardo Zanuzzo e Rogério Torchelsen.<br>
+Alunos: Silvana Trindade, Geovani K., Edimar , Leonardo B.<br>
 Curso: Ciência da Computação<br>
 Disciplina: Banco de Dados II<br>
 Professor: Denio Duarte
