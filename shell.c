@@ -24,7 +24,6 @@ void shell()
         
         if (strcmp(strtolower(tokens[0]),"create")==0)
         {
-
         	if(strcmp(strtolower(tokens[1]),"table")==0)
 	        {
 	           printf("Invalid command.\n");
@@ -43,7 +42,7 @@ void shell()
 	     			continue;
 	     		}
 
-	            resultado = checkCreateDB(tokens[2]);//verifica a existência do nome e grava-o no arquivo
+	            resultado = checkCreateDB( remove_semicolon(tokens[2]) );//verifica a existência do nome e grava-o no arquivo
 	            
 	            if(resultado==-1) 
 	            {
@@ -72,19 +71,19 @@ void shell()
 
             	continue;
             }
-
-            codDB = busca(tokens[1],1);     //função chamada para conecção no banco, retorna o codigo do banco ao conectar
+            char *name_db = remove_semicolon(tokens[1]);
+            codDB = busca(name_db,1);     //função chamada para conecção no banco, retorna o codigo do banco ao conectar
            
             if (codDB >= 0)
             {
-                strcpy(nomeBD, tokens[1]);  //passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
-                current_db_name = strdup(tokens[1]);
+                strcpy(nomeBD, name_db);  //passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
+                current_db_name = strdup(name_db);
                 current_database = codDB;
                 strcat(current_db_name,"=#"); 
             }
             else
             {
-                printf("\nNo such database '%s'.\n", tokens[1]);
+                printf("\nNo such database '%s'.\n", name_db);
                 continue;
             }
         }
@@ -114,11 +113,11 @@ void shell()
             	continue;
         	}
 
- 			char *t = table_name_real(tokens[1],current_database);
+ 			char *t = table_name_real(remove_semicolon(tokens[1]),current_database);
 
- 			char *file = table_name_real(tokens[1],current_database);
+ 			char *file = table_name_real(remove_semicolon(tokens[1]),current_database);
  			strcat(file,".dat");
- 			// printf("%s\n",file );
+ 			
  			if (existeArquivo(file) == 0)
  			{
  				printf("Table doesn't exist.\n" );
@@ -138,7 +137,7 @@ void shell()
             //LISTA os bancos existentes
             listaBancos();
         }   
-        else if(strcmp(strtolower(tokens[0]),"exit")==0)
+        else if(strcmp(strtolower(remove_semicolon(tokens[0])),"exit")==0)
         {
             break;
         } 
@@ -217,6 +216,23 @@ char *remove_newline(char *str)
   int i, pos = 0;
   for (i = 0; i < strlen(str); i++) {
     if (str[i] != '\n') {
+      temp[pos++] = str[i];
+    }
+  }
+
+  temp[pos] = '\0';
+
+  return temp;
+}
+
+
+char *remove_semicolon(char *str)
+{
+  char *temp = (char*) malloc (sizeof(char) * strlen(str));
+
+  int i, pos = 0;
+  for (i = 0; i < strlen(str); i++) {
+    if (str[i] != ';') {
       temp[pos++] = str[i];
     }
   }
