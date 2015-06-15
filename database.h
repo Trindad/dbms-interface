@@ -1,6 +1,6 @@
 #ifndef DATABASE_H
 #define DATABASE_H
-#include "buffend.h"
+#include "table.h"
 
 #define TAM_NOME_BANCO 30
 
