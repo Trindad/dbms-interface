@@ -245,7 +245,7 @@ void insert(char *sql,int index_database)
 	}
 	else
 	{
-		fprintf(stderr, "Table %s doesn't exist.\n",datas.insert[0][0]);
+		fprintf(stderr, "Table %s doesn't exist.\n",datas.insert[0][0].str);
 	}
 
 	for (rows = 0; rows < datas.numberOfRows; rows++)

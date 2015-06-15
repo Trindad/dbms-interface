@@ -104,7 +104,20 @@ void shell()
 
             listaTabelas(current_database);
            
-        }   
+        } 
+        else if (strcmp(strtolower(tokens[0]),"show")==0)
+        {
+        	if (nTokens != 2)
+        	{
+        		printf("Invalid number of arguments.\n");
+
+            	continue;
+        	}
+
+ 			char *t = table_name_real(tokens[1],current_database);
+
+        	imprime(t);
+        }  
         else if(strcmp(strtolower(tokens[0]),"\\l")==0)
         {
         	if (nTokens != 1)
