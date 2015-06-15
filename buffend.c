@@ -370,7 +370,7 @@ char *getTupla(tp_table *campos,struct fs_objects objeto, int from){ //Pega uma 
         return ERRO_DE_LEITURA;
 
     fseek(dados, from, 1);
-    
+
     if(fgetc (dados) != EOF){
         fseek(dados, -1, 1);
         fread(linha, sizeof(char), tamTpl, dados); //Traz a tupla inteira do arquivo
@@ -566,7 +566,7 @@ int finalizaTabela(table *t, int database){
     strcat(nomeArquivo, ".dat\0");
     strcat(t->nome, "\0");
 
-    printf("nomeArquivo %s\n",nomeArquivo );
+    // printf("nomeArquivo %s\n",nomeArquivo );
     // Salva dados sobre a tabela no dicionario.
     fwrite(&t->nome,sizeof(t->nome),1,dicionario);
     fwrite(&codTbl,sizeof(codTbl),1,dicionario);
@@ -669,11 +669,11 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
 
         strncpy(e->nomeCampo, nomeCampo,n); 
 
-        n = strlen(valorCampo) + 1;
+        n = strlen(valorCampo)+1;
         
         if (n > tam && tipo == 'S')
         {
-            n = tam;
+            n = tam-1;
         }
 
         strncpy(e->valorCampo, valorCampo,n);
@@ -726,7 +726,7 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
         
                 if (n > tam && tipo == 'S')
                 {
-                    n = tam;
+                    n = tam-1;
                 }
                 strncpy(e->valorCampo, valorCampo,n);
                 aux->next = e;
@@ -740,7 +740,7 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
 }
 int finalizaInsert(char *nome, column *c){
     column *auxC, *temp;
-    int x = 0, t = 0, erro = 0, j = 0;
+    int x = 0, t = 0, erro, j = 0;
     FILE *dados;
 
     struct fs_objects objeto,dicio; // Le dicionario
@@ -763,12 +763,12 @@ int finalizaInsert(char *nome, column *c){
                 // printf("NOME %s TEMP NOME Campo %s\n", nome,temp->nomeCampo);
                 erro = verificaChavePK(nome, temp , temp->nomeCampo, temp->valorCampo);
                 if(erro == ERRO_CHAVE_PRIMARIA){
-                     printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
+                     printf("Erro GRAVE! na funÃ§Ã£o verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
                     free(c);    // Libera a memoria da estrutura.
-					free(auxT); // Libera a memoria da estrutura.
-					//free(temp); // Libera a memoria da estrutura.   
-					free(tab); // Libera a memoria da estrutura.
-					free(tab2); // Libera a memoria da estrutura.
+                    free(auxT); // Libera a memoria da estrutura.
+                    //free(temp); // Libera a memoria da estrutura.   
+                    free(tab); // Libera a memoria da estrutura.
+                    free(tab2); // Libera a memoria da estrutura.
                     exit(1);
                 }
 
@@ -780,12 +780,12 @@ int finalizaInsert(char *nome, column *c){
                     erro = verificaChaveFK(nome, temp, tab2[j].nome, temp->valorCampo, tab2[j].tabelaApt, tab2[j].attApt);
 
                     if(erro != SUCCESS){
-                        printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
+                        printf("Erro GRAVE! na funÃ§Ã£o verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
                         free(c);    // Libera a memoria da estrutura.
-						free(auxT); // Libera a memoria da estrutura.
-						// free(temp); // Libera a memoria da estrutura.
+                        free(auxT); // Libera a memoria da estrutura.
+                        // free(temp); // Libera a memoria da estrutura.
                         free(tab); // Libera a memoria da estrutura.
-						free(tab2); // Libera a memoria da estrutura.
+                        free(tab2); // Libera a memoria da estrutura.
                         exit(1);
                     }
                 }
@@ -796,49 +796,50 @@ int finalizaInsert(char *nome, column *c){
     
     
     if(erro == ERRO_CHAVE_ESTRANGEIRA){
-        printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
+        printf("Erro GRAVE! na funÃ§Ã£o verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
         free(c);    // Libera a memoria da estrutura.
-		free(auxT); // Libera a memoria da estrutura.
-		// free(temp); // Libera a memoria da estrutura.
+        free(auxT); // Libera a memoria da estrutura.
+        // free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
-		free(tab2); // Libera a memoria da estrutura.
+        free(tab2); // Libera a memoria da estrutura.
         exit(1);
     }
 
     if(erro == ERRO_CHAVE_PRIMARIA){
-        printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
+        printf("Erro GRAVE! na funÃ§Ã£o verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
         free(c);    // Libera a memoria da estrutura.
-		free(auxT); // Libera a memoria da estrutura.
-		// free(temp); // Libera a memoria da estrutura.
+        free(auxT); // Libera a memoria da estrutura.
+        // free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
-		free(tab2); // Libera a memoria da estrutura.
+        free(tab2); // Libera a memoria da estrutura.
         exit(1);
     }
     if(erro == ERRO_DE_PARAMETRO) {
-        printf("Erro GRAVE! na função finalizaInsert(). Erro de Parametro.\nAbortando...\n");
+        printf("Erro GRAVE! na funÃ§Ã£o finalizaInsert(). Erro de Parametro.\nAbortando...\n");
         free(c);    // Libera a memoria da estrutura.
-		free(auxT); // Libera a memoria da estrutura.
-		// free(temp); // Libera a memoria da estrutura.
+        free(auxT); // Libera a memoria da estrutura.
+        // free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
-		free(tab2); // Libera a memoria da estrutura.
+        free(tab2); // Libera a memoria da estrutura.
         exit(1);
     }
     
     
     if((dados = fopen(dicio.nArquivo,"a+b")) == NULL){
-		free(c);    // Libera a memoria da estrutura.
-		free(auxT); // Libera a memoria da estrutura.
-		// free(temp); // Libera a memoria da estrutura.
+        free(c);    // Libera a memoria da estrutura.
+        free(auxT); // Libera a memoria da estrutura.
+        // free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
-		free(tab2); // Libera a memoria da estrutura.
+        free(tab2); // Libera a memoria da estrutura.
         return ERRO_ABRIR_ARQUIVO;
         
-	}
+    }
     
     auxC = c;
     t = 0;
     while(t < dicio.qtdCampos) 
     {        
+        // printf("nome Campo %s %s\n",auxC->nomeCampo,auxT[t].nome );
         if (strcmp(auxC->nomeCampo, auxT[t].nome) == 0)
         {
             if(t >= dicio.qtdCampos)
@@ -927,7 +928,7 @@ int finalizaInsert(char *nome, column *c){
     
     fclose(dados);
     free(tab); // Libera a memoria da estrutura.
-	free(tab2); // Libera a memoria da estrutura.
+    free(tab2); // Libera a memoria da estrutura.
     free(c);    // Libera a memoria da estrutura.
     free(auxT); // Libera a memoria da estrutura.
     // free(temp); // Libera a memoria da estrutura.
@@ -1042,12 +1043,13 @@ void imprime(char nomeTabela[]) {
 
     if(pagina == ERRO_PARAMETRO){
         free(bufferpoll);
-         printf("Erro GRAVE ao abrir a TABELA.\nAbortando...\n");
+        printf("Erro GRAVE ao abrir a TABELA.\nAbortando...\n");
         exit(1);
     }
     
     // PARA IMPRIMIR PÁGINA
-    printf("Número de tuplas: %d\n", --x);
+    // printf("Número de tuplas: %d\n", --x);
+    --x;
 	p = 0;
 	while(x){
 	    column *pagina = getPage(bufferpoll, esquema, objeto, p);	
@@ -1058,7 +1060,7 @@ void imprime(char nomeTabela[]) {
 	    }
 		for(j=0; j < objeto.qtdCampos*bufferpoll[p].nrec; j++){
         	if(pagina[j].tipoCampo == 'S'){
-            	printf("%s: %-15s ", pagina[j].nomeCampo,pagina[j].valorCampo);
+            	printf("%s: %-30s ", pagina[j].nomeCampo,pagina[j].valorCampo);
                 free(pagina[j].valorCampo);
             }
         	else if(pagina[j].tipoCampo == 'I'){

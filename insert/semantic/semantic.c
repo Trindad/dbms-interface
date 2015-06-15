@@ -11,14 +11,13 @@ int database;
  */
 void insertFields(table *t,Datas datas,char *type , int r) {
 
-	
 	int  c = 0, it = 0; //indice da coluna com o nome do campo a ser inserido
 	column *columns = NULL;
 	char *nameColumns[nColumns]; //vetor com nome das colunas para controle de nulos
+	
 	/**
 	 * Insere um conjunto de dados de cada vez
 	 */
-	
 	while(c < datas.numberOfColumns[r])
 	{
 		if (datas.insert[r][c+1].t_char == type[it])
@@ -65,6 +64,7 @@ void insertFields(table *t,Datas datas,char *type , int r) {
 			count = 0;
 			temp = temp->next;
 		}
+
 		it = 0;
 
 		while(it < index)
@@ -254,8 +254,24 @@ void insert(char *sql,int index_database)
 		free(datas.insert[rows]);
 	}
 
-	free(file);
+	// int u,v;
+
+	// for (u = 0; u < datas.numberOfRows; u++)
+	// {
+	// 	int n = datas.numberOfColumns[u];
+
+	// 	for (v = 0; v < n; v++)
+	// 	{
+	// 		free(datas.insert[u][v].str);
+	// 	}
+	// }
+	
 	free(datas.insert);
+
+	free(file);
+	datas.numberOfRows = 0;
+	free(datas.numberOfColumns);
+
 }
 
 /**

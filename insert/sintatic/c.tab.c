@@ -977,7 +977,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 #line 96 "c.y"
     {
 	count = 1;
-	int *temp = realloc(datas.numberOfColumns, (i+1)*sizeof(int));
+	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
@@ -992,7 +992,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 /* Line 936 of glr.c  */
 #line 106 "c.y"
     {
-	int *temp = realloc(datas.numberOfColumns, (i+1)*sizeof(int));
+	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
@@ -1032,7 +1032,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 /* Line 936 of glr.c  */
 #line 137 "c.y"
     {
-	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
+	int *temp = (int*)realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
@@ -2831,6 +2831,11 @@ union TOKEN **output(void);
  */
 Datas execute(char *sql)
 {
+	i = 0;
+	j = 0;
+	countColumn = 0;//controle para o número de campos inseridos
+	countField = 0;
+	count = 0;
 	datas.insert = (union TOKEN**) malloc (sizeof(union TOKEN*)*5000);
 
 	if (datas.insert == NULL)

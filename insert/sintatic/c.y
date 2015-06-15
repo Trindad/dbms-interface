@@ -95,7 +95,7 @@ table_name : ident columns
 	;
 columns: {
 	count = 1;
-	int *temp = realloc(datas.numberOfColumns, (i+1)*sizeof(int));
+	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
@@ -104,7 +104,7 @@ columns: {
 	datas.numberOfRows++;
 	}insertOrder 
 	| {
-	int *temp = realloc(datas.numberOfColumns, (i+1)*sizeof(int));
+	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
@@ -135,7 +135,7 @@ values_plus: ',' insertValues
 	; 
 
 continue:  ',' {
-	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
+	int *temp = (int*)realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
@@ -233,6 +233,11 @@ union TOKEN **output(void);
  */
 Datas execute(char *sql)
 {
+	i = 0;
+	j = 0;
+	countColumn = 0;//controle para o número de campos inseridos
+	countField = 0;
+	count = 0;
 	datas.insert = (union TOKEN**) malloc (sizeof(union TOKEN*)*5000);
 
 	if (datas.insert == NULL)

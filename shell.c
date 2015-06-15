@@ -6,7 +6,7 @@ int current_database = -1;
 void shell()
 {
 	current_database = -1;
-	char entrada[1000], nomeBD[TAM_NOME_BANCO], nomeaux[TAM_NOME_BANCO];
+	char entrada[1000], nomeBD[TAM_NOME_BANCO];
     int resultado=0, codDB=-1;
     nomeBD[0]='\0';
 
@@ -116,15 +116,15 @@ void shell()
 
  			char *t = table_name_real(tokens[1],current_database);
 
- 			char *file = t;
+ 			char *file = table_name_real(tokens[1],current_database);
  			strcat(file,".dat");
-
+ 			// printf("%s\n",file );
  			if (existeArquivo(file) == 0)
  			{
  				printf("Table doesn't exist.\n" );
  				continue;
  			}
-
+ 			printf("%s\n",t );
         	imprime(t);
         }  
         else if(strcmp(strtolower(tokens[0]),"\\l")==0)
