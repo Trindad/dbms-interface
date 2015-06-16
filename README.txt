@@ -371,7 +371,7 @@ Pode se criar um novo banco estando ou não conectado a  um banco.
 
  - \c name_my_db: 
 Para realizar conexão a um banco é utilizado o comando \c nome_banco.
-Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem dois bancos com o mesmo nome. Faz uso da função checkCreateDB do arquivo database.c . 
+Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem dois bancos com o mesmo nome. Faz uso da função checkCreateDB do arquivo database.c para testar. 
 É possível se conectar a um banco a qualquer momento, ou seja, posso estar em um banco de dados e utilizar o comando \c nome_banco e me conectar a um outro banco (saindo do atual).
 
  - \d
@@ -416,7 +416,7 @@ Mesmo que o programa seja recompilado por completo os bancos criados permanecem 
 
 PASSOS PARA UTILIZAR A INTERFACE
 
-Comando para saída do shell, simplesmente verifica o token de entrada é exit, da um break e encerra o programa.
+Comando para saída do shell, simplesmente verifica se o token de entrada é exit, dá um break e encerra o programa.
 
 COMPILAR:
 	Além do gcc é necessário ter na máquina instalado o bison e o lex.
