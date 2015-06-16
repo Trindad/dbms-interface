@@ -35,6 +35,8 @@ int countColumn = 0;//controle para o número de campos inseridos
 int countField = 0;
 int count = 0;
 char *str_replace(char *search , char *replace , char *subject);
+char *remove_quotes(char *str);
+char *remove_single_quotes(char *str);
 %}
 
 
@@ -169,8 +171,8 @@ type: NUM {
 	} 
 	| STRING_LITERAL {
 
-	char *c = str_replace("\"","", $1);
-	datas.insert[i][j].str = strdup(c);
+	char *c = remove_quotes($1);
+	datas.insert[i][j].str = c;
 	//printf("STRING[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
 	j++;
 	datas.insert[i][j].t_char = 'S';
@@ -179,8 +181,8 @@ type: NUM {
 	datas.numberOfColumns[i]+=2;
 	} 
 	| ID'.'ID {
-	char *c = str_replace("\"","", $1);
-	datas.insert[i][j].str = strdup(c);
+	char *c = remove_quotes($1);
+	datas.insert[i][j].str = c;
 	//printf("FIELD[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
 	j++;
 	datas.insert[i][j].t_char = 'S';
@@ -207,8 +209,8 @@ type: NUM {
 	datas.numberOfColumns[i]+=2;
 	}
 	| CHAR {
-	char *c = str_replace("\'","", $1);
-	datas.insert[i][j].str = strdup(c);
+	char *c = remove_single_quotes($1);
+	datas.insert[i][j].str = c;
 	//printf("BOOL[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
 	j++;
 	datas.insert[i][j].t_char = 'C';
@@ -312,4 +314,36 @@ char *str_replace(char *search , char *replace , char *subject)
     strcpy(new_subject + strlen(new_subject) , old);
      
     return new_subject;
+}
+
+char *remove_quotes(char *str)
+{
+  char *temp = (char*) malloc (sizeof(char) * strlen(str));
+
+  int i, pos = 0;
+  for (i = 0; i < strlen(str); i++) {
+    if (str[i] != '\"') {
+      temp[pos++] = str[i];
+    }
+  }
+
+  temp[pos] = '\0';
+
+  return temp;
+}
+
+char *remove_single_quotes(char *str)
+{
+  char *temp = (char*) malloc (sizeof(char) * strlen(str));
+
+  int i, pos = 0;
+  for (i = 0; i < strlen(str); i++) {
+    if (str[i] != '\'') {
+      temp[pos++] = str[i];
+    }
+  }
+
+  temp[pos] = '\0';
+
+  return temp;
 }

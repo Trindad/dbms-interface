@@ -223,6 +223,7 @@ int finalizaTabela(table *t, int database){
 // INSERE NA TABELA
 column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
     
+    // printf("%s\n",valorCampo );
     column *aux;
     if(c == NULL){ // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
     
@@ -315,12 +316,13 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
 
                 strncpy(e->nomeCampo, nomeCampo,n);
                 
-                 n = strlen(valorCampo) + 1;
+                n = strlen(valorCampo) + 1;
         
                 if (n > tam && tipo == 'S')
                 {
                     n = tam-1;
                 }
+
                 strncpy(e->valorCampo, valorCampo,n);
                 aux->next = e;
                 

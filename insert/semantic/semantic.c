@@ -22,6 +22,7 @@ void insertFields(table *t,Datas datas,char *type , int r) {
 	{
 		if (datas.insert[r][c+1].t_char == type[it])
 		{
+			// printf("%s\n",datas.insert[r][c].str );
 			columns = insereValor(t,columns,datas.insert[1][it].str,datas.insert[r][c].str);
 		}
 		else
