@@ -333,7 +333,11 @@ Comandos do Shell:
 
 
 SHELL
+<<<<<<< HEAD
+* Todos os comandos aceitam ponto e vírgula ";" no final, com exceção do \d e \l.
+=======
 Todos os comandos aceitam ';' no final com exceção dos \l e \d.
+>>>>>>> Melhorando README
 
 	Conectar no banco
 		\c <database_name>
@@ -356,36 +360,42 @@ Todos os comandos aceitam ';' no final com exceção dos \l e \d.
 	Sair do Shell (interface)
 		exit
 
-
-
 Implementação das funções:
 
 A implementação das funções está no arquivo database.c e seus protótipos em database.h. 
 
  - create database name_my_db
-Nessa nova versão cada tabela criada no banco recebe o id do banco ao qual ela pertence. 
-As tabelas são guardadas no dicionário com os ids e são escritas em arquivo com o id também. 
-O id é controlado por uma varíavel que é atualizada a cada conexão ao banco, assim sendo necessário que o usuário crie e se conecte ao banco para depois inserir as tabelas e os dados no respectivo banco. 
-Para criar um banco utiliza-se o comando create database nome_do_banco, sendo que o nome do banco pode conter letras maiúsculas e minúsculas. 
-Pode se criar um novo banco estando ou não conectado a  um banco.
+	Nessa nova versão cada tabela criada no banco recebe o id do banco ao qual ela pertence. 
+	As tabelas são guardadas no dicionário com os ids e são escritas em arquivo com o id também. 
+	O id é controlado por uma varíavel que é atualizada a cada conexão ao banco, assim sendo necessário que o usuário crie e se conecte ao banco para depois inserir as tabelas e os dados no respectivo banco. 
+	Para criar um banco utiliza-se o comando create database nome_do_banco, sendo que o nome do banco pode conter letras maiúsculas e minúsculas. 
+	Pode se criar um novo banco estando ou não conectado a  um banco.
 
  - \c name_my_db: 
-Para realizar conexão a um banco é utilizado o comando \c nome_banco.
-Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem dois bancos com o mesmo nome. Faz uso da função checkCreateDB do arquivo database.c . 
-É possível se conectar a um banco a qualquer momento, ou seja, posso estar em um banco de dados e utilizar o comando \c nome_banco e me conectar a um outro banco (saindo do atual).
+	Para realizar conexão a um banco é utilizado o comando \c nome_banco.
+	Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem dois bancos com o mesmo nome. Faz uso da função checkCreateDB do arquivo database.c . 
+	É possível se conectar a um banco a qualquer momento, ou seja, posso estar em um banco de dados e utilizar o comando \c nome_banco e me conectar a um outro banco (saindo do atual).
 
  - \d
-Lista as tabelas do banco, para isso é acionado a função listaTabelas.
+	Lista as tabelas do banco, para isso é acionado a função listaTabelas.
 
  - show name_table
-Mostra os dados dentro das tabelas, para isso faz uso da função imprime.
+	Mostra os dados dentro das tabelas, para isso faz uso da função imprime.
 
  - \l
+<<<<<<< HEAD
 Lista o nomes dos bancos existentes no SGBD. Podendo ser utilizada, estando ou não conectado a um banco. 
 Mesmo que o programa seja recompilado por completo os bancos criados permanecem lá. A listagem é feita através da função listaBancos, do arquivo database.c.
 
+ - inserts:
+Para realizar um insert em uma tabela é utilizado o comando insert, este possuindo quatro sintaxes diferentes, mas todas obedecendo as mesmas restrições: 
+=======
+	Lista o nomes dos bancos existentes no SGBD. Podendo ser utilizada, estando ou não conectado a um banco. 
+	Mesmo que o programa seja recompilado por completo os bancos criados permanecem lá. A listagem é feita através da função listaBancos, do arquivo database.c.
+
  - INSERT:
 	Para realizar um insert em uma tabela é utilizado o comando insert, este possuindo quatro sintaxes diferentes, mas todas obedecendo as mesmas restrições: 
+>>>>>>> Melhorando README
 	As palavras insert, into e values podem estar escritas em letras maiúsculas ou minúsculas, mas nunca misturadas (ex: Insert, inTo, Values).  
 	A nomenclatura da tabela e os seus atributos devem ser respeitados.
 	Para valores cujo o atributo da tabela é do tipo String (S) e char (C) é necessário que o valor passado no insert esteja entra aspas duplas (ex: “valor”, “A”).
@@ -411,7 +421,12 @@ Mesmo que o programa seja recompilado por completo os bancos criados permanecem 
 	
 	Para o desenvolvimento do insert foi feito a análise léxica, semântica e sintática do comando sql. O código pode ser encontrado no diretório insert
 	onde contêm dois diretórios, o sintátic e semantic. O código desenvolvido básicamente recebe uma string com o comando sql, verifica a questão léxica, em seguida a análise semântica utiliza de expressões para verificar a string passada que deve seguir o padrão dos exemplos anteriores, caso algum erro ocorra então é lançado uma mensagem de erro, as mensagens são geradas com o padrão do bison. 
+<<<<<<< HEAD
+	Na análise semântica, é verificado se os tipos estão corretos, se a tabela existe para o banco logado, estando tudo certo ele faz a inserção das tuplas na tabela.
+
+=======
 	Na análise semântica, é verificado se os tipos estão corretos, se a tabela existe para o banco logado, estando tudo certo ele faz a inserção das tuplas na tabela.  
+>>>>>>> Melhorando README
  - exit
 
 PASSOS PARA UTILIZAR A INTERFACE
@@ -419,32 +434,22 @@ PASSOS PARA UTILIZAR A INTERFACE
 Comando para saída do shell, simplesmente verifica o token de entrada é exit, da um break e encerra o programa.
 
 COMPILAR:
-	Além do gcc é necessário ter na máquina instalado o bison e o lex.
-
-OPÇÃO 1: Manual
-	1º Passo
-		Estar no diretório root do projeto
-	2º Passo
-		Entrar no diretório sintatic, por exemplo
-			cd insert/sintatic
-		Em seguida 
-			lex c.l
-			bison c.y
-			gcc c.tab.c -o bf -g -ll -ly
-	3° Passo
-		Voltar ao diretório root
-	4º Passo
-		Compilar com GCC
-			gcc *.c insert/semantic/semantic.c -o <nome_executavel> -g -ll -ly
-	5º Passo 
-		Executar
-			./<nome_executavel>
-
-OPÇÃO 2: usando Make
-	1º Passo 
-		make
-	2º Passo
-		./sgbd
-	Para remover os dados usar 'make clean'
+1º Passo
+	Estar no diretório root do projeto
+2º Passo
+	Entrar no diretório sintatic, por exemplo
+		cd insert/sintatic
+	Em seguida 
+		lex c.l
+		bison c.y
+		gcc c.tab.c -o bf -g -ll -ly
+3° Passo
+	Voltar ao diretório root
+4º Passo
+	Compilar com GCC
+		gcc *.c insert/semantic/semantic.c -o <nome_executavel> -g -ll -ly
+5º Passo 
+	Executar
+		./<nome_executavel>
 
 	
