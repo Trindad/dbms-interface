@@ -384,6 +384,9 @@ Mostra os dados dentro das tabelas, para isso faz uso da função imprime.
 Lista o nomes dos bancos existentes no SGBD. Podendo ser utilizada, estando ou não conectado a um banco. 
 Mesmo que o programa seja recompilado por completo os bancos criados permanecem lá. A listagem é feita através da função listaBancos, do arquivo database.c.
 
+-help
+	ajuda ao usuário
+
  - INSERT:
 	Para realizar um insert em uma tabela é utilizado o comando insert, este possuindo quatro sintaxes diferentes, mas todas obedecendo as mesmas restrições: 
 	As palavras insert, into e values podem estar escritas em letras maiúsculas ou minúsculas, mas nunca misturadas (ex: Insert, inTo, Values).  

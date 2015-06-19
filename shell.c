@@ -90,6 +90,12 @@ void shell()
       
         else if(strcmp(strtolower(tokens[0]),"insert")==0)
         {
+        	if (current_database == -1)
+ 			{
+ 				printf("Not connected to any database.\n");
+ 				continue;
+ 			}
+ 			
             insert(entrada,current_database);
         }
         else if(strcmp(strtolower(tokens[0]),"\\d")==0)
@@ -112,6 +118,11 @@ void shell()
 
             	continue;
         	}
+ 			if (current_database == -1)
+ 			{
+ 				printf("Not connected to any database.\n");
+ 				continue;
+ 			}
 
  			char *t = table_name_real(remove_semicolon(tokens[1]),current_database);
 
