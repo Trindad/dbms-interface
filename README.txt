@@ -430,7 +430,7 @@ OPÇÃO 1: Manual
 		Em seguida 
 			lex c.l
 			bison c.y
-			gcc c.tab.c -o bf -g -ll -ly
+			gcc c.tab.c -o bf -g -lfl
 	3° Passo
 		Voltar ao diretório root
 	4º Passo

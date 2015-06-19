@@ -1,7 +1,7 @@
 all: sgbd
 	
 sgbd: sintatic
-	gcc *.c insert/semantic/semantic.c -o sgbd -g -ll -ly 
+	gcc *.c insert/semantic/semantic.c -o sgbd -g -lfl
 
 clean:
 	rm *.dat
