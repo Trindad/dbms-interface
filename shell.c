@@ -141,7 +141,7 @@ void shell()
         {
             break;
         }
-        else if (strcmp(strtolower(tokens[0]),"\\help")==0)
+        else if (strcmp(strtolower(tokens[0]),"help")==0)
         {
         	if (nTokens != 1)
         	{
@@ -408,5 +408,19 @@ char *table_name_real(char *name,int database)
 
 void help()
 {
+	printf("DBMS Interface Help\n");
+	printf("Here is a list of commands you can enter:\n\n");
+	printf("help - Shows this help\n");
+	printf("exit - Exits DBMS interface\n");
+	printf("\\c <database_name> - Connects to a database\n");
+	printf("\\d - Lists all tables in the connected database\n");
+	printf("\\l - Lists all databases\n");
+	printf("show <table_name> - Displays the table's data\n");
+	
+	printf("\nFor database creation and insertion on tables, you can type standard SQL queries, like in the examples below.\n");
+	printf("\nDatabase creation example:\n");
+	printf("\t create database example_db;\n");
+	printf("\nTable insertion example:\n");
+	printf("\t insert into table1 values(\"val1\", 12.5), (\"val2\", 55.5);\n");
 	
 }
