@@ -23,5 +23,7 @@ char *table_name_real(char *name,int database);//retorna o nome real da tabela g
 
 char *remove_semicolon(char *str); //remove ; do comando sql
 
+void help();//função para ajuda ao usuário
+
 #endif
 

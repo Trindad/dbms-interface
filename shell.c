@@ -140,6 +140,15 @@ void shell()
         else if(strcmp(strtolower(remove_semicolon(tokens[0])),"exit")==0)
         {
             break;
+        }
+        else if (strcmp(strtolower(tokens[0]),"\\help")==0)
+        {
+        	if (nTokens != 1)
+        	{
+        		printf("Invalid number of arguments.\n");
+        	}
+
+        	help();
         } 
         else
         {
@@ -394,4 +403,10 @@ char *table_name_real(char *name,int database)
     strcat(table_name,name);
 
     return table_name;
+}
+
+
+void help()
+{
+	
 }
