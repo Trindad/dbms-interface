@@ -26,14 +26,14 @@ void shell()
         {
         	if(strcmp(strtolower(tokens[1]),"table")==0)
 	        {
-	           printf("Invalid command.\n");
+	           printf("Invalid command. Type help to show de interface usage.\n");
 	           continue;
 	        }
 	        else if(strcmp(strtolower(tokens[1]),"database")==0)
 	        {
 	     		if (nTokens != 3)
 	     		{
-	     			printf("Invalid number of arguments.\n");
+	     			printf("Invalid number of arguments. Type help to show de interface usage.\n");
 	     			continue;
 	     		}
 	     		else if (strlen(tokens[2]) > TAM_NOME_BANCO )
@@ -50,7 +50,7 @@ void shell()
 	            }
 	            if(resultado==-3) 
 	            {
-	                printf("Database exist.\n");
+	                printf("Database exists.\n");
 	            }
 	            else
 	            {
@@ -59,7 +59,7 @@ void shell()
 	        } 
 	        else
 	       	{
-	       		printf("Invalid command.\n");
+	       		printf("Invalid command. Type help to show de interface usage.\n");
 	       		continue;
 	       	}   
         }
@@ -67,7 +67,7 @@ void shell()
                 
             if (nTokens != 2)
             {
-            	printf("Invalid number of arguments.\n");
+            	printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
             	continue;
             }
@@ -102,7 +102,7 @@ void shell()
         {
         	if (nTokens != 1)
             {
-            	printf("Invalid number of arguments.\n");
+            	printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
             	continue;
             }
@@ -114,7 +114,7 @@ void shell()
         {
         	if (nTokens != 2)
         	{
-        		printf("Invalid number of arguments.\n");
+        		printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
             	continue;
         	}
@@ -141,7 +141,7 @@ void shell()
         {
         	if (nTokens != 1)
             {
-            	printf("Invalid number of arguments.\n");
+            	printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
             	continue;
             }
@@ -156,14 +156,14 @@ void shell()
         {
         	if (nTokens != 1)
         	{
-        		printf("Invalid number of arguments.\n");
+        		printf("Invalid number of arguments. Type help to show de interface usage.\n");
         	}
 
         	help();
         } 
         else
         {
-        	printf("Invalid command.\n");
+        	printf("Invalid command. Type help to show de interface usage.\n");
         	continue;
         }  
     }
