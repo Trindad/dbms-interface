@@ -223,7 +223,6 @@ int finalizaTabela(table *t, int database){
 // INSERE NA TABELA
 column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
     
-    // printf("%s\n",valorCampo );
     column *aux;
     if(c == NULL){ // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
     
@@ -547,15 +546,15 @@ void imprime(char nomeTabela[]) {
     tp_table *esquema = leSchema(objeto);
 
     if(esquema == ERRO_ABRIR_ESQUEMA){
-        printf("Erro GRAVE ao Criar o ESQUEMA.\nAbortando...\n");
-        exit(1);
+        printf("Out of memory...Aborting\n");
+        return ERROR_SCHEMA;
     }
 
     tp_buffer *bufferpoll = initbuffer();
 
     if(bufferpoll == ERRO_DE_ALOCACAO){
-        printf("Erro GRAVE alocar memória para o BUFFER.\nAbortando...\n");
-        exit(1);
+       printf("Out of memory...Aborting\n");
+       return  ERROR_BUFFER_MEMORY;
     }
 
     erro = SUCCESS;
@@ -567,7 +566,7 @@ void imprime(char nomeTabela[]) {
 
     if(pagina == ERRO_PARAMETRO){
         free(bufferpoll);
-        printf("Erro GRAVE ao abrir a TABELA.\nAbortando...\n");
+        printf("Cannot open table. Aborting...\n", );
         exit(1);
     }
     
