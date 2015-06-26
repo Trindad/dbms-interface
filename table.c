@@ -29,7 +29,8 @@ int verificaNomeTabela(char *nomeTabela)
 
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL){
         free(tupla);
-        return ERRO_ABRIR_ARQUIVO;
+        printf("Out of memory\n");
+        exit(1);
     }
 
     while(fgetc (dicionario) != EOF){
@@ -64,7 +65,8 @@ table *iniciaTabela(char *nome){
 
     if (t == NULL)
     {
-        return ERRO_DE_ALOCACAO;
+        printf("Out of memory.\nAborting");
+        exit(1);
     }
     int n = strlen(nome);
 
@@ -90,7 +92,8 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
         memset(e, 0, sizeof(*e));
         if (e == NULL)
         {
-            return ERRO_DE_ALOCACAO;
+            printf("Out of memory.\n");
+            exit(1);
         }
         e->next = NULL;
         int n = strlen(nomeCampo)+1;
@@ -346,6 +349,12 @@ int finalizaInsert(char *nome, column *c){
     table *tab     = (table *)malloc(sizeof(table));
     tp_table *tab2 = (tp_table *)malloc(sizeof(tp_table)); 
 
+    if (tab == NULL || tab2 == NULL)
+    {
+        printf("Out of memory.\nAborting...");
+        exit(1);
+    }
+
     tab->esquema = abreTabela(nome, &objeto, &tab->esquema);
     tab2 = procuraAtributoFK(objeto);
     
@@ -359,7 +368,7 @@ int finalizaInsert(char *nome, column *c){
                 // printf("NOME %s TEMP NOME Campo %s\n", nome,temp->nomeCampo);
                 erro = verificaChavePK(nome, temp , temp->nomeCampo, temp->valorCampo);
                 if(erro == ERRO_CHAVE_PRIMARIA){
-                     printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
+                    printf("There was an error due to primary key. Check the table's schema.\nAborting...\n");
                     free(c);    // Libera a memoria da estrutura.
                     free(auxT); // Libera a memoria da estrutura.
                     //free(temp); // Libera a memoria da estrutura.   
@@ -376,13 +385,13 @@ int finalizaInsert(char *nome, column *c){
                     erro = verificaChaveFK(nome, temp, tab2[j].nome, temp->valorCampo, tab2[j].tabelaApt, tab2[j].attApt);
 
                     if(erro != SUCCESS){
-                        printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
+                        printf("Error due to foreign key constraint.\n");
                         free(c);    // Libera a memoria da estrutura.
                         free(auxT); // Libera a memoria da estrutura.
                         // free(temp); // Libera a memoria da estrutura.
                         free(tab); // Libera a memoria da estrutura.
                         free(tab2); // Libera a memoria da estrutura.
-                        exit(1);
+                        return;
                     }
                 }
 
@@ -392,32 +401,32 @@ int finalizaInsert(char *nome, column *c){
     
     
     if(erro == ERRO_CHAVE_ESTRANGEIRA){
-        printf("Erro GRAVE! na função verificaChaveFK(). Erro de Chave Estrangeira.\nAbortando...\n");
+        printf("Error due to foreign key constraint.\n");
         free(c);    // Libera a memoria da estrutura.
         free(auxT); // Libera a memoria da estrutura.
         // free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
         free(tab2); // Libera a memoria da estrutura.
-        exit(1);
+        return ERRO_CHAVE_ESTRANGEIRA;
     }
 
     if(erro == ERRO_CHAVE_PRIMARIA){
-        printf("Erro GRAVE! na função verificaChavePK(). Erro de Chave Primaria.\nAbortando...\n");
+        printf("There was an error due to primary key. Check the table's schema.\nAborting...\n");
         free(c);    // Libera a memoria da estrutura.
         free(auxT); // Libera a memoria da estrutura.
         // free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
         free(tab2); // Libera a memoria da estrutura.
-        exit(1);
+        return ERRO_CHAVE_PRIMARIA;
     }
     if(erro == ERRO_DE_PARAMETRO) {
-        printf("Erro GRAVE! na função finalizaInsert(). Erro de Parametro.\nAbortando...\n");
+        printf("Error on insert. Wrong arguments.\nAborting...\n");
         free(c);    // Libera a memoria da estrutura.
         free(auxT); // Libera a memoria da estrutura.
         // free(temp); // Libera a memoria da estrutura.
         free(tab); // Libera a memoria da estrutura.
         free(tab2); // Libera a memoria da estrutura.
-        exit(1);
+        return ERRO_DE_PARAMETRO;
     }
     
     
@@ -547,14 +556,14 @@ void imprime(char nomeTabela[]) {
 
     if(esquema == ERRO_ABRIR_ESQUEMA){
         printf("Out of memory...Aborting\n");
-        return ERROR_SCHEMA;
+        return;
     }
 
     tp_buffer *bufferpoll = initbuffer();
 
     if(bufferpoll == ERRO_DE_ALOCACAO){
        printf("Out of memory...Aborting\n");
-       return  ERROR_BUFFER_MEMORY;
+       return;
     }
 
     erro = SUCCESS;
@@ -566,8 +575,7 @@ void imprime(char nomeTabela[]) {
 
     if(pagina == ERRO_PARAMETRO){
         free(bufferpoll);
-        printf("Cannot open table. Aborting...\n", );
-        exit(1);
+       return;
     }
     
     // PARA IMPRIMIR PÁGINA
@@ -578,8 +586,7 @@ void imprime(char nomeTabela[]) {
         column *pagina = getPage(bufferpoll, esquema, objeto, p);   
         if(pagina == ERRO_PARAMETRO){
             free(bufferpoll);
-            printf("Erro GRAVE ao abrir a TABELA.\nAbortando...\n");
-            exit(1);
+            return;
         }
         for(j=0; j < objeto.qtdCampos*bufferpoll[p].nrec; j++){
             if(pagina[j].tipoCampo == 'S'){
@@ -623,6 +630,12 @@ int TrocaArquivosObj(char *nomeTabela, char *linha){
     int x = 0;
     char *tabela = (char *)malloc(sizeof(char) * TAMANHO_NOME_TABELA);
 
+    if (tabela == NULL)
+    {
+        printf("Out memory.\nAborting...");
+        exit(1);
+    }
+
     while(x < TAMANHO_NOME_TABELA){
         tabela[x] = linha[x];
         x++;
@@ -646,11 +659,18 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
     FILE *schema;
     int cod = 0, chave, i = 0;
     char *tupla = (char *)malloc(sizeof(char) * 109);
+
     tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos);
     tp_table *vetEsqm = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos);
 
+    if (esquema == NULL || vetEsqm == NULL || tupla == NULL)
+    {
+        printf("Out of memory.\n");
+        exit(1);
+    }
+
     if((schema = fopen("fs_schema.dat", "a+b")) == NULL){
-        printf("Erro GRAVE ao abrir o ESQUEMA.\nAbortando...\n");
+        printf("Couldn't open schema.\nAborting...\n");
         free(tupla);
         free(esquema);
         free(vetEsqm);
@@ -718,8 +738,20 @@ int excluirTabela(char *nomeTabela) {
     qtTable = quantidadeTabelas();
 
     char **tupla = malloc(sizeof(char)*qtTable);
+
+    if (tupla == NULL)
+    {
+        printf("Out of memory.\nAborting...");
+        exit(1);
+    }
     for(i=0; i<qtTable; i++) {
         tupla[i] = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+
+        if (tupla[i] == NULL)
+        {
+            printf("Out of memory.\nAborting...");
+            exit(1);
+        }
     }
 
     tp_table *tab2 = (tp_table *)malloc(sizeof(struct tp_table));
@@ -751,12 +783,18 @@ int excluirTabela(char *nomeTabela) {
                     abreTabela(tupla[j], &objeto1, &esquema1);
 
                     tp_table *tab3 = (tp_table *)malloc(sizeof(struct tp_table));
+                    
+                    if (tab3 == NULL)
+                    {
+                        printf("Out of memory.\nAborting...");
+                        exit(1);
+                    }
                     tab3 = procuraAtributoFK(objeto1);
 
                     for(l=0; l<objeto1.qtdCampos; l++) {
                         if(tab3[l].chave == FK) {                               //verifica se a outra tabela possui
                             if(strcmp(nomeTabela, tab3[l].tabelaApt) == 0) {    //chave estrangeira
-                                printf("Exclusao nao permitida!\n");            //se sim, verifica se e da tabela
+                                printf("Cannot delete row due to foreign key constraint!\n");            //se sim, verifica se e da tabela
                                 return ERRO_CHAVE_ESTRANGEIRA;                  //anterior
                             }
                         }
@@ -772,7 +810,7 @@ int excluirTabela(char *nomeTabela) {
     tp_buffer *bufferpoll = initbuffer();
 
     if(bufferpoll == ERRO_DE_ALOCACAO){
-        printf("Erro ao alocar memória para o buffer.\n");
+        printf("Out of memory.\n");
         return ERRO_LEITURA_DADOS;
     }
 

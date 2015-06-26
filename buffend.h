@@ -39,7 +39,7 @@ int colocaTuplaBuffer(tp_buffer *buffer, int from, tp_table *campos, struct fs_o
     *objeto - Estrutura que armazena dados sobre a tabela que está no buffer
 */
 
-column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, int page);
+column *getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, int page);
 
 /*
     Esta função recupera uma página do buffer e retorna a mesma em uma estrutura do tipo column
@@ -53,7 +53,7 @@ column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, 
 /************************************************************************************************
  ************************************************************************************************/
 
-column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, int page, int nTupla);
+column *excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, int page, int nTupla);
 /*
     Esta função uma determinada tupla do buffer e retorna a mesma em uma estrutura do tipo column; 
     A estrutura column possui informações de como manipular os dados

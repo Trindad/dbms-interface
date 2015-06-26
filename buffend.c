@@ -205,11 +205,16 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
 // RETORNA PAGINA DO BUFFER
 column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, int page){
     
-    if(page >= PAGES)
+    if(page >= PAGES) {
+        printf("Invalid page.\n" );
         return ERRO_PAGINA_INVALIDA;
+    }
 
-    if(buffer[page].nrec == 0) //Essa página não possui registros
+    //Essa página não possui registros
+    if(buffer[page].nrec == 0) {
+        printf("Page empty.\n" );
         return ERRO_PARAMETRO;
+    }
     
     column *colunas = (column *)malloc(sizeof(column)*objeto.qtdCampos*buffer[page].nrec); //Aloca a quantidade de campos necessária
     
@@ -223,6 +228,12 @@ column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, 
         if(j >= objeto.qtdCampos)
             j=0;
         colunas[h].valorCampo = (char *)malloc(sizeof(char)*campos[j].tam);
+
+        if (colunas[h].valorCampo == NULL)
+        {
+            printf("Out of memory.\nAborting...");
+            exit(1);
+        }
         colunas[h].tipoCampo = campos[j].tipo;  //Guarda tipo do campo
         strcpy(colunas[h].nomeCampo, campos[j].nome); //Guarda nome do campo
         
