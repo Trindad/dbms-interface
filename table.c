@@ -65,7 +65,7 @@ table *iniciaTabela(char *nome){
 
     if (t == NULL)
     {
-        printf("Out of memory.\nAborting");
+        printf("Out of memory.\nAborting...\n");
         exit(1);
     }
     int n = strlen(nome);

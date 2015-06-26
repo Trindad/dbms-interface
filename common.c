@@ -11,13 +11,13 @@ struct fs_objects leObjeto(char *nTabela){
     struct fs_objects objeto;
     
     if(!verificaNomeTabela(nTabela)){
-        printf("Erro GRAVE! na função leObjeto(). Nome da tabela inválido.\nAbortando...\n");
+        printf("Invalid table name.\n");
 		free(tupla);
         return objeto;
     }
 
     if (dicionario == NULL) {
-        printf("Erro GRAVE! na função leObjeto(). Arquivo não encontrado.\nAbortando...\n\n");
+        printf("Database dictionary not found.\n");
 		free(tupla);
         return objeto;
     }
@@ -183,11 +183,18 @@ int existeArquivo(char* filename){
 
 int procuraObjectArquivo(char *nomeTabela){
     int teste        = 0, 
-        cont         = 0, 
-        achou        = 0,
-        tamanhoTotal = sizeof(struct fs_objects);
+    cont         = 0, 
+    achou        = 0,
+    tamanhoTotal = sizeof(struct fs_objects);
 
     char *table = (char *)malloc(sizeof(char) * tamanhoTotal);
+
+    if (table == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        exit(1);
+    }
+
     FILE *dicionario, *fp;
 
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
@@ -237,8 +244,15 @@ int procuraSchemaArquivo(struct fs_objects objeto){
     FILE *schema, *newSchema;
     int cod = 0;
     char *tupla = (char *)malloc(sizeof(char) * 109);
+
     tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos);
 
+    if (esquema == NULL || tupla == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        exit(1);
+    }
+    
     if((schema = fopen("fs_schema.dat", "a+b")) == NULL)
         return ERRO_REMOVER_ARQUIVO_SCHEMA;
     

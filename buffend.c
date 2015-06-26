@@ -9,8 +9,11 @@ tp_buffer * initbuffer(){
     int i = 0;
     tp_buffer *temp = bp;
 
-    if(bp == NULL)
-        return ERRO_DE_ALOCACAO;
+    if(bp == NULL){
+        printf("Out of memory.\nAborting...\n");
+        exit(1);
+    }
+
     for (i = 0;i < PAGES; i++){
         temp->db=0;
         temp->pc=0;
