@@ -18,6 +18,12 @@ char *getTupla(tp_table *campos,struct fs_objects objeto, int from){ //Pega uma 
 
     int tamTpl = tamTupla(campos, objeto);
     char *linha=(char *)malloc(sizeof(char)*tamTpl);
+
+    if (linha == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        exit(1);
+    }
     FILE *dados;
 
     from = from * tamTpl;

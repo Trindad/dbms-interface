@@ -148,6 +148,22 @@ void shell()
             //LISTA os bancos existentes
             listaBancos();
         }   
+        else if(strcmp(strtolower(tokens[0]),"\\drop")==0)
+        {
+        	if (nTokens != 3)
+            {
+            	printf("Invalid number of arguments. Type help to show de interface usage.\n");
+
+            	continue;
+            }
+            else if(strcmp(strtolower(tokens[1]),"table") == 0){
+            	char *t = table_name_real(remove_semicolon(tokens[2]),current_database);
+            	excluirTabela(t);
+            }
+            else if(strcmp(strtolower(tokens[1]),"database") == 0){
+            	dropDabase(remove_semicolon(tokens[2]));
+            }
+        }
         else if(strcmp(strtolower(remove_semicolon(tokens[0])),"exit")==0)
         {
             break;
