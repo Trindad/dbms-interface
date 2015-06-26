@@ -161,7 +161,7 @@ void shell()
             	excluirTabela(t);
             }
             else if(strcmp(strtolower(tokens[1]),"database") == 0){
-            	dropDabase(remove_semicolon(tokens[2]));
+            	dropDatabase(remove_semicolon(tokens[2]));
             }
         }
         else if(strcmp(strtolower(remove_semicolon(tokens[0])),"exit")==0)

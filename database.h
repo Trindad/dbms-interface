@@ -22,7 +22,7 @@ void grava_banco(char *str);
 
 int checkCreateDB(char *nome);
 
-void dropDabase(char *name);//exclui banco de dados
+void dropDatabase(char *name);//exclui banco de dados
 
 extern char **tokenize(char *str, char delim, int *size);//quebra string 
 /*

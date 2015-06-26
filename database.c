@@ -78,7 +78,7 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
     return -2;
 }
 
-void dropDabase(char *name){
+void dropDatabase(char *name){
 
 }
 //criar banco
