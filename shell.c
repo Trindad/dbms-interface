@@ -148,7 +148,7 @@ void shell()
             //LISTA os bancos existentes
             listaBancos();
         }   
-        else if(strcmp(strtolower(tokens[0]),"\\drop")==0)
+        else if(strcmp(strtolower(tokens[0]),"drop")==0)
         {
         	if (nTokens != 3)
             {
