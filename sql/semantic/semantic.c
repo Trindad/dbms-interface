@@ -145,7 +145,6 @@ table *start(char *name)
     return t;
 }
 
-
 /**
  * Função para analisar a string de entrada para inserir no banco
  * Analise léxica,sintática e semântica, caso ocorra algum erro, 
@@ -293,4 +292,10 @@ char *table_name_cat(char *name,int database)
     strcat(table_name,name);
 
     return table_name;
+}
+
+
+void createTable(char *sql, int current_database)
+{
+
 }

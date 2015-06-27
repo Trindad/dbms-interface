@@ -429,7 +429,7 @@ OPÇÃO 1: Manual
 		Estar no diretório root do projeto
 	2º Passo
 		Entrar no diretório sintatic, por exemplo
-			cd insert/sintatic
+			cd sql/sintatic
 		Em seguida 
 			lex c.l
 			bison c.y
@@ -438,7 +438,7 @@ OPÇÃO 1: Manual
 		Voltar ao diretório root
 	4º Passo
 		Compilar com GCC
-			gcc *.c insert/semantic/semantic.c -o <nome_executavel> -g -ll -ly
+			gcc *.c sql/semantic/semantic.c -o <nome_executavel> -g -ll -ly
 	5º Passo 
 		Executar
 			./<nome_executavel>

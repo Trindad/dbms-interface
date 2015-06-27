@@ -27,6 +27,7 @@ void shell()
         	if(strcmp(strtolower(tokens[1]),"table")==0)
 	        {
 	           printf("Invalid command. Type help to show de interface usage.\n");
+	           createTable(entrada,current_database);
 	           continue;
 	        }
 	        else if(strcmp(strtolower(tokens[1]),"database")==0)
@@ -222,6 +223,11 @@ char **tokenize(char *str, char delim, int *size)
   *size = ocurrences + 1;
   char **tokens = (char**) malloc (sizeof(char*) * (ocurrences + 1));
 
+   if (tokens == NULL)
+  {
+  	printf("Out of memory.\nAborting...\n");
+  }
+
   int current = 0, pos = 0, i;
   char accumulate[2000];
 
@@ -249,6 +255,11 @@ char *remove_newline(char *str)
 {
   char *temp = (char*) malloc (sizeof(char) * strlen(str));
 
+  if (temp == NULL)
+  {
+  	printf("Out of memory.\nAborting...\n");
+  }
+
   int i, pos = 0;
   for (i = 0; i < strlen(str); i++) {
     if (str[i] != '\n') {
@@ -265,6 +276,11 @@ char *remove_newline(char *str)
 char *remove_semicolon(char *str)
 {
   char *temp = (char*) malloc (sizeof(char) * strlen(str));
+
+  if (temp == NULL)
+  {
+  	printf("Out of memory.\nAborting...\n");
+  }
 
   int i, pos = 0;
   for (i = 0; i < strlen(str); i++) {

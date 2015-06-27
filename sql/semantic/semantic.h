@@ -5,6 +5,8 @@
 
 void insert(char *str, int current_database);
 
+void createTable(char *str, int current_database);
+
 table *start(char *name);
 
 char *table_name_cat(char *name,int database);
