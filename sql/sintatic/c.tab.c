@@ -76,11 +76,16 @@
      BOOL = 266,
      WHERE = 267,
      ID = 268,
-     CHAR = 269,
+     CHAR_ = 269,
      DATE = 270,
      STRING_LITERAL = 271,
-     LOWERTHANCOMMA = 272,
-     COMMA = 273
+     CREATE = 272,
+     TABLE = 273,
+     INTEGER = 274,
+     CHAR = 275,
+     DOUBLE = 276,
+     LOWERTHANCOMMA = 277,
+     COMMA = 278
    };
 #endif
 
@@ -100,7 +105,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of glr.c  */
-#line 104 "c.tab.c"
+#line 109 "c.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 #endif
@@ -182,7 +187,7 @@ char *remove_single_quotes(char *str);
 
 
 /* Line 243 of glr.c  */
-#line 186 "c.tab.c"
+#line 191 "c.tab.c"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -279,10 +284,10 @@ YYID (i)
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   34
+#define YYLAST   27
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  24
+#define YYNTOKENS  29
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  21
 /* YYNRULES -- Number of rules.  */
@@ -297,7 +302,7 @@ YYID (i)
 
 /* YYTRANSLATE(X) -- Bison symbol number corresponding to X.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   273
+#define YYMAXUTOK   278
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -309,8 +314,8 @@ static const unsigned char yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      19,    20,     2,     2,    21,     2,    23,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    22,
+      24,    25,     2,     2,    26,     2,    28,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    27,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -332,7 +337,7 @@ static const unsigned char yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18
+      15,    16,    17,    18,    19,    20,    21,    22,    23
 };
 
 #if YYDEBUG
@@ -349,23 +354,23 @@ static const unsigned char yyprhs[] =
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const signed char yyrhs[] =
 {
-      25,     0,    -1,    26,    -1,     4,     5,    27,    -1,    30,
-      -1,    13,    -1,    13,    -1,    28,    31,    -1,    -1,    32,
-      36,    -1,    -1,    33,    19,    34,    20,    36,    -1,    29,
-      -1,    29,    35,    -1,    21,    34,    -1,    -1,     8,    37,
-      38,    -1,    -1,    19,    40,    20,    39,    42,    -1,    44,
-      -1,    44,    41,    -1,    21,    40,    -1,    -1,    21,    43,
-      38,    -1,    22,    -1,     6,    -1,    16,    -1,    13,    23,
+      30,     0,    -1,    31,    -1,     4,     5,    32,    -1,    35,
+      -1,    13,    -1,    13,    -1,    33,    36,    -1,    -1,    37,
+      41,    -1,    -1,    38,    24,    39,    25,    41,    -1,    34,
+      -1,    34,    40,    -1,    26,    39,    -1,    -1,     8,    42,
+      43,    -1,    -1,    24,    45,    25,    44,    47,    -1,    49,
+      -1,    49,    46,    -1,    26,    45,    -1,    -1,    26,    48,
+      43,    -1,    27,    -1,     6,    -1,    16,    -1,    13,    28,
       13,    -1,     7,    -1,    11,    -1,    14,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned char yyrline[] =
 {
-       0,    72,    72,    74,    76,    79,    88,    96,    98,    98,
-     108,   108,   118,   119,   121,   124,   124,   127,   127,   129,
-     134,   136,   139,   139,   152,   163,   172,   183,   193,   202,
-     211
+       0,    77,    77,    79,    81,    84,    93,   101,   103,   103,
+     113,   113,   123,   124,   126,   129,   129,   132,   132,   134,
+     139,   141,   144,   144,   157,   168,   177,   188,   198,   207,
+     216
 };
 #endif
 
@@ -376,21 +381,22 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "INT", "INSERT", "INTO", "NUM",
   "PONTOFLUTUANTE", "VALUES", "SELECT", "FROM", "BOOL", "WHERE", "ID",
-  "CHAR", "DATE", "STRING_LITERAL", "LOWERTHANCOMMA", "COMMA", "'('",
-  "')'", "','", "';'", "'.'", "$accept", "input", "exp", "insert_in",
-  "ident", "column", "table_name", "columns", "$@1", "$@2", "column_names",
-  "column_plus", "insertOrder", "$@3", "insertStart", "$@4",
-  "insertValues", "values_plus", "continue", "$@5", "type", 0
+  "CHAR_", "DATE", "STRING_LITERAL", "CREATE", "TABLE", "INTEGER", "CHAR",
+  "DOUBLE", "LOWERTHANCOMMA", "COMMA", "'('", "')'", "','", "';'", "'.'",
+  "$accept", "input", "exp", "insert_in", "ident", "column", "table_name",
+  "columns", "$@1", "$@2", "column_names", "column_plus", "insertOrder",
+  "$@3", "insertStart", "$@4", "insertValues", "values_plus", "continue",
+  "$@5", "type", 0
 };
 #endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const unsigned char yyr1[] =
 {
-       0,    24,    25,    26,    27,    28,    29,    30,    32,    31,
-      33,    31,    34,    34,    35,    37,    36,    39,    38,    40,
-      40,    41,    43,    42,    42,    44,    44,    44,    44,    44,
-      44
+       0,    29,    30,    31,    32,    33,    34,    35,    37,    36,
+      38,    36,    39,    39,    40,    42,    41,    44,    43,    45,
+      45,    46,    48,    47,    47,    49,    49,    49,    49,    49,
+      49
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -442,22 +448,22 @@ static const signed char yydefgoto[] =
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -28
+#define YYPACT_NINF -26
 static const signed char yypact[] =
 {
-       0,     1,     9,   -28,    -2,   -28,   -28,   -28,    -7,   -28,
-     -28,     5,    -5,   -28,   -28,     2,    -3,   -28,    -4,    -1,
-      -6,   -28,     2,   -28,     5,   -28,   -28,   -28,     3,   -28,
-     -28,     4,     6,   -28,   -28,     7,   -28,    -6,   -28,   -28,
-     -19,   -28,   -28,   -28,   -28,    -3,   -28
+       0,     1,     9,   -26,    -2,   -26,   -26,   -26,   -12,   -26,
+     -26,     5,   -10,   -26,   -26,     2,    -8,   -26,    -9,    -7,
+      -6,   -26,     2,   -26,     5,   -26,   -26,   -26,    -5,   -26,
+     -26,    -4,    -1,   -26,   -26,     6,   -26,    -6,   -26,   -26,
+     -24,   -26,   -26,   -26,   -26,    -8,   -26
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const signed char yypgoto[] =
 {
-     -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,
-       8,   -28,    10,   -28,   -27,   -28,   -16,   -28,   -28,   -28,
-     -28
+     -26,   -26,   -26,   -26,   -26,   -26,   -26,   -26,   -26,   -26,
+       4,   -26,     3,   -26,   -25,   -26,   -15,   -26,   -26,   -26,
+     -26
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -467,9 +473,8 @@ static const signed char yypgoto[] =
 static const signed char yytable[] =
 {
       25,    26,    42,    43,     1,    27,     4,    28,    29,     5,
-      30,     6,   -10,    13,    15,    17,    20,    22,    46,    24,
-      39,    41,     0,     0,    36,     0,    35,    37,     0,     0,
-      33,     0,     0,     0,    34
+      30,     6,   -10,    13,    15,    17,    20,    22,    24,    39,
+      46,    36,    41,    35,     0,    37,    33,    34
 };
 
 /* YYCONFLP[YYPACT[STATE-NUM]] -- Pointer into YYCONFL of start of
@@ -480,8 +485,7 @@ static const unsigned char yyconflp[] =
 {
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0
+       0,     0,     0,     0,     0,     0,     0,     0
 };
 
 /* YYCONFL[I] -- lists of conflicting rule numbers, each terminated by
@@ -493,21 +497,20 @@ static const short int yyconfl[] =
 
 static const signed char yycheck[] =
 {
-       6,     7,    21,    22,     4,    11,     5,    13,    14,     0,
-      16,    13,    19,     8,    19,    13,    19,    21,    45,    20,
-      13,    37,    -1,    -1,    20,    -1,    23,    21,    -1,    -1,
-      22,    -1,    -1,    -1,    24
+       6,     7,    26,    27,     4,    11,     5,    13,    14,     0,
+      16,    13,    24,     8,    24,    13,    24,    26,    25,    13,
+      45,    25,    37,    28,    -1,    26,    22,    24
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const unsigned char yystos[] =
 {
-       0,     4,    25,    26,     5,     0,    13,    27,    28,    30,
-      31,    32,    33,     8,    36,    19,    37,    13,    29,    34,
-      19,    38,    21,    35,    20,     6,     7,    11,    13,    14,
-      16,    40,    44,    34,    36,    23,    20,    21,    41,    13,
-      39,    40,    21,    22,    42,    43,    38
+       0,     4,    30,    31,     5,     0,    13,    32,    33,    35,
+      36,    37,    38,     8,    41,    24,    42,    13,    34,    39,
+      24,    43,    26,    40,    25,     6,     7,    11,    13,    14,
+      16,    45,    49,    39,    41,    28,    25,    26,    46,    13,
+      44,    45,    26,    27,    47,    48,    43
 };
 
 
@@ -949,7 +952,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
         case 5:
 
 /* Line 936 of glr.c  */
-#line 79 "c.y"
+#line 84 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("nome tabela[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
@@ -963,7 +966,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 6:
 
 /* Line 936 of glr.c  */
-#line 88 "c.y"
+#line 93 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("nome coluna[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
@@ -976,7 +979,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 8:
 
 /* Line 936 of glr.c  */
-#line 98 "c.y"
+#line 103 "c.y"
     {
 	count = 1;
 	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
@@ -992,7 +995,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 10:
 
 /* Line 936 of glr.c  */
-#line 108 "c.y"
+#line 113 "c.y"
     {
 	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 	if (temp != NULL)
@@ -1007,21 +1010,21 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 15:
 
 /* Line 936 of glr.c  */
-#line 124 "c.y"
+#line 129 "c.y"
     {i++;j = countField = 0; datas.numberOfColumns[i] = 0;}
     break;
 
   case 17:
 
 /* Line 936 of glr.c  */
-#line 127 "c.y"
+#line 132 "c.y"
     {i++; j =0;}
     break;
 
   case 19:
 
 /* Line 936 of glr.c  */
-#line 129 "c.y"
+#line 134 "c.y"
     {
 	if( (countField > countColumn || countField < countColumn) && count == 0)
 		fprintf(stderr, "Number of fields %d specified doesn't match number of columns %d.\n",countField,countColumn);
@@ -1032,7 +1035,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 22:
 
 /* Line 936 of glr.c  */
-#line 139 "c.y"
+#line 144 "c.y"
     {
 	int *temp = (int*)realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 
@@ -1048,7 +1051,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 23:
 
 /* Line 936 of glr.c  */
-#line 148 "c.y"
+#line 153 "c.y"
     {
 	// i++;
 	j = 0;
@@ -1058,14 +1061,14 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 24:
 
 /* Line 936 of glr.c  */
-#line 152 "c.y"
+#line 157 "c.y"
     { datas.numberOfRows++; }
     break;
 
   case 25:
 
 /* Line 936 of glr.c  */
-#line 163 "c.y"
+#line 168 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("INT[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
@@ -1080,7 +1083,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 26:
 
 /* Line 936 of glr.c  */
-#line 172 "c.y"
+#line 177 "c.y"
     {
 
 	char *c = remove_quotes((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
@@ -1097,7 +1100,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 27:
 
 /* Line 936 of glr.c  */
-#line 183 "c.y"
+#line 188 "c.y"
     {
 	char *c = remove_quotes((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.str));
 	datas.insert[i][j].str = c;
@@ -1113,7 +1116,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 28:
 
 /* Line 936 of glr.c  */
-#line 193 "c.y"
+#line 198 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("DOUBLE[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
@@ -1128,7 +1131,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 29:
 
 /* Line 936 of glr.c  */
-#line 202 "c.y"
+#line 207 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("BOOL[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
@@ -1143,7 +1146,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 30:
 
 /* Line 936 of glr.c  */
-#line 211 "c.y"
+#line 216 "c.y"
     {
 	char *c = remove_single_quotes((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	datas.insert[i][j].str = c;
@@ -1159,7 +1162,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 
 
 /* Line 936 of glr.c  */
-#line 1163 "c.tab.c"
+#line 1166 "c.tab.c"
       default: break;
     }
 
@@ -1260,7 +1263,7 @@ yylhsNonterm (yyRuleNum yyrule)
 }
 
 #define yypact_value_is_default(yystate) \
-  ((yystate) == (-28))
+  ((yystate) == (-26))
 
 /** True iff LR state STATE has only a default reduction (regardless
  *  of token).  */
@@ -2816,7 +2819,7 @@ yypdumpstack (yyGLRStack* yystackp)
 
 
 /* Line 2659 of glr.c  */
-#line 222 "c.y"
+#line 227 "c.y"
 
 #include"lex.yy.c"
 #include<ctype.h>

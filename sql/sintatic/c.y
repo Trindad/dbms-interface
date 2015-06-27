@@ -54,9 +54,14 @@ char *remove_single_quotes(char *str);
 %token <str> BOOL
 %token WHERE
 %token <str> ID
-%token <str> CHAR
+%token <str> CHAR_
 %token DATE
 %token <str> STRING_LITERAL
+%token <str>CREATE 
+%token <str>TABLE 
+%token <str>INTEGER 
+%token <str>CHAR 
+%token <str>DOUBLE 
 
 %token-table
 %nonassoc LOWERTHANCOMMA
@@ -208,7 +213,7 @@ type: NUM {
 	countField++;
 	datas.numberOfColumns[i]+=2;
 	}
-	| CHAR {
+	| CHAR_ {
 	char *c = remove_single_quotes($1);
 	datas.insert[i][j].str = c;
 	//printf("BOOL[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
