@@ -26,10 +26,10 @@ void shell()
         {
         	if(strcmp(strtolower(tokens[1]),"table")==0)
 	        {
-	        	if(nTokens >= 6)
-	        	{
-	           		printf("Invalid command. Type help to show de interface usage.\n");
-	        	}
+	        	// if(nTokens >= 6)
+	        	// {
+	         //   		printf("Invalid command. Type help to show de interface usage.\n");
+	        	// }
 
 	           createTable(entrada,current_database);
 	        }
@@ -325,7 +325,7 @@ void example()
 	    {
 	        if(!nTabela[0]){ 
 	    		
-	            tab[0] = iniciaTabela(table_name_real("Aluno",current_database));                                                 //Cria a tabela 
+	            tab[0] = iniciaTabela(table_name_real("Aluno",current_database));                //Cria a tabela 
 	            tab[0] = adicionaCampo(tab[0], "CPF"     , 'I', (sizeof(int))   ,PK,"","");     //Cria os atributos
 	            tab[0] = adicionaCampo(tab[0], "Nome"    , 'S', 20              ,NPK,"","");        
 	            tab[0] = adicionaCampo(tab[0], "Endereco", 'S', 20              ,NPK,"","");
@@ -348,7 +348,7 @@ void example()
 	            tab[2] = adicionaCampo(tab[2], "CodMat"     , 'I', (sizeof(int))  ,PK, "","");
 	            tab[2] = adicionaCampo(tab[2], "CPF"        , 'I', (sizeof(int))  ,FK, table_name_real("Aluno",current_database),"CPF");
 	            tab[2] = adicionaCampo(tab[2], "CodInst"    , 'I', (sizeof(int))  ,FK , table_name_real("Inst",current_database),"CodInst");
-	            tab[2] = adicionaCampo(tab[2], "Curso"   , 'S',  20  ,NPK, "","");
+	            tab[2] = adicionaCampo(tab[2], "Curso"   , 'S',  20  ,NPK,"","");
 	            finalizaTabela(tab[2],current_database);
 	        }
 	         

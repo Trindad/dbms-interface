@@ -283,7 +283,7 @@ char *table_name_cat(char *name,int database)
 
 	if (table_name == NULL)
 	{
-		printf("Out of memory.\n");
+		printf("Out of memory.\nAborting...\n");
 		exit(1);
 	}
 
@@ -295,16 +295,52 @@ char *table_name_cat(char *name,int database)
 }
 
 
-void createTable(char *sql, int current_database)
+void createTable(char *sql, int index_database)
 {
-	database = current_database;
+	printf("%s\n",sql);
+	database = index_database;
 
 	Datas datas = execute_create_table(sql);
 
-	if (datas.create_new_table == NULL)
+	if (datas.name_table_create == NULL)
 	{
 		printf("Out of memory.\nAborting...\n");
 		exit(1);
 	}
 
+	// for (i = 0; i < datas.number_columns; i++)
+	// {
+	// 	printf("\n------------------------------------------------------\n");
+	// 	printf("nome %s\n",datas.create_new_table[i].name_column_table );
+	// 	printf("tipo %c\n",datas.create_new_table[i].type_column );
+	// 	printf("tamanho %d\n",datas.create_new_table[i].size );
+	// 	printf("constraint %d\n",datas.create_new_table[i].constraint );
+	// }
+
+	//verifica se a tabela já não existe
+	if ( existeArquivo(table_name_cat(datas.name_table_create,database)) == 1)
+	{
+		printf("Table %s already exists.\n",datas.name_table_create);
+		return;
+	}
+	int object      = existeArquivo("fs_object.dat");
+	int schema      = existeArquivo("fs_schema.dat");
+
+	table  *tab = iniciaTabela(table_name_cat(datas.name_table_create,database));
+	// printf("number_columns %d\n", datas.number_columns);
+	for (i = 0; i < datas.number_columns; i++)
+	{
+		//chave estrangeira = 2
+		if (datas.create_new_table[i].constraint == 2)
+		{
+			tab = adicionaCampo(tab,datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint,table_name_cat(datas.create_new_table[i].table_foreign,database),datas.create_new_table[i].name_column_foreign);
+		}
+		else
+		{
+			// printf("%s\t%c\t%d\t%d",datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint );
+        	tab = adicionaCampo(tab,datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint,"","");
+		}
+	}
+    i = 0;
+    finalizaTabela(tab,database);
 }

@@ -24,7 +24,10 @@ typedef struct _datas_create
 {
 	char type_column;//tipo da coluna
 	char *name_column_table;//nome da coluna
+	char *table_foreign;//armazena a tabela da chave estrangeira
+	char *name_column_foreign;//armazena nome da chave estrangeira
 	int size;//tamanho limite do valor
+	int constraint;
 	
 }CreateTB;
 
@@ -74,6 +77,11 @@ char *remove_single_quotes(char *str);
 %token <str>CHAR 
 %token <str>DOUBLE 
 %token <str>STRING
+%token <str>PRIMARY
+%token <str>KEY
+%token <str>FOREIGN
+%token <str>CONSTRAINT 
+%token <str>REFERENCES 
 
 %token-table
 %nonassoc LOWERTHANCOMMA
@@ -95,7 +103,7 @@ exp: INSERT INTO insert_in
 	|CREATE TABLE create_next_name
 	;
 
-create_next_name: ID create_columns {
+create_next_name: ID{
 		datas.name_table_create = strdup($1);
 
 		if (datas.name_table_create == NULL)
@@ -103,7 +111,7 @@ create_next_name: ID create_columns {
 			printf("Out of memory.\nAborting...\n");
 			exit(1);
 		}
-	}
+	}create_columns
 	;
 insert_in : table_name 
 	;
@@ -255,11 +263,14 @@ type: NUM {
 /**
  * Expressões que fazem tratamento para a criação de tabelas
  */
-create_columns: '(' values_table ')'';'
+create_columns: '(' values_table constraints
 
-values_table: ID{
+values_table: ID{datas.create_new_table[datas.number_columns].name_column_table = strdup($1);} type_value plus_columns
+	;
+
+plus_columns: ',' {
 	
-	CreateTB *temp = (CreateTB*) realloc (datas.create_new_table, (datas.number_columns+2)*sizeof(int));
+	CreateTB *temp = (CreateTB*) realloc (datas.create_new_table, (datas.number_columns+2)*sizeof(CreateTB));
 
 	if (temp == NULL)
 	{
@@ -268,13 +279,8 @@ values_table: ID{
 	}
 
 	datas.create_new_table = temp;
-	int auxiliar_ = datas.number_columns;
-	datas.create_new_table[auxiliar_].name_column_table = strdup($1);
 
-} type_value plus_columns
-	;
-
-plus_columns: ',' values_table %prec COMMA
+} values_table %prec COMMA
 	| %prec LOWERTHANCOMMA
 	;
 
@@ -307,6 +313,7 @@ type_value: INTEGER parenthesis {
 }
 	|DOUBLE parenthesis{
 	datas.create_new_table[datas.number_columns].type_column = 'D';
+
 	if (datas.create_new_table[datas.number_columns].size == -1)
 	{
 		datas.create_new_table[datas.number_columns].size = sizeof(double);
@@ -315,9 +322,66 @@ type_value: INTEGER parenthesis {
 }
 	;
 
-parenthesis: '(' NUM ')' %prec PARENTHESIS {datas.create_new_table[datas.number_columns].size = atoi($2); }
-	| %prec LOWERPARENTHESIS {datas.create_new_table[datas.number_columns].size = -1;}
+parenthesis: '(' NUM ')' isprimarykey %prec PARENTHESIS {datas.create_new_table[datas.number_columns].size = atoi($2); }
+	| isprimarykey %prec LOWERPARENTHESIS {datas.create_new_table[datas.number_columns].size = -1;}
 	;
+isprimarykey: PRIMARY KEY {datas.create_new_table[datas.number_columns].constraint = 1;}
+	|{datas.create_new_table[datas.number_columns].constraint = 0;}
+	;
+constraints: CONSTRAINT PRIMARY KEY '('ID')' {
+	int ok = 0;
+	for (i = 0; i < datas.number_columns; i++)
+	{
+		if (strcmp(datas.create_new_table[i].name_column_table,$5) == 0)
+		{
+			datas.create_new_table[i].constraint = 1;
+			ok = 1;
+		}
+	}
+
+	if (ok == 0)
+	{
+		printf("Column %s doesn't exist.\n",$5);
+		return;
+	}
+}next_constraints
+	|CONSTRAINT FOREIGN KEY '('ID')' REFERENCES ID'('ID')' 
+	{
+		int ok = 0;
+		for (i = 0; i < datas.number_columns; i++)
+		{
+			if (strcmp(datas.create_new_table[i].name_column_table,$5) == 0)
+			{
+				datas.create_new_table[i].constraint = 2;
+				datas.create_new_table[i].name_column_foreign = strdup($10);
+				if (datas.create_new_table[i].name_column_foreign == NULL)
+				{
+					printf("Out of memory.\nAborting...\n");
+					exit(1);
+				}
+
+				datas.create_new_table[i].table_foreign = strdup($8);
+				if (datas.create_new_table[i].table_foreign == NULL)
+				{
+					printf("Out of memory.\nAborting...\n");
+					exit(1);
+				}
+				ok = 1;
+			}
+		}
+
+		if (ok == 0)
+		{
+			printf("Column %s doesn't exist.\n",$5);
+			return;
+		}
+	}next_constraints
+	|')'';'
+	;
+next_constraints: ',' constraints
+	| ')'
+	;
+
 %%
 #include"lex.yy.c"
 #include<ctype.h>
@@ -342,6 +406,14 @@ Datas execute_create_table(char *sql)
 		printf("Out of memory.\nAborting...\n");
 		exit(1);
 	}
+
+	yy_scan_string(sql);
+    yyparse();
+
+    /* to avoid leakage */
+    yylex_destroy();
+
+    return datas;
 }
 
 Datas execute_insert(char *sql)
