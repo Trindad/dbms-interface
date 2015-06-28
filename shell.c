@@ -138,7 +138,6 @@ void shell()
  				printf("Table doesn't exist.\n" );
  				continue;
  			}
- 			printf("%s\n",t );
         	imprime(t);
         }  
         else if(strcmp(strtolower(tokens[0]),"\\l")==0)

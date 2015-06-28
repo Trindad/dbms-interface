@@ -401,11 +401,11 @@ static const signed char yyrhs[] =
 static const unsigned short int yyrline[] =
 {
        0,   100,   100,   102,   103,   106,   106,   116,   119,   128,
-     136,   138,   138,   148,   148,   158,   159,   161,   164,   164,
-     167,   167,   169,   174,   176,   179,   179,   192,   203,   212,
-     223,   233,   242,   251,   266,   268,   268,   271,   271,   284,
-     287,   296,   305,   314,   325,   326,   328,   329,   331,   331,
-     349,   348,   379,   381,   382
+     136,   138,   138,   148,   148,   159,   160,   162,   165,   165,
+     168,   168,   170,   175,   177,   180,   180,   194,   205,   214,
+     225,   235,   244,   253,   268,   270,   270,   273,   273,   286,
+     289,   298,   307,   316,   327,   328,   330,   331,   333,   333,
+     351,   350,   381,   383,   384
 };
 #endif
 
@@ -1095,8 +1095,9 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
-	else
+	else {
 		fprintf(stderr, "Out of memory.\nAborting...\n");exit(1);
+	}
 	datas.numberOfColumns[i] = countColumn = 0;
 	datas.numberOfRows++;
 	}
@@ -1105,21 +1106,21 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 18:
 
 /* Line 936 of glr.c  */
-#line 164 "c.y"
+#line 165 "c.y"
     {i++;j = countField = 0; datas.numberOfColumns[i] = 0;}
     break;
 
   case 20:
 
 /* Line 936 of glr.c  */
-#line 167 "c.y"
+#line 168 "c.y"
     {i++; j =0;}
     break;
 
   case 22:
 
 /* Line 936 of glr.c  */
-#line 169 "c.y"
+#line 170 "c.y"
     {
 	if( (countField > countColumn || countField < countColumn) && count == 0)
 		fprintf(stderr, "Number of fields %d specified doesn't match number of columns %d.\n",countField,countColumn);
@@ -1130,14 +1131,15 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 25:
 
 /* Line 936 of glr.c  */
-#line 179 "c.y"
+#line 180 "c.y"
     {
 	int *temp = (int*)realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
-	else
+	else {
 		fprintf(stderr, "Out of memory.\nAborting...\n");exit(1);
+	}
 	datas.numberOfRows++;
 	datas.numberOfColumns[i] = 0;
 	}
@@ -1146,7 +1148,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 26:
 
 /* Line 936 of glr.c  */
-#line 188 "c.y"
+#line 190 "c.y"
     {
 	// i++;
 	j = 0;
@@ -1156,14 +1158,14 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 27:
 
 /* Line 936 of glr.c  */
-#line 192 "c.y"
+#line 194 "c.y"
     { datas.numberOfRows++; }
     break;
 
   case 28:
 
 /* Line 936 of glr.c  */
-#line 203 "c.y"
+#line 205 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("INT[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
@@ -1178,7 +1180,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 29:
 
 /* Line 936 of glr.c  */
-#line 212 "c.y"
+#line 214 "c.y"
     {
 
 	char *c = remove_quotes((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
@@ -1195,7 +1197,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 30:
 
 /* Line 936 of glr.c  */
-#line 223 "c.y"
+#line 225 "c.y"
     {
 	char *c = remove_quotes((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.str));
 	datas.insert[i][j].str = c;
@@ -1211,7 +1213,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 31:
 
 /* Line 936 of glr.c  */
-#line 233 "c.y"
+#line 235 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("DOUBLE[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
@@ -1226,7 +1228,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 32:
 
 /* Line 936 of glr.c  */
-#line 242 "c.y"
+#line 244 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("BOOL[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
@@ -1241,7 +1243,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 33:
 
 /* Line 936 of glr.c  */
-#line 251 "c.y"
+#line 253 "c.y"
     {
 	char *c = remove_single_quotes((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	datas.insert[i][j].str = c;
@@ -1257,14 +1259,14 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 35:
 
 /* Line 936 of glr.c  */
-#line 268 "c.y"
+#line 270 "c.y"
     {datas.create_new_table[datas.number_columns].name_column_table = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));}
     break;
 
   case 37:
 
 /* Line 936 of glr.c  */
-#line 271 "c.y"
+#line 273 "c.y"
     {
 	
 	CreateTB *temp = (CreateTB*) realloc (datas.create_new_table, (datas.number_columns+2)*sizeof(CreateTB));
@@ -1283,7 +1285,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 40:
 
 /* Line 936 of glr.c  */
-#line 287 "c.y"
+#line 289 "c.y"
     {
 	datas.create_new_table[datas.number_columns].type_column = 'I';
 	if (datas.create_new_table[datas.number_columns].size == -1)
@@ -1298,7 +1300,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 41:
 
 /* Line 936 of glr.c  */
-#line 296 "c.y"
+#line 298 "c.y"
     {
 	datas.create_new_table[datas.number_columns].type_column = 'C';
 	if (datas.create_new_table[datas.number_columns].size == -1)
@@ -1313,7 +1315,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 42:
 
 /* Line 936 of glr.c  */
-#line 305 "c.y"
+#line 307 "c.y"
     {
 	datas.create_new_table[datas.number_columns].type_column = 'S';
 	if (datas.create_new_table[datas.number_columns].size == -1)
@@ -1328,7 +1330,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 43:
 
 /* Line 936 of glr.c  */
-#line 314 "c.y"
+#line 316 "c.y"
     {
 	datas.create_new_table[datas.number_columns].type_column = 'D';
 
@@ -1343,35 +1345,35 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 44:
 
 /* Line 936 of glr.c  */
-#line 325 "c.y"
+#line 327 "c.y"
     {datas.create_new_table[datas.number_columns].size = atoi((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (4))].yystate.yysemantics.yysval.str)); }
     break;
 
   case 45:
 
 /* Line 936 of glr.c  */
-#line 326 "c.y"
+#line 328 "c.y"
     {datas.create_new_table[datas.number_columns].size = -1;}
     break;
 
   case 46:
 
 /* Line 936 of glr.c  */
-#line 328 "c.y"
+#line 330 "c.y"
     {datas.create_new_table[datas.number_columns].constraint = 1;}
     break;
 
   case 47:
 
 /* Line 936 of glr.c  */
-#line 329 "c.y"
+#line 331 "c.y"
     {datas.create_new_table[datas.number_columns].constraint = 0;}
     break;
 
   case 48:
 
 /* Line 936 of glr.c  */
-#line 331 "c.y"
+#line 333 "c.y"
     {
 	int ok = 0;
 	for (i = 0; i < datas.number_columns; i++)
@@ -1394,7 +1396,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
   case 50:
 
 /* Line 936 of glr.c  */
-#line 349 "c.y"
+#line 351 "c.y"
     {
 		int ok = 0;
 		for (i = 0; i < datas.number_columns; i++)
@@ -1430,7 +1432,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 
 
 /* Line 936 of glr.c  */
-#line 1434 "c.tab.c"
+#line 1436 "c.tab.c"
       default: break;
     }
 
@@ -3087,7 +3089,7 @@ yypdumpstack (yyGLRStack* yystackp)
 
 
 /* Line 2659 of glr.c  */
-#line 385 "c.y"
+#line 387 "c.y"
 
 #include"lex.yy.c"
 #include<ctype.h>
@@ -3134,6 +3136,7 @@ Datas execute_insert(char *sql)
 	if (datas.insert == NULL)
 	{
 		fprintf(stderr, "Out of memory.\nAborting...\n");
+		exit(1);
 	}
 	int it = 0;
 
@@ -3144,15 +3147,21 @@ Datas execute_insert(char *sql)
 		if (datas.insert[it] == NULL)
 		{
 		  fprintf(stderr, "Out of memory.\nAborting...\n");
+		  exit(1);
 		}
 	}
 
 	datas.numberOfColumns = (int*) malloc (sizeof(int));
+	if (datas.numberOfColumns == NULL)
+	{
+		printf("Out of memory.\nAborting...\n");
+		exit(1);
+	}
 	datas.numberOfColumns[0] = 0;
 
 	datas.numberOfRows = 0;
 
-	// printf("string de entrada : %s\n", argv[1]);
+	printf("string de entrada : %s\n", sql);
     yy_scan_string(sql);
     yyparse();
 

@@ -149,8 +149,9 @@ columns: {
 	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
-	else
+	else {
 		fprintf(stderr, "Out of memory.\nAborting...\n");exit(1);
+	}
 	datas.numberOfColumns[i] = countColumn = 0;
 	datas.numberOfRows++;
 	}'('column_names')' insertOrder 
@@ -181,8 +182,9 @@ continue:  ',' {
 
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
-	else
+	else {
 		fprintf(stderr, "Out of memory.\nAborting...\n");exit(1);
+	}
 	datas.numberOfRows++;
 	datas.numberOfColumns[i] = 0;
 	} insertStart {
@@ -428,6 +430,7 @@ Datas execute_insert(char *sql)
 	if (datas.insert == NULL)
 	{
 		fprintf(stderr, "Out of memory.\nAborting...\n");
+		exit(1);
 	}
 	int it = 0;
 
@@ -438,15 +441,20 @@ Datas execute_insert(char *sql)
 		if (datas.insert[it] == NULL)
 		{
 		  fprintf(stderr, "Out of memory.\nAborting...\n");
+		  exit(1);
 		}
 	}
 
 	datas.numberOfColumns = (int*) malloc (sizeof(int));
+	if (datas.numberOfColumns == NULL)
+	{
+		printf("Out of memory.\nAborting...\n");
+		exit(1);
+	}
 	datas.numberOfColumns[0] = 0;
 
 	datas.numberOfRows = 0;
 
-	// printf("string de entrada : %s\n", argv[1]);
     yy_scan_string(sql);
     yyparse();
 

@@ -156,6 +156,7 @@ void insert(char *sql,int index_database)
 	database = index_database;
 
 	Datas datas = execute_insert(sql);
+
 	int rows = 0,columns = 0;
 
     char *file = table_name_cat(datas.insert[rows][columns].str,database);
@@ -163,89 +164,86 @@ void insert(char *sql,int index_database)
     strcat(file,".dat");
 	int exist  = existeArquivo(file);
 
+	if (table_exist(datas.insert[0][0].str,database) == 0)
+	{
+		fprintf(stderr, "Table %s doesn't exist.\n",datas.insert[0][0].str);
+		return;
+	}
 	rows++;
-
 	/**
 	 * Verifica possiveis erros semanticos
 	 */
-	if (exist)
+
+	table  *t = start(table_name_cat(datas.insert[0][0].str,database) );
+
+	if (datas.numberOfColumns[rows] >= 1)
 	{
-		table  *t = start(table_name_cat(datas.insert[0][0].str,database) );
+		/**
+		 * Insere na ordem do insert os campos
+		 */
+		char *type = (char*) malloc (sizeof(char)*datas.numberOfColumns[rows]);
 
-		if (datas.numberOfColumns[rows] >= 1)
+		if (type == NULL)
 		{
-			/**
-			 * Insere na ordem do insert os campos
-			 */
-			char *type = (char*) malloc (sizeof(char)*datas.numberOfColumns[rows]);
-
-			if (type == NULL)
-			{
-				fprintf(stderr, "Out of memory.\n");
-			}
-
-			int it = 0;
-			
-			while(it < datas.numberOfColumns[rows])
-			{
-				type[it] = retornaTipoDoCampo(datas.insert[rows][it].str,t);
-				
-				it++;
-			}
-
-			rows++;
-			
-			for (it = rows; it < datas.numberOfRows; it++)
-			{
-				insertFields(t,datas,type,it);
-			}
-			free(type);
+			fprintf(stderr, "Out of memory.\n");
 		}
-		else
-		{
-			tp_table *e = t->esquema;
-			int it = 0;
 
-			//insere campos na ordem do banco
-			while(e != NULL)
-			{
-				datas.insert[rows][it].str = strdup(e->nome);
-				e = e->next;
-				it++;
-			}
-
-			datas.numberOfColumns[rows] = it;
-
-			char *type = (char*) malloc (sizeof(char)*datas.numberOfColumns[rows]);
-
-			if (type == NULL)
-			{
-				fprintf(stderr, "Out of memory.\n");
-			}
-
-			it = 0;
-
-			while(it < datas.numberOfColumns[rows])
-			{
-				type[it] = retornaTipoDoCampo(datas.insert[rows][it].str,t);
-				
-				it++;
-			}
-
-			rows++;
-
-			for (it = rows; it < datas.numberOfRows; it++)
-			{
-				insertFields(t,datas,type,it);
-			}
-
-			free(type);
-		}
+		int it = 0;
 		
+		while(it < datas.numberOfColumns[rows])
+		{
+			type[it] = retornaTipoDoCampo(datas.insert[rows][it].str,t);
+			
+			it++;
+		}
+
+		rows++;
+		
+		for (it = rows; it < datas.numberOfRows; it++)
+		{
+			insertFields(t,datas,type,it);
+		}
+		free(type);
 	}
 	else
 	{
-		fprintf(stderr, "Table %s doesn't exist.\n",datas.insert[0][0].str);
+		tp_table *e = t->esquema;
+		int it = 0;
+
+		//insere campos na ordem do banco
+		while(e != NULL)
+		{
+			datas.insert[rows][it].str = strdup(e->nome);
+			e = e->next;
+			it++;
+		}
+
+		datas.numberOfColumns[rows] = it;
+
+		char *type = (char*) malloc (sizeof(char)*datas.numberOfColumns[rows]);
+
+		if (type == NULL)
+		{
+			fprintf(stderr, "Out of memory.\n");
+		}
+
+		it = 0;
+
+		while(it < datas.numberOfColumns[rows])
+		{
+			type[it] = retornaTipoDoCampo(datas.insert[rows][it].str,t);
+			
+			it++;
+		}
+
+		rows++;
+
+		for (it = rows; it < datas.numberOfRows; it++)
+		{
+			insertFields(t,datas,type,it);
+		}
+
+		free(type);
 	}
 
 	for (rows = 0; rows < datas.numberOfRows; rows++)
@@ -253,18 +251,6 @@ void insert(char *sql,int index_database)
 		
 		free(datas.insert[rows]);
 	}
-
-	// int u,v;
-
-	// for (u = 0; u < datas.numberOfRows; u++)
-	// {
-	// 	int n = datas.numberOfColumns[u];
-
-	// 	for (v = 0; v < n; v++)
-	// 	{
-	// 		free(datas.insert[u][v].str);
-	// 	}
-	// }
 	
 	free(datas.insert);
 
@@ -342,5 +328,65 @@ void createTable(char *sql, int index_database)
 		}
 	}
     i = 0;
+
     finalizaTabela(tab,database);
 }
+
+/**
+ * Verifica se a tabela existe 
+ * Retorna 1 se sim e 0 do constrário
+ */
+int table_exist(char *tablename,int database)
+{
+    FILE *dictionary;
+    i = 0;
+    char *tb_name = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+
+    if (tb_name == NULL)
+    {
+    	printf("Out of memory.\nAborting...\n");
+    	exit(1);
+    }
+
+    if((dictionary = fopen("fs_object.dat","a+b")) == NULL){
+        free(tb_name);
+        printf("No table created.\n");
+        return;
+    }
+
+    while(fgetc (dictionary) != EOF)
+    {
+        fseek(dictionary, -1, 1);
+
+        fread(tb_name, sizeof(char), TAMANHO_NOME_TABELA, dictionary); //Lê somente o nome da tabela
+        
+        int n = 0;
+        char **str = tokenize(tb_name,'_',&n);
+
+        if (n >= 2) {
+            n = atoi(str[0]);
+
+            if(n == database){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
+                char *temp = tb_name;
+
+                for (i = 0; i < strlen(str[0]); i++)
+                {
+                    temp++;
+                }
+
+                temp++;
+                if (strcmp(tablename,temp) == 0)
+                {
+                	return 1;
+                }
+            }
+        }
+        
+        fseek(dictionary, 28, 1);
+    }
+
+    fclose(dictionary);
+
+    return 0;
+}
+

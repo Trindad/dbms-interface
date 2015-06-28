@@ -11,4 +11,8 @@ table *start(char *name);
 
 char *table_name_cat(char *name,int database);
 
+int table_exist(char *tablename,int database);
+
+extern char **tokenize(char *str, char delim, int *size);//quebra string
+
 #endif

@@ -29,7 +29,7 @@ int verificaNomeTabela(char *nomeTabela)
 
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL){
         free(tupla);
-        printf("Out of memory\n");
+        printf("Out of memory.\nAborting...\n");
         exit(1);
     }
 
@@ -92,7 +92,7 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
         memset(e, 0, sizeof(*e));
         if (e == NULL)
         {
-            printf("Out of memory.\n");
+            printf("Out of memory.\nAborting...\n");
             exit(1);
         }
         e->next = NULL;
@@ -351,7 +351,7 @@ int finalizaInsert(char *nome, column *c){
 
     if (tab == NULL || tab2 == NULL)
     {
-        printf("Out of memory.\nAborting...");
+        printf("Out of memory.\nAborting...\n");
         exit(1);
     }
 
@@ -632,7 +632,7 @@ int TrocaArquivosObj(char *nomeTabela, char *linha){
 
     if (tabela == NULL)
     {
-        printf("Out memory.\nAborting...");
+        printf("Out memory.\nAborting...\n");
         exit(1);
     }
 
@@ -665,7 +665,7 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
 
     if (esquema == NULL || vetEsqm == NULL || tupla == NULL)
     {
-        printf("Out of memory.\n");
+        printf("Out of memory.\nAborting...\n");
         exit(1);
     }
 

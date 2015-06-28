@@ -215,7 +215,6 @@ column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, 
 
     //Essa página não possui registros
     if(buffer[page].nrec == 0) {
-        printf("Page empty.\n" );
         return ERRO_PARAMETRO;
     }
     
