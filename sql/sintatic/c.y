@@ -79,6 +79,9 @@ char *remove_single_quotes(char *str);
 %nonassoc LOWERTHANCOMMA
 %nonassoc COMMA
 
+%nonassoc LOWERPARENTHESIS
+%nonassoc PARENTHESIS
+
 %glr-parser
 %start	input 
 
@@ -254,24 +257,7 @@ type: NUM {
  */
 create_columns: '(' values_table ')'';'
 
-values_table: ID {
-
-	CreateTB *temp = (CreateTB*) realloc (datas.create_new_table, (datas.number_columns+2)*sizeof(int));
-
-	if (temp == NULL)
-	{
-		printf("Out of memory.\nAborting...\n");
-		exit(1);
-	}
-
-	datas.create_new_table = temp;
-	int auxiliar_ = datas.number_columns;
-	datas.number_columns = datas.number_columns + 1;
-
-	datas.create_new_table[auxiliar_].name_column_table = strdup($1);
-
-}type_value','values_table
-			| ID type_value {
+values_table: ID{
 	
 	CreateTB *temp = (CreateTB*) realloc (datas.create_new_table, (datas.number_columns+2)*sizeof(int));
 
@@ -285,61 +271,53 @@ values_table: ID {
 	int auxiliar_ = datas.number_columns;
 	datas.create_new_table[auxiliar_].name_column_table = strdup($1);
 
-}
-			;
+} type_value plus_columns
+	;
 
-type_value: INTEGER {
+plus_columns: ',' values_table %prec COMMA
+	| %prec LOWERTHANCOMMA
+	;
+
+type_value: INTEGER parenthesis {
 	datas.create_new_table[datas.number_columns].type_column = 'I';
-	datas.create_new_table[datas.number_columns].size = sizeof(int); 
+	if (datas.create_new_table[datas.number_columns].size == -1)
+	{
+		datas.create_new_table[datas.number_columns].size = sizeof(int);
+	}
 	datas.number_columns = datas.number_columns + 1;
 
 }
-			|CHAR {
-	datas.create_new_table[datas.number_columns].type_column = 'I';
-	datas.create_new_table[datas.number_columns].size = sizeof(int); 
-	datas.number_columns = datas.number_columns + 1;
-
-}
-
-			|STRING {
-	datas.create_new_table[datas.number_columns].type_column = 'S';
-	datas.create_new_table[datas.number_columns].size = 255; 
-	datas.number_columns = datas.number_columns + 1;
-
-}
-			|DOUBLE {
-	datas.create_new_table[datas.number_columns].type_column = 'D';
-	datas.create_new_table[datas.number_columns].size = sizeof(double); 
-	datas.number_columns = datas.number_columns + 1;
-
-}
-			|INTEGER'(' NUM ')' {
-	datas.create_new_table[datas.number_columns].type_column = 'I';
-	datas.create_new_table[datas.number_columns].size = atoi($3); 
-	datas.number_columns = datas.number_columns + 1;
-
-}
-			|CHAR'(' NUM ')' {
+	|CHAR parenthesis{
 	datas.create_new_table[datas.number_columns].type_column = 'C';
-	datas.create_new_table[datas.number_columns].size = atoi($3); 
+	if (datas.create_new_table[datas.number_columns].size == -1)
+	{
+		datas.create_new_table[datas.number_columns].size = sizeof(char);
+	}
 	datas.number_columns = datas.number_columns + 1;
 
 }
-			|STRING'(' NUM ')' {
+	|STRING parenthesis {
 	datas.create_new_table[datas.number_columns].type_column = 'S';
-	datas.create_new_table[datas.number_columns].size = atoi($3); 
+	if (datas.create_new_table[datas.number_columns].size == -1)
+	{
+		datas.create_new_table[datas.number_columns].size = 255;
+	}
 	datas.number_columns = datas.number_columns + 1;
 
 }
-			|DOUBLE'(' NUM ')' {
+	|DOUBLE parenthesis{
 	datas.create_new_table[datas.number_columns].type_column = 'D';
-	datas.create_new_table[datas.number_columns].size = atoi($3); 
+	if (datas.create_new_table[datas.number_columns].size == -1)
+	{
+		datas.create_new_table[datas.number_columns].size = sizeof(double);
+	}
 	datas.number_columns = datas.number_columns + 1;
-
 }
 	;
 
-
+parenthesis: '(' NUM ')' %prec PARENTHESIS {datas.create_new_table[datas.number_columns].size = atoi($2); }
+	| %prec LOWERPARENTHESIS {datas.create_new_table[datas.number_columns].size = -1;}
+	;
 %%
 #include"lex.yy.c"
 #include<ctype.h>
