@@ -265,7 +265,7 @@ type: NUM {
 /**
  * Expressões que fazem tratamento para a criação de tabelas
  */
-create_columns: '(' values_table constraints
+create_columns: '(' values_table 
 
 values_table: ID{datas.create_new_table[datas.number_columns].name_column_table = strdup($1);} type_value plus_columns
 	;
@@ -283,7 +283,7 @@ plus_columns: ',' {
 	datas.create_new_table = temp;
 
 } values_table %prec COMMA
-	| %prec LOWERTHANCOMMA
+	|init_constraints %prec LOWERTHANCOMMA
 	;
 
 type_value: INTEGER parenthesis {
@@ -330,8 +330,13 @@ parenthesis: '(' NUM ')' isprimarykey %prec PARENTHESIS {datas.create_new_table[
 isprimarykey: PRIMARY KEY {datas.create_new_table[datas.number_columns].constraint = 1;}
 	|{datas.create_new_table[datas.number_columns].constraint = 0;}
 	;
-constraints: CONSTRAINT PRIMARY KEY '('ID')' {
+
+init_constraints: end_create
+	| ',' constraints
+	;
+constraints: CONSTRAINT PRIMARY KEY '(' ID  {
 	int ok = 0;
+	printf("%s\n",$5);
 	for (i = 0; i < datas.number_columns; i++)
 	{
 		if (strcmp(datas.create_new_table[i].name_column_table,$5) == 0)
@@ -346,28 +351,14 @@ constraints: CONSTRAINT PRIMARY KEY '('ID')' {
 		printf("Column %s doesn't exist.\n",$5);
 		return;
 	}
-}next_constraints
-	|CONSTRAINT FOREIGN KEY '('ID')' REFERENCES ID'('ID')' 
-	{
+}')' next_constraints
+	|CONSTRAINT FOREIGN KEY '('ID {
 		int ok = 0;
 		for (i = 0; i < datas.number_columns; i++)
 		{
+			printf("%s\n",$5);
 			if (strcmp(datas.create_new_table[i].name_column_table,$5) == 0)
 			{
-				datas.create_new_table[i].constraint = 2;
-				datas.create_new_table[i].name_column_foreign = strdup($10);
-				if (datas.create_new_table[i].name_column_foreign == NULL)
-				{
-					printf("Out of memory.\nAborting...\n");
-					exit(1);
-				}
-
-				datas.create_new_table[i].table_foreign = strdup($8);
-				if (datas.create_new_table[i].table_foreign == NULL)
-				{
-					printf("Out of memory.\nAborting...\n");
-					exit(1);
-				}
 				ok = 1;
 			}
 		}
@@ -377,11 +368,28 @@ constraints: CONSTRAINT PRIMARY KEY '('ID')' {
 			printf("Column %s doesn't exist.\n",$5);
 			return;
 		}
-	}next_constraints
-	|')'';'
+	}')' REFERENCES ID{
+		datas.create_new_table[i].table_foreign = strdup($3);
+		if (datas.create_new_table[i].table_foreign == NULL)
+		{
+			printf("Out of memory.\nAborting...\n");
+			exit(1);
+		}
+}'('ID 
+	{
+		datas.create_new_table[i].constraint = 2;
+		datas.create_new_table[i].name_column_foreign = strdup($2);
+		if (datas.create_new_table[i].name_column_foreign == NULL)
+		{
+			printf("Out of memory.\nAborting...\n");
+			exit(1);
+		}
+	}')'next_constraints 
 	;
-next_constraints: ',' constraints
-	| ')'
+next_constraints: ','constraints
+	| end_create
+	;
+end_create:')'';'
 	;
 
 %%
