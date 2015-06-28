@@ -13,6 +13,7 @@ TABLE|table {yylval.str = yytext; return TABLE;}
 INTEGER|integer {yylval.str = yytext; return INTEGER;}
 CHAR|char {yylval.str = yytext; return CHAR;}
 DOUBLE|double {yylval.str = yytext; return DOUBLE;}
+STRING|string {yylval.str = yytext; return STRING;}
 FROM|from {yylval.str = yytext; return FROM;}
 WHERE|where 	{yylval.str = yytext; return WHERE;}
 {digit}+     {yylval.str = yytext;  return NUM ;}

@@ -155,7 +155,7 @@ void insert(char *sql,int index_database)
 {
 	database = index_database;
 
-	Datas datas = execute(sql);
+	Datas datas = execute_insert(sql);
 	int rows = 0,columns = 0;
 
     char *file = table_name_cat(datas.insert[rows][columns].str,database);
@@ -297,5 +297,14 @@ char *table_name_cat(char *name,int database)
 
 void createTable(char *sql, int current_database)
 {
+	database = current_database;
+
+	Datas datas = execute_create_table(sql);
+
+	if (datas.create_new_table == NULL)
+	{
+		printf("Out of memory.\nAborting...\n");
+		exit(1);
+	}
 
 }

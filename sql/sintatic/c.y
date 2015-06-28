@@ -20,9 +20,20 @@ union TOKEN{
 	double t_double;
 };
 
+typedef struct _datas_create
+{
+	char type_column;//tipo da coluna
+	char *name_column_table;//nome da coluna
+	int size;//tamanho limite do valor
+	
+}CreateTB;
+
 typedef struct _datas 
 {
 	union TOKEN **insert; //dados para execução do insert
+	CreateTB *create_new_table;//dados para a criação da nova tabela
+	char *name_table_create;
+	int number_columns;	//número de colunas da tabela para o crate table
 	int *numberOfColumns; //número de colunas de cada  linha
 	int numberOfRows; //número de linhas da matriz insert
 }Datas;
@@ -62,6 +73,7 @@ char *remove_single_quotes(char *str);
 %token <str>INTEGER 
 %token <str>CHAR 
 %token <str>DOUBLE 
+%token <str>STRING
 
 %token-table
 %nonassoc LOWERTHANCOMMA
@@ -77,6 +89,18 @@ char *remove_single_quotes(char *str);
 input:	exp 
 	;
 exp: INSERT INTO insert_in 
+	|CREATE TABLE create_next_name
+	;
+
+create_next_name: ID create_columns {
+		datas.name_table_create = strdup($1);
+
+		if (datas.name_table_create == NULL)
+		{
+			printf("Out of memory.\nAborting...\n");
+			exit(1);
+		}
+	}
 	;
 insert_in : table_name 
 	;
@@ -115,7 +139,7 @@ columns: {
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
-		fprintf(stderr, "Out of memory.\n");
+		fprintf(stderr, "Out of memory.\nAborting...\n");exit(1);
 	datas.numberOfColumns[i] = countColumn = 0;
 	datas.numberOfRows++;
 	}'('column_names')' insertOrder 
@@ -147,7 +171,7 @@ continue:  ',' {
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else
-		fprintf(stderr, "Out of memory.\n");
+		fprintf(stderr, "Out of memory.\nAborting...\n");exit(1);
 	datas.numberOfRows++;
 	datas.numberOfColumns[i] = 0;
 	} insertStart {
@@ -224,6 +248,98 @@ type: NUM {
 	datas.numberOfColumns[i]+=2;
 	}
 	;
+
+/**
+ * Expressões que fazem tratamento para a criação de tabelas
+ */
+create_columns: '(' values_table ')'';'
+
+values_table: ID {
+
+	CreateTB *temp = (CreateTB*) realloc (datas.create_new_table, (datas.number_columns+2)*sizeof(int));
+
+	if (temp == NULL)
+	{
+		printf("Out of memory.\nAborting...\n");
+		exit(1);
+	}
+
+	datas.create_new_table = temp;
+	int auxiliar_ = datas.number_columns;
+	datas.number_columns = datas.number_columns + 1;
+
+	datas.create_new_table[auxiliar_].name_column_table = strdup($1);
+
+}type_value','values_table
+			| ID type_value {
+	
+	CreateTB *temp = (CreateTB*) realloc (datas.create_new_table, (datas.number_columns+2)*sizeof(int));
+
+	if (temp == NULL)
+	{
+		printf("Out of memory.\nAborting...\n");
+		exit(1);
+	}
+
+	datas.create_new_table = temp;
+	int auxiliar_ = datas.number_columns;
+	datas.create_new_table[auxiliar_].name_column_table = strdup($1);
+
+}
+			;
+
+type_value: INTEGER {
+	datas.create_new_table[datas.number_columns].type_column = 'I';
+	datas.create_new_table[datas.number_columns].size = sizeof(int); 
+	datas.number_columns = datas.number_columns + 1;
+
+}
+			|CHAR {
+	datas.create_new_table[datas.number_columns].type_column = 'I';
+	datas.create_new_table[datas.number_columns].size = sizeof(int); 
+	datas.number_columns = datas.number_columns + 1;
+
+}
+
+			|STRING {
+	datas.create_new_table[datas.number_columns].type_column = 'S';
+	datas.create_new_table[datas.number_columns].size = 255; 
+	datas.number_columns = datas.number_columns + 1;
+
+}
+			|DOUBLE {
+	datas.create_new_table[datas.number_columns].type_column = 'D';
+	datas.create_new_table[datas.number_columns].size = sizeof(double); 
+	datas.number_columns = datas.number_columns + 1;
+
+}
+			|INTEGER'(' NUM ')' {
+	datas.create_new_table[datas.number_columns].type_column = 'I';
+	datas.create_new_table[datas.number_columns].size = atoi($3); 
+	datas.number_columns = datas.number_columns + 1;
+
+}
+			|CHAR'(' NUM ')' {
+	datas.create_new_table[datas.number_columns].type_column = 'C';
+	datas.create_new_table[datas.number_columns].size = atoi($3); 
+	datas.number_columns = datas.number_columns + 1;
+
+}
+			|STRING'(' NUM ')' {
+	datas.create_new_table[datas.number_columns].type_column = 'S';
+	datas.create_new_table[datas.number_columns].size = atoi($3); 
+	datas.number_columns = datas.number_columns + 1;
+
+}
+			|DOUBLE'(' NUM ')' {
+	datas.create_new_table[datas.number_columns].type_column = 'D';
+	datas.create_new_table[datas.number_columns].size = atoi($3); 
+	datas.number_columns = datas.number_columns + 1;
+
+}
+	;
+
+
 %%
 #include"lex.yy.c"
 #include<ctype.h>
@@ -238,7 +354,19 @@ union TOKEN **output(void);
  	-- Compilador C (gcc)
  -- Programa executável que faz a analise sintática da gramática descrita em parse.y (a.out)
  */
-Datas execute(char *sql)
+Datas execute_create_table(char *sql)
+{
+	datas.create_new_table = (CreateTB*) malloc (sizeof(CreateTB));
+	datas.number_columns = 0;
+
+	if (datas.create_new_table == NULL)
+	{
+		printf("Out of memory.\nAborting...\n");
+		exit(1);
+	}
+}
+
+Datas execute_insert(char *sql)
 {
 	i = 0;
 	j = 0;
@@ -246,10 +374,10 @@ Datas execute(char *sql)
 	countField = 0;
 	count = 0;
 	datas.insert = (union TOKEN**) malloc (sizeof(union TOKEN*)*5000);
-
+	
 	if (datas.insert == NULL)
 	{
-		fprintf(stderr, "Out of memory.\n");
+		fprintf(stderr, "Out of memory.\nAborting...\n");
 	}
 	int it = 0;
 
@@ -259,7 +387,7 @@ Datas execute(char *sql)
 
 		if (datas.insert[it] == NULL)
 		{
-		  fprintf(stderr, "Out of memory.\n");
+		  fprintf(stderr, "Out of memory.\nAborting...\n");
 		}
 	}
 
