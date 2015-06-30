@@ -22,6 +22,9 @@ void shell()
 
         char **tokens = tokenize(remove_newline(entrada),' ',&nTokens);
         
+        /**
+         * Opção para criar tabela e banco de dados
+         */
         if (strcmp(strtolower(tokens[0]),"create")==0)
         {
         	if(strcmp(strtolower(tokens[1]),"table")==0)
@@ -62,6 +65,9 @@ void shell()
 	       		continue;
 	       	}   
         }
+        /**
+         * Conecta ao banco de dados passado como parâmetro
+         */
         else if(strcmp(strtolower(tokens[0]),"\\c") == 0){
                 
             if (nTokens != 2)
@@ -86,7 +92,9 @@ void shell()
                 continue;
             }
         }
-      
+      	/**
+      	 * Insere tuplas em uma tabela
+      	 */
         else if(strcmp(strtolower(tokens[0]),"insert")==0)
         {
         	if (current_database == -1)
@@ -97,18 +105,33 @@ void shell()
  			
             insert(entrada,current_database);
         }
+        /**
+         * Imprime as tabelas do banco de dados atual
+         * ou o esquema de uma tabela
+         */
         else if(strcmp(strtolower(tokens[0]),"\\d")==0)
         {
-        	if (nTokens != 1)
+        	if (nTokens >= 3)
             {
             	printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
             	continue;
             }
 
-            listaTabelas(current_database);
+            if (nTokens == 1)
+            {
+            	//imprime tabelas do banco de dados
+            	listaTabelas(current_database);
+            }
+            else
+            {
+            	//imprime esquema da tabela
+            }
            
         } 
+        /**
+         * Imprime os registros da tabela passada
+         */
         else if (strcmp(strtolower(tokens[0]),"show")==0)
         {
         	if (nTokens != 2)
@@ -135,6 +158,9 @@ void shell()
  			}
         	imprime(t);
         }  
+        /**
+         * Lista os bancos existentes
+         */
         else if(strcmp(strtolower(tokens[0]),"\\l")==0)
         {
         	if (nTokens != 1)
@@ -146,6 +172,9 @@ void shell()
             //LISTA os bancos existentes
             listaBancos();
         }   
+        /**
+         * Opção para deletar o banco de dados e tabelas
+         */
         else if(strcmp(strtolower(tokens[0]),"drop")==0)
         {
         	if (nTokens != 3)
@@ -162,6 +191,9 @@ void shell()
             	dropDatabase(remove_semicolon(tokens[2]));
             }
         }
+        /**
+         * Ajuda ao usuário com exemplos da sintaxe dos comandos
+         */
         else if (strcmp(strtolower(tokens[0]),"help")==0)
         {
         	if (nTokens != 1)
@@ -171,12 +203,18 @@ void shell()
 
         	help();
         }
+        /**
+         * Imprime mensagem de copyright
+         */
         else if(strcmp(strtolower(remove_semicolon(tokens[0])),"\\copyright")==0)
         {
             printf("\nDatabase Management System\n");
             printf("\nPermission to use, copy, modify, and distribute this software and its\ndocumentation for any purpose, without fee, and without a written agreement\nis hereby granted, provided that the above copyright notice and this\nparagraph and the following two paragraphs appear in all copies.\n");
             printf("\nTHIS SOFTWARE IS BEING DEVELOPED BY STUDENTS OF DATABASE II CLASS AT UNIVERSIDADE FEDERAL DA FRONTEIRA SUL.\n\n");	
         }
+        /**
+         * Comando de saída
+         */
         else if(strcmp(strtolower(remove_semicolon(tokens[0])),"exit")==0)
         {
             break;
@@ -260,7 +298,6 @@ char **tokenize(char *str, char delim, int *size)
 
   return tokens;
 }
-
 
 char *remove_newline(char *str)
 {

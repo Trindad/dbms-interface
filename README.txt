@@ -428,7 +428,6 @@ Mesmo que o programa seja recompilado por completo os bancos criados permanecem 
 	Para o desenvolvimento do insert foi feito a análise léxica, semântica e sintática do comando sql. O código pode ser encontrado no diretório insert
 	onde contêm dois diretórios, o sintátic e semantic. O código desenvolvido básicamente recebe uma string com o comando sql, verifica a questão léxica, em seguida a análise semântica utiliza de expressões para verificar a string passada que deve seguir o padrão dos exemplos anteriores, caso algum erro ocorra então é lançado uma mensagem de erro, as mensagens são geradas com o padrão do bison. 
 	Na análise semântica, é verificado se os tipos estão corretos, se a tabela existe para o banco logado, estando tudo certo ele faz a inserção das tuplas na tabela.  
- - exit
 
 PASSOS PARA UTILIZAR A INTERFACE
 
