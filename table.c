@@ -567,8 +567,9 @@ void imprime(char nomeTabela[]) {
     }
 
     erro = SUCCESS;
-    for(x = 0; erro == SUCCESS; x++)
+    for(x = 0; erro == SUCCESS; x++) {
         erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);        
+    }
     
 
     column *pagina = getPage(bufferpoll, esquema, objeto, 0);
@@ -577,44 +578,185 @@ void imprime(char nomeTabela[]) {
         free(bufferpoll);
        return;
     }
-    
-    // PARA IMPRIMIR PÁGINA
-    // printf("Número de tuplas: %d\n", --x);
-    --x;
+
+    int number_of_tuples = --x;
+    int u = x,p_ = 0, v = 0;
     p = 0;
-    while(x){
-        column *pagina = getPage(bufferpoll, esquema, objeto, p);   
+    int controler_ = 0;
+    int limit[objeto.qtdCampos];//insere o tamanho máximo que será o espaço para impressão
+    
+    int ii;
+    for (ii = 0; ii < objeto.qtdCampos; ii++)
+    {
+        limit[ii] = strlen( pagina[controler_].nomeCampo );
+    }
+    /**
+     * Obtendo configurações do tamanho das variáveis
+     * para impressão, onde o tamanho maior será o do
+     * campo independente se for o registro ou o nome
+     * da tabela
+     */
+    while(u){
+
+        column *pagina = getPage(bufferpoll, esquema, objeto, p); 
+
         if(pagina == ERRO_PARAMETRO){
             free(bufferpoll);
             return;
         }
         for(j=0; j < objeto.qtdCampos*bufferpoll[p].nrec; j++){
+
             if(pagina[j].tipoCampo == 'S'){
-                printf("%s: %-30s ", pagina[j].nomeCampo,pagina[j].valorCampo);
+                if (limit[controler_] < strlen(pagina[j].valorCampo))
+                {
+                    limit[controler_] = strlen(pagina[j].valorCampo);
+                }
+
+                free(pagina[j].valorCampo);
+            }
+            else if(pagina[j].tipoCampo == 'I'){
+                char *str = (char*) malloc (sizeof(char)*sizeof(int));
+                
+                if (str == NULL)
+                {
+                    printf("Out of memory.\nAborting...\n");
+                    exit(1);
+                }
+                sprintf(str, "%d", pagina[j].valorCampo);
+                
+                if (limit[controler_] < strlen(str))
+                {
+                    limit[controler_] = strlen(str);
+                }
+                free(str);
+                free(pagina[j].valorCampo);
+            }
+            else if(pagina[j].tipoCampo == 'C'){
+                if (limit[controler_] < strlen(pagina[j].valorCampo))
+                {
+                    limit[controler_] = strlen(pagina[j].valorCampo);
+                }
+
+                free(pagina[j].valorCampo);
+            }
+            else if(pagina[j].tipoCampo == 'D'){
+
+                if (limit[controler_] < strlen(pagina[j].valorCampo))
+                {
+                    limit[controler_] = strlen(pagina[j].valorCampo)+1;//mais um por causa do '.'
+                }
+
+                free(pagina[j].valorCampo);
+            }
+            if(j >= 1 && ((j+1)%objeto.qtdCampos)==0){
+               controler_ = 0;
+            }
+            else
+            {
+                controler_++;  
+            }
+
+        } 
+        u-=bufferpoll[p++].nrec;
+    }
+
+    p = 0;
+    controler_ = 0;
+    ii = 0;
+    int tam = 0;
+
+    while(x){
+
+        column *pagina = getPage(bufferpoll, esquema, objeto, p); 
+
+        if(pagina == ERRO_PARAMETRO){
+            free(bufferpoll);
+            return;
+        }
+        for(j=0; j < objeto.qtdCampos*bufferpoll[p].nrec; j++){
+
+            if (j == 0)
+            {
+                /**
+                 * Imprime o nome das colunas
+                 */
+                while(controler_ < objeto.qtdCampos)
+                {
+                    printf(" %s",pagina[controler_].nomeCampo);
+                    tam = (limit[controler_] - strlen(pagina[controler_].nomeCampo))+1;
+                    for (v = 0; v < tam; v++) printf(" ");
+                    printf("|");
+                    controler_++;
+                }
+                printf("\n");
+                p_ = 0;
+                while(p_ < objeto.qtdCampos)
+                {
+                    for (v = 0; v < limit[p_]+2; v++)printf("-");
+                    printf("+");
+                    p_++;
+                }
+                printf("\n");
+            }
+
+            if(pagina[j].tipoCampo == 'S'){
+                printf(" %s", pagina[j].valorCampo);
+                tam = (limit[ii] - strlen(pagina[j].valorCampo))+1;
+                for (v = 0; v < tam; v++) printf(" ");
+                printf("|");
+                
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'I'){
                 int *n = (int *)&pagina[j].valorCampo[0];
-                printf("%s: %-15d ",pagina[j].nomeCampo, *n);
+                printf(" %d",pagina[j].nomeCampo, *n);
+                
+                char *str = (char*) malloc (sizeof(char)*sizeof(int));
+                
+                if (str == NULL)
+                {
+                    printf("Out of memory.\nAborting...\n");
+                    exit(1);
+                }
+                sprintf(str, "%d", pagina[j].valorCampo);
+
+                tam = (limit[ii] - strlen(str))+1;
+
+                for (v = 0; v < tam; v++) printf(" ");
+                printf("|");
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'C'){
-                printf("%s: %-15c ",pagina[j].nomeCampo, pagina[j].valorCampo[0]);
+                printf(" %c",pagina[j].valorCampo[0]);
+                tam = (limit[ii] - strlen(pagina[j].valorCampo))+1;
+                for (v = 0; v < tam; v++) printf(" ");
+                printf("|");
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'D'){
                 double *n = (double *)&pagina[j].valorCampo[0];
-                 printf("%s: %-15f ",pagina[j].nomeCampo, *n);
+                printf(" %f",*n);
+                tam = (limit[ii] - strlen(pagina[j].valorCampo));
+                for (v = 0; v < tam; v++) printf(" ");
+                printf("|");
                  free(pagina[j].valorCampo);
 
             }
             if(j>=1 && ((j+1)%objeto.qtdCampos)==0){
+                ii = 0;
                 printf("\n");
             }
+            else
+            {
+                ii++;
+            }
         } 
+
         x-=bufferpoll[p++].nrec;
     }
-    printf("\n\n");
+
+    printf("( %d records )\n",number_of_tuples);
+    printf("\n");
    
     free(pagina);
     free(bufferpoll);

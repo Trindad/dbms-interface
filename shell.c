@@ -488,13 +488,7 @@ void example()
 
 	    }
 	}
-    
-    // imprime(table_name_real("Aluno",current_database));        //Imprime os atributos da tabela "Aluno"
-    // imprime(table_name_real("Inst",current_database));
-    // //excluirTabela("Inst");   //Exclui os dados da tabela do dicionario e remove-a do disco
-    // imprime(table_name_real("Inscri",current_database));
-    // //excluirTabela("Inscri");
-    
+  
     current_database = -1;//não existe nenhum banco logado
 }
 
