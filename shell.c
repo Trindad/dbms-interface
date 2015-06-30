@@ -26,11 +26,6 @@ void shell()
         {
         	if(strcmp(strtolower(tokens[1]),"table")==0)
 	        {
-	        	// if(nTokens >= 6)
-	        	// {
-	         //   		printf("Invalid command. Type help to show de interface usage.\n");
-	        	// }
-
 	           createTable(entrada,current_database);
 	        }
 	        else if(strcmp(strtolower(tokens[1]),"database")==0)

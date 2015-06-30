@@ -436,6 +436,11 @@ Comando para saída do shell, simplesmente verifica se o token de entrada é exi
 
 COMPILAR:
 	Além do gcc é necessário ter na máquina instalado o bison e o lex.
+	lex versão: lex 2.5.35
+	bison versão: bison (GNU bison) 2.5
+	Para conferir se você já possuim instalado digite no terminal:
+		lex --version
+		bison --version
 
 OPÇÃO 1: Manual
 	1º Passo
