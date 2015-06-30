@@ -167,10 +167,6 @@ void shell()
             	dropDatabase(remove_semicolon(tokens[2]));
             }
         }
-        else if(strcmp(strtolower(remove_semicolon(tokens[0])),"exit")==0)
-        {
-            break;
-        }
         else if (strcmp(strtolower(tokens[0]),"help")==0)
         {
         	if (nTokens != 1)
@@ -180,6 +176,18 @@ void shell()
 
         	help();
         } 
+        else if(strcmp(strtolower(remove_semicolon(tokens[0])),"exit")==0)
+        {
+            break;
+        } 
+        else if(strcmp(strtolower(remove_semicolon(tokens[0])),"quit")==0)
+        {
+            break;
+        }
+        else if(strcmp(strtolower(remove_semicolon(tokens[0])),"bye")==0)
+        {
+            break;
+        }
         else
         {
         	printf("Invalid command. Type help to show de interface usage.\n");
