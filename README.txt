@@ -355,8 +355,21 @@ Todos os comandos aceitam ';' no final com exceção dos \l e \d.
 
 	Sair do Shell (interface)
 		exit
+		bye
+		quit
+	Copyright
+		\copyright
+	Excluir banco de dados
+		drop database <database_name>
+	Excluir tabela do banco de dados
+		drop table <table_name>
+	Criar tabela
+		CREATE TABLE <table name> ( <column name> <column type> [ <attribute constraint> ]...);
+		CREATE TABLE <table name> ( <column name> <column type>, <column name> <column type> , [ <attribute constraint> ]);
+		Exemplos:
+			create table curso (nome string primary key,creditos integer,professor string(100));
 
-
+			create table cursoverao (nome string,cod integer, creditos integer,professor string(100),constraint primary key (nome) , CONSTRAINT FOREIGN KEY ( cod ) REFERENCES Inst(CodInst));
 
 Implementação das funções:
 

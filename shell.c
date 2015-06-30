@@ -179,8 +179,8 @@ void shell()
         else if(strcmp(strtolower(remove_semicolon(tokens[0])),"\\copyright")==0)
         {
             printf("\nDatabase Management System\n");
-            printf("\nPermission to use, copy, modify, and distribute this software and its\ndocumentation for any purpose, without fee, and without a written agreement\nis hereby granted, provided that the above copyright notice and this\nparagraph and the following two paragraphs appear in all copies.\n\n");
-            printf("\nTHIS SOFTWARE IS BEING DEVELOPED BY STUDENTS OF DATABASE II CLASS AT UNIVERSIDADE FEDERAL DA FRONTEIRA SUL.\n");	
+            printf("\nPermission to use, copy, modify, and distribute this software and its\ndocumentation for any purpose, without fee, and without a written agreement\nis hereby granted, provided that the above copyright notice and this\nparagraph and the following two paragraphs appear in all copies.\n");
+            printf("\nTHIS SOFTWARE IS BEING DEVELOPED BY STUDENTS OF DATABASE II CLASS AT UNIVERSIDADE FEDERAL DA FRONTEIRA SUL.\n\n");	
         }
         else if(strcmp(strtolower(remove_semicolon(tokens[0])),"exit")==0)
         {
