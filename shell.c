@@ -6,7 +6,7 @@ int current_database = -1;
 void shell()
 {
 	current_database = -1;
-	char entrada[1000], nomeBD[TAM_NOME_BANCO];
+	char entrada[1000],inicio[1000], nomeBD[TAM_NOME_BANCO];
     int resultado=0, codDB=-1;
     nomeBD[0]='\0';
 
@@ -14,225 +14,248 @@ void shell()
 
     while(1){       
         
-        int nTokens;
-
-        printf("%s",current_db_name);
+        fgets(inicio,1000,stdin);
         
-        fgets(entrada,1000,stdin);
+		if(strcmp(inicio,"dbms-start\n")==0){
+			printf("\nDatabase initialized\n");
+			
+			while(1){
+		
+				int nTokens;
 
-        char **tokens = tokenize(remove_newline(entrada),' ',&nTokens);
-        
-        /**
-         * Opção para criar tabela e banco de dados
-         */
-        if (strcmp(strtolower(tokens[0]),"create")==0)
-        {
-        	if(strcmp(strtolower(tokens[1]),"table")==0)
-	        {
-	           createTable(entrada,current_database);
-	        }
-	        else if(strcmp(strtolower(tokens[1]),"database")==0)
-	        {
-	     		if (nTokens != 3)
-	     		{
-	     			printf("Invalid number of arguments. Type help to show de interface usage.\n");
-	     			continue;
-	     		}
-	     		else if (strlen(tokens[2]) > TAM_NOME_BANCO )
-	     		{
-	     			printf("Database name too big.\n");
-	     			continue;
-	     		}
+				printf("%s",current_db_name);
+				
+				fgets(entrada,1000,stdin);
 
-	            resultado = checkCreateDB( remove_semicolon(tokens[2]) );//verifica a existência do nome e grava-o no arquivo
-	            
-	            if(resultado==-1) 
-	            {
-	                printf("Error creating database file.\n");
-	            }
-	            if(resultado==-3) 
-	            {
-	                printf("Database exists.\n");
-	            }
-	            else
-	            {
-	                printf("Database created successfully.\n");
-	            }
-	        } 
-	        else
-	       	{
-	       		printf("Invalid command. Type help to show de interface usage.\n");
-	       		continue;
-	       	}   
-        }
-        /**
-         * Conecta ao banco de dados passado como parâmetro
-         */
-        else if(strcmp(strtolower(tokens[0]),"\\c") == 0){
-                
-            if (nTokens != 2)
-            {
-            	printf("Invalid number of arguments. Type help to show de interface usage.\n");
+				char **tokens = tokenize(remove_newline(entrada),' ',&nTokens);
+				
+				/**
+				 * Opção para criar tabela e banco de dados
+				 */
+				if (strcmp(strtolower(tokens[0]),"create")==0)
+				{
+					if(strcmp(strtolower(tokens[1]),"table")==0)
+					{
+					   createTable(entrada,current_database);
+					}
+					else if(strcmp(strtolower(tokens[1]),"database")==0)
+					{
+						if (nTokens != 3)
+						{
+							printf("Invalid number of arguments. Type help to show de interface usage.\n");
+							continue;
+						}
+						else if (strlen(tokens[2]) > TAM_NOME_BANCO )
+						{
+							printf("Database name too big.\n");
+							continue;
+						}
 
-            	continue;
-            }
-            char *name_db = remove_semicolon(tokens[1]);
-            codDB = busca(name_db,1);     //função chamada para conecção no banco, retorna o codigo do banco ao conectar
-           
-            if (codDB >= 0)
-            {
-                strcpy(nomeBD, name_db);  //passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
-                current_db_name = strdup(name_db);
-                current_database = codDB;
-                strcat(current_db_name,"=#"); 
-            }
-            else
-            {
-                printf("\nNo such database '%s'.\n", name_db);
-                continue;
-            }
-        }
-      	/**
-      	 * Insere tuplas em uma tabela
-      	 */
-        else if(strcmp(strtolower(tokens[0]),"insert")==0)
-        {
-        	if (current_database == -1)
- 			{
- 				printf("Not connected to any database.\n");
- 				continue;
- 			}
- 			
-            insert(entrada,current_database);
-        }
-        /**
-         * Imprime as tabelas do banco de dados atual
-         * ou o esquema de uma tabela
-         */
-        else if(strcmp(strtolower(tokens[0]),"\\d")==0)
-        {
-        	if (nTokens >= 3)
-            {
-            	printf("Invalid number of arguments. Type help to show de interface usage.\n");
+						resultado = checkCreateDB( remove_semicolon(tokens[2]) );//verifica a existência do nome e grava-o no arquivo
+						
+						if(resultado==-1) 
+						{
+							printf("Error creating database file.\n");
+						}
+						if(resultado==-3) 
+						{
+							printf("Database exists.\n");
+						}
+						else
+						{
+							printf("Database created successfully.\n");
+						}
+					} 
+					else
+					{
+						printf("Invalid command. Type help to show de interface usage.\n");
+						continue;
+					}   
+				}
+				/**
+				 * Conecta ao banco de dados passado como parâmetro
+				 */
+				else if(strcmp(strtolower(tokens[0]),"\\c") == 0){
+						
+					if (nTokens != 2)
+					{
+						printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
-            	continue;
-            }
+						continue;
+					}
+					char *name_db = remove_semicolon(tokens[1]);
+					codDB = busca(name_db,1);     //função chamada para conecção no banco, retorna o codigo do banco ao conectar
+				   
+					if (codDB >= 0)
+					{
+						strcpy(nomeBD, name_db);  //passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
+						current_db_name = strdup(name_db);
+						current_database = codDB;
+						strcat(current_db_name,"=#"); 
+					}
+					else
+					{
+						printf("\nNo such database '%s'.\n", name_db);
+						continue;
+					}
+				}
+				/**
+				 * Insere tuplas em uma tabela
+				 */
+				else if(strcmp(strtolower(tokens[0]),"insert")==0)
+				{
+					if (current_database == -1)
+					{
+						printf("Not connected to any database.\n");
+						continue;
+					}
+					
+					insert(entrada,current_database);
+				}
+				/**
+				 * Imprime as tabelas do banco de dados atual
+				 * ou o esquema de uma tabela
+				 */
+				else if(strcmp(strtolower(tokens[0]),"\\d")==0)
+				{
+					if (nTokens >= 3)
+					{
+						printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
-            if (nTokens == 1)
-            {
-            	//imprime tabelas do banco de dados
-            	listaTabelas(current_database);
-            }
-            else
-            {
-            	//imprime esquema da tabela
-            }
-           
-        } 
-        /**
-         * Imprime os registros da tabela passada
-         */
-        else if (strcmp(strtolower(tokens[0]),"show")==0)
-        {
-        	if (nTokens != 2)
-        	{
-        		printf("Invalid number of arguments. Type help to show de interface usage.\n");
+						continue;
+					}
 
-            	continue;
-        	}
- 			if (current_database == -1)
- 			{
- 				printf("Not connected to any database.\n");
- 				continue;
- 			}
+					if (nTokens == 1)
+					{
+						//imprime tabelas do banco de dados
+						listaTabelas(current_database);
+					}
+					else
+					{
+						//imprime esquema da tabela
+					}
+				   
+				} 
+				/**
+				 * Imprime os registros da tabela passada
+				 */
+				else if (strcmp(strtolower(tokens[0]),"show")==0)
+				{
+					if (nTokens != 2)
+					{
+						printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
- 			char *t = table_name_real(remove_semicolon(tokens[1]),current_database);
+						continue;
+					}
+					if (current_database == -1)
+					{
+						printf("Not connected to any database.\n");
+						continue;
+					}
 
- 			char *file = table_name_real(remove_semicolon(tokens[1]),current_database);
- 			strcat(file,".dat");
- 			
- 			if (existeArquivo(file) == 0)
- 			{
- 				printf("Table doesn't exist.\n" );
- 				continue;
- 			}
-        	imprime(t);
-        }  
-        /**
-         * Lista os bancos existentes
-         */
-        else if(strcmp(strtolower(tokens[0]),"\\l")==0)
-        {
-        	if (nTokens != 1)
-            {
-            	printf("Invalid number of arguments. Type help to show de interface usage.\n");
+					char *t = table_name_real(remove_semicolon(tokens[1]),current_database);
 
-            	continue;
-            }
-            //LISTA os bancos existentes
-            listaBancos();
-        }   
-        /**
-         * Opção para deletar o banco de dados e tabelas
-         */
-        else if(strcmp(strtolower(tokens[0]),"drop")==0)
-        {
-        	if (nTokens != 3)
-            {
-            	printf("Invalid number of arguments. Type help to show de interface usage.\n");
+					char *file = table_name_real(remove_semicolon(tokens[1]),current_database);
+					strcat(file,".dat");
+					
+					if (existeArquivo(file) == 0)
+					{
+						printf("Table doesn't exist.\n" );
+						continue;
+					}
+					imprime(t);
+				}  
+				/**
+				 * Lista os bancos existentes
+				 */
+				else if(strcmp(strtolower(tokens[0]),"\\l")==0)
+				{
+					if (nTokens != 1)
+					{
+						printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
-            	continue;
-            }
-            else if(strcmp(strtolower(tokens[1]),"table") == 0){
-            	char *t = table_name_real(remove_semicolon(tokens[2]),current_database);
-            	excluirTabela(t);
-            }
-            else if(strcmp(strtolower(tokens[1]),"database") == 0){
-            	dropDatabase(remove_semicolon(tokens[2]));
-            }
-        }
-        /**
-         * Ajuda ao usuário com exemplos da sintaxe dos comandos
-         */
-        else if (strcmp(strtolower(tokens[0]),"help")==0)
-        {
-        	if (nTokens != 1)
-        	{
-        		printf("Invalid number of arguments. Type help to show de interface usage.\n");
-        	}
+						continue;
+					}
+					//LISTA os bancos existentes
+					listaBancos();
+				}   
+				/**
+				 * Opção para deletar o banco de dados e tabelas
+				 */
+				else if(strcmp(strtolower(tokens[0]),"drop")==0)
+				{
+					if (nTokens != 3)
+					{
+						printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
-        	help();
-        }
-        /**
-         * Imprime mensagem de copyright
-         */
-        else if(strcmp(strtolower(remove_semicolon(tokens[0])),"\\copyright")==0)
-        {
-            printf("\nDatabase Management System\n");
-            printf("\nPermission to use, copy, modify, and distribute this software and its\ndocumentation for any purpose, without fee, and without a written agreement\nis hereby granted, provided that the above copyright notice and this\nparagraph and the following two paragraphs appear in all copies.\n");
-            printf("\nTHIS SOFTWARE IS BEING DEVELOPED BY STUDENTS OF DATABASE II CLASS AT UNIVERSIDADE FEDERAL DA FRONTEIRA SUL.\n\n");	
-        }
-        /**
-         * Comando de saída
-         */
-        else if(strcmp(strtolower(remove_semicolon(tokens[0])),"exit")==0)
-        {
-            break;
-        } 
-        else if(strcmp(strtolower(remove_semicolon(tokens[0])),"quit")==0)
-        {
-            break;
-        }
-        else if(strcmp(strtolower(remove_semicolon(tokens[0])),"bye")==0)
-        {
-            break;
-        }
-        else
-        {
-        	printf("Invalid command. Type help to show de interface usage.\n");
-        	continue;
-        }  
-    }
+						continue;
+					}
+					else if(strcmp(strtolower(tokens[1]),"table") == 0){
+						char *t = table_name_real(remove_semicolon(tokens[2]),current_database);
+						excluirTabela(t);
+					}
+					else if(strcmp(strtolower(tokens[1]),"database") == 0){
+						dropDatabase(remove_semicolon(tokens[2]));
+					}
+				}
+				/**
+				 * Ajuda ao usuário com exemplos da sintaxe dos comandos
+				 */
+				else if (strcmp(strtolower(tokens[0]),"help")==0)
+				{
+					if (nTokens != 1)
+					{
+						printf("Invalid number of arguments. Type help to show de interface usage.\n");
+					}
+
+					help();
+				}
+				/**
+				 * Imprime mensagem de copyright
+				 */
+				else if(strcmp(strtolower(remove_semicolon(tokens[0])),"\\copyright")==0)
+				{
+					printf("\nDatabase Management System\n");
+					printf("\nPermission to use, copy, modify, and distribute this software and its\ndocumentation for any purpose, without fee, and without a written agreement\nis hereby granted, provided that the above copyright notice and this\nparagraph and the following two paragraphs appear in all copies.\n");
+					printf("\nTHIS SOFTWARE IS BEING DEVELOPED BY STUDENTS OF DATABASE II CLASS AT UNIVERSIDADE FEDERAL DA FRONTEIRA SUL.\n\n");	
+				}
+				/**
+				 * Comando de saída
+				 */
+				else if(strcmp(strtolower(remove_semicolon(tokens[0])),"exit")==0)
+				{
+					strcpy(inicio,"exit\n");
+					break;
+				} 
+				else if(strcmp(strtolower(remove_semicolon(tokens[0])),"quit")==0)
+				{
+					strcpy(inicio,"exit\n");
+					break;
+				}
+				else if(strcmp(strtolower(remove_semicolon(tokens[0])),"bye")==0)
+				{
+					strcpy(inicio,"exit\n");
+					break;
+				}
+				else
+				{
+					printf("Invalid command. Type help to show de interface usage.\n");
+					continue;
+				}
+			}  
+		}
+		
+		if (strcmp(inicio,"help\n")==0)
+			help();
+		
+		if(strcmp(inicio,"exit\n")==0)
+			break;
+		
+		else{
+			printf("Invalid command. Type help to show de interface usage.\n");
+			continue;
+		}	
+	}
 }
 
 /**
@@ -499,8 +522,9 @@ char *table_name_real(char *name,int database)
 
 void help()
 {
-	printf("DBMS Interface Help\n");
+	printf("\nDBMS Interface Help\n");
 	printf("Here is a list of commands you can enter:\n\n");
+	printf("dbms-start - start the database\n");
 	printf("help - Shows this help\n");
 	printf("exit - Exits DBMS interface\n");
 	printf("\\c <database_name> - Connects to a database\n");
@@ -512,6 +536,6 @@ void help()
 	printf("\nDatabase creation example:\n");
 	printf("\t create database example_db;\n");
 	printf("\nTable insertion example:\n");
-	printf("\t insert into table1 values(\"val1\", 12.5), (\"val2\", 55.5);\n");
+	printf("\t insert into table1 values(\"val1\", 12.5), (\"val2\", 55.5);\n\n");
 	
 }
