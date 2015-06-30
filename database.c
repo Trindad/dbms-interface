@@ -29,6 +29,48 @@ int cod_id_banco(){
     return cod_id;
 }
 
+void reescreve(char *str)
+{
+    FILE *file;
+    int quant_db = cod_id_bancoj(), aux = 0, cont = 0;
+    db *database = (db *)malloc(sizeof(db));
+    db *aux_arq = (db *)malloc(sizeof(db)*quant_db);
+
+    if (database == NULL)
+    {
+        printf("Out of memory.\n");
+        abort();
+    }
+    file = fopen("fs_database.dat", "r");
+    if(file != NULL)
+    {
+       for(; cont < (quant_db-1); cont++){
+            fread(&database->cod,sizeof(int),1,file);
+            fread(&database->nome,sizeof(char),TAM_NOME_BANCO,file);
+            if(strcmp(database->nome,str)!=0){
+                strcpy(aux_arq[aux].nome,database->nome);
+                aux_arq[aux].cod = database->cod;
+                aux++;
+            }
+        }
+        fclose(file);
+        file = fopen("fs_database.dat","w");
+        if(file != NULL){
+            for(cont = 0; cont < aux; cont++){
+                fwrite(&aux_arq[cont].cod, sizeof(int), 1, file);
+                fwrite(&aux_arq[cont].nome, sizeof(char), TAM_NOME_BANCO, file);
+            }
+        }
+        else
+            printf("\nError while writing in database file");
+    }
+    else
+    {
+        printf("\nCannot open fs_database!\n");
+    }
+    fclose(file);
+}
+
 //busca por nome do banco se estiver cadastrado retorna a id dele
 int busca(char *str, int identificacao){//a identificacao indicara qual if será executado
    
