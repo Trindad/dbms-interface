@@ -245,9 +245,6 @@ void shell()
 			}  
 		}
 		
-		if (strcmp(inicio,"help\n")==0)
-			help();
-		
 		if(strcmp(inicio,"exit\n")==0)
 			break;
 		
