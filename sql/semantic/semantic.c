@@ -331,7 +331,7 @@ void createTable(char *sql, int index_database)
 	int schema      = existeArquivo("fs_schema.dat");
 
 	table  *tab = iniciaTabela(table_name_cat(datas.name_table_create,database));
-	// printf("number_columns %d\n", datas.number_columns);
+
 	for (i = 0; i < datas.number_columns; i++)
 	{
 		//chave estrangeira = 2
@@ -341,10 +341,17 @@ void createTable(char *sql, int index_database)
 		}
 		else
 		{
-			// printf("%s\t%c\t%d\t%d",datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint );
         	tab = adicionaCampo(tab,datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint,"","");
 		}
 	}
+
+    for (i = 0; i < datas.number_columns; i++)
+    {
+    	free(datas.create_new_table[i].name_column_table);
+    }
+
+    free(datas.create_new_table);
+    
     i = 0;
 
     finalizaTabela(tab,database);

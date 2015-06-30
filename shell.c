@@ -10,8 +10,7 @@ void shell()
     int resultado=0, codDB=-1;
     nomeBD[0]='\0';
 
-    char *current_db_name = ">";//inicializa com nenhum banco conectado
-
+    char *current_db_name = strdup(">");//inicializa com nenhum banco conectado
 
     while(1){       
         
@@ -90,9 +89,20 @@ void shell()
 					if (codDB >= 0)
 					{
 						strcpy(nomeBD, name_db);  //passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
-						current_db_name = strdup(name_db);
+						free(current_db_name);
+						
+						current_db_name = (char*) malloc (sizeof(char)*(strlen(name_db)+3));
+
+						if (current_db_name == NULL)
+						{
+							printf("Out of memory.\nAborting...\n");
+						}
+
+						strcpy(current_db_name,name_db);
 						current_database = codDB;
-						strcat(current_db_name,"=#"); 
+
+						strcat(current_db_name,"=#");
+						current_db_name[strlen(current_db_name)] = '\0'; 
 					}
 					else
 					{
@@ -172,6 +182,8 @@ void shell()
 						continue;
 					}
 					imprime(t);
+					free(file);
+					free(t);
 				}  
 				/**
 				 * Lista os bancos existentes
@@ -201,6 +213,7 @@ void shell()
 					else if(strcmp(strtolower(tokens[1]),"table") == 0){
 						char *t = table_name_real(remove_semicolon(tokens[2]),current_database);
 						excluirTabela(t);
+						free(t);
 					}
 					else if(strcmp(strtolower(tokens[1]),"database") == 0){
 						dropDatabase(remove_semicolon(tokens[2]));
@@ -272,6 +285,8 @@ void shell()
 			continue;
 		}	
 	}
+
+	free(current_db_name);
 }
 
 /**
@@ -340,11 +355,12 @@ char **tokenize(char *str, char delim, int *size)
 
 char *remove_newline(char *str)
 {
-  char *temp = (char*) malloc (sizeof(char) * strlen(str));
+  char *temp = (char*) malloc (sizeof(char) * (strlen(str)+1) );
 
   if (temp == NULL)
   {
   	printf("Out of memory.\nAborting...\n");
+  	exit(1);
   }
 
   int i, pos = 0;
@@ -362,11 +378,12 @@ char *remove_newline(char *str)
 
 char *remove_semicolon(char *str)
 {
-  char *temp = (char*) malloc (sizeof(char) * strlen(str));
+  char *temp = (char*) malloc (sizeof(char) * (strlen(str)+1));
 
   if (temp == NULL)
   {
   	printf("Out of memory.\nAborting...\n");
+  	exit(1);
   }
 
   int i, pos = 0;
