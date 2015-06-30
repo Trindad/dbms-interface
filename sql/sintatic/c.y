@@ -42,6 +42,7 @@ typedef struct _datas
 }Datas;
 
 Datas datas;
+char *table_select;
 
 int i = 0;
 int j = 0;
@@ -63,8 +64,8 @@ char *remove_single_quotes(char *str);
 %token <str>NUM
 %token <str> PONTOFLUTUANTE
 %token VALUES
-%token SELECT
-%token FROM
+%token <str>SELECT
+%token <str>FROM
 %token <str> BOOL
 %token WHERE
 %token <str> ID
@@ -101,8 +102,13 @@ input:	exp
 	;
 exp: INSERT INTO insert_in 
 	|CREATE TABLE create_next_name
+	|SELECT next_select
 	;
 
+next_select: '*' FROM table_name_select
+	;
+table_name_select: ID{table_select = strdup($1);} ';'
+	;
 create_next_name: ID{
 		datas.name_table_create = strdup($1);
 
@@ -424,6 +430,20 @@ Datas execute_create_table(char *sql)
     yylex_destroy();
 
     return datas;
+}
+
+char *execute_select(char *sql)
+{
+	table_select = NULL;
+
+	yy_scan_string(sql);
+    
+    yyparse();
+
+    /* to avoid leakage */
+    yylex_destroy();
+
+    return table_select;//retorna o nome da tabela 
 }
 
 Datas execute_insert(char *sql)

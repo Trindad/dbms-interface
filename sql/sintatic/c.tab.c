@@ -197,6 +197,7 @@ typedef struct _datas
 }Datas;
 
 Datas datas;
+char *table_select;
 
 int i = 0;
 int j = 0;
@@ -209,7 +210,7 @@ char *remove_single_quotes(char *str);
 
 
 /* Line 243 of glr.c  */
-#line 213 "c.tab.c"
+#line 214 "c.tab.c"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -304,18 +305,18 @@ YYID (i)
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  7
+#define YYFINAL  10
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   87
+#define YYLAST   82
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  37
+#define YYNTOKENS  38
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  39
+#define YYNNTS  42
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  58
+#define YYNRULES  62
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  107
+#define YYNSTATES  115
 /* YYMAXRHS -- Maximum number of symbols on right-hand side of rule.  */
 #define YYMAXRHS 15
 /* YYMAXLEFT -- Maximum number of symbols to the left of a handle
@@ -336,8 +337,8 @@ static const unsigned char yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      32,    33,     2,     2,    34,     2,    36,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    35,
+      34,    35,    32,     2,    36,     2,    37,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    33,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -368,45 +369,48 @@ static const unsigned char yytranslate[] =
    YYRHS.  */
 static const unsigned char yyprhs[] =
 {
-       0,     0,     3,     5,     9,    13,    14,    18,    20,    22,
-      24,    27,    28,    31,    32,    38,    40,    43,    46,    47,
-      51,    52,    58,    60,    63,    66,    67,    71,    73,    75,
-      77,    81,    83,    85,    87,    90,    91,    96,    97,   101,
-     103,   106,   109,   112,   115,   120,   122,   125,   126,   128,
-     131,   132,   141,   142,   143,   144,   160,   163,   165
+       0,     0,     3,     5,     9,    13,    16,    20,    21,    25,
+      26,    30,    32,    34,    36,    39,    40,    43,    44,    50,
+      52,    55,    58,    59,    63,    64,    70,    72,    75,    78,
+      79,    83,    85,    87,    89,    93,    95,    97,    99,   102,
+     103,   108,   109,   113,   115,   118,   121,   124,   127,   132,
+     134,   137,   138,   140,   143,   144,   153,   154,   155,   156,
+     172,   175,   177
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const signed char yyrhs[] =
 {
-      38,     0,    -1,    39,    -1,     4,     5,    42,    -1,    17,
-      18,    40,    -1,    -1,    13,    41,    60,    -1,    45,    -1,
-      13,    -1,    13,    -1,    43,    46,    -1,    -1,    47,    51,
-      -1,    -1,    48,    32,    49,    33,    51,    -1,    44,    -1,
-      44,    50,    -1,    34,    49,    -1,    -1,     8,    52,    53,
-      -1,    -1,    32,    55,    33,    54,    57,    -1,    59,    -1,
-      59,    56,    -1,    34,    55,    -1,    -1,    34,    58,    53,
-      -1,    35,    -1,     6,    -1,    16,    -1,    13,    36,    13,
-      -1,     7,    -1,    11,    -1,    14,    -1,    32,    61,    -1,
-      -1,    13,    62,    65,    63,    -1,    -1,    34,    64,    61,
-      -1,    68,    -1,    19,    66,    -1,    20,    66,    -1,    22,
-      66,    -1,    21,    66,    -1,    32,     6,    33,    67,    -1,
-      67,    -1,    23,    24,    -1,    -1,    75,    -1,    34,    69,
-      -1,    -1,    26,    23,    24,    32,    13,    70,    33,    74,
-      -1,    -1,    -1,    -1,    26,    25,    24,    32,    13,    71,
-      33,    27,    13,    72,    32,    13,    73,    33,    74,    -1,
-      34,    69,    -1,    75,    -1,    33,    35,    -1
+      39,     0,    -1,    40,    -1,     4,     5,    46,    -1,    17,
+      18,    44,    -1,     9,    41,    -1,    32,    10,    42,    -1,
+      -1,    13,    43,    33,    -1,    -1,    13,    45,    64,    -1,
+      49,    -1,    13,    -1,    13,    -1,    47,    50,    -1,    -1,
+      51,    55,    -1,    -1,    52,    34,    53,    35,    55,    -1,
+      48,    -1,    48,    54,    -1,    36,    53,    -1,    -1,     8,
+      56,    57,    -1,    -1,    34,    59,    35,    58,    61,    -1,
+      63,    -1,    63,    60,    -1,    36,    59,    -1,    -1,    36,
+      62,    57,    -1,    33,    -1,     6,    -1,    16,    -1,    13,
+      37,    13,    -1,     7,    -1,    11,    -1,    14,    -1,    34,
+      65,    -1,    -1,    13,    66,    69,    67,    -1,    -1,    36,
+      68,    65,    -1,    72,    -1,    19,    70,    -1,    20,    70,
+      -1,    22,    70,    -1,    21,    70,    -1,    34,     6,    35,
+      71,    -1,    71,    -1,    23,    24,    -1,    -1,    79,    -1,
+      36,    73,    -1,    -1,    26,    23,    24,    34,    13,    74,
+      35,    78,    -1,    -1,    -1,    -1,    26,    25,    24,    34,
+      13,    75,    35,    27,    13,    76,    34,    13,    77,    35,
+      78,    -1,    36,    73,    -1,    79,    -1,    35,    33,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short int yyrline[] =
 {
-       0,   100,   100,   102,   103,   106,   106,   116,   119,   128,
-     136,   138,   138,   148,   148,   159,   160,   162,   165,   165,
-     168,   168,   170,   175,   177,   180,   180,   194,   205,   214,
-     225,   235,   244,   253,   268,   270,   270,   273,   273,   286,
-     289,   298,   307,   316,   327,   328,   330,   331,   334,   335,
-     337,   337,   355,   371,   379,   355,   389,   390,   392
+       0,   101,   101,   103,   104,   105,   108,   110,   110,   112,
+     112,   122,   125,   134,   142,   144,   144,   154,   154,   165,
+     166,   168,   171,   171,   174,   174,   176,   181,   183,   186,
+     186,   200,   211,   220,   231,   241,   250,   259,   274,   276,
+     276,   279,   279,   292,   295,   304,   313,   322,   333,   334,
+     336,   337,   340,   341,   343,   343,   361,   377,   385,   361,
+     395,   396,   398
 };
 #endif
 
@@ -420,37 +424,40 @@ static const char *const yytname[] =
   "CHAR_", "DATE", "STRING_LITERAL", "CREATE", "TABLE", "INTEGER", "CHAR",
   "DOUBLE", "STRING", "PRIMARY", "KEY", "FOREIGN", "CONSTRAINT",
   "REFERENCES", "LOWERTHANCOMMA", "COMMA", "LOWERPARENTHESIS",
-  "PARENTHESIS", "'('", "')'", "','", "';'", "'.'", "$accept", "input",
-  "exp", "create_next_name", "$@1", "insert_in", "ident", "column",
-  "table_name", "columns", "$@2", "$@3", "column_names", "column_plus",
-  "insertOrder", "$@4", "insertStart", "$@5", "insertValues",
-  "values_plus", "continue", "$@6", "type", "create_columns",
-  "values_table", "$@7", "plus_columns", "$@8", "type_value",
-  "parenthesis", "isprimarykey", "init_constraints", "constraints", "$@9",
-  "$@10", "$@11", "$@12", "next_constraints", "end_create", 0
+  "PARENTHESIS", "'*'", "';'", "'('", "')'", "','", "'.'", "$accept",
+  "input", "exp", "next_select", "table_name_select", "$@1",
+  "create_next_name", "$@2", "insert_in", "ident", "column", "table_name",
+  "columns", "$@3", "$@4", "column_names", "column_plus", "insertOrder",
+  "$@5", "insertStart", "$@6", "insertValues", "values_plus", "continue",
+  "$@7", "type", "create_columns", "values_table", "$@8", "plus_columns",
+  "$@9", "type_value", "parenthesis", "isprimarykey", "init_constraints",
+  "constraints", "$@10", "$@11", "$@12", "$@13", "next_constraints",
+  "end_create", 0
 };
 #endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const unsigned char yyr1[] =
 {
-       0,    37,    38,    39,    39,    41,    40,    42,    43,    44,
-      45,    47,    46,    48,    46,    49,    49,    50,    52,    51,
-      54,    53,    55,    55,    56,    58,    57,    57,    59,    59,
-      59,    59,    59,    59,    60,    62,    61,    64,    63,    63,
-      65,    65,    65,    65,    66,    66,    67,    67,    68,    68,
-      70,    69,    71,    72,    73,    69,    74,    74,    75
+       0,    38,    39,    40,    40,    40,    41,    43,    42,    45,
+      44,    46,    47,    48,    49,    51,    50,    52,    50,    53,
+      53,    54,    56,    55,    58,    57,    59,    59,    60,    62,
+      61,    61,    63,    63,    63,    63,    63,    63,    64,    66,
+      65,    68,    67,    67,    69,    69,    69,    69,    70,    70,
+      71,    71,    72,    72,    74,    73,    75,    76,    77,    73,
+      78,    78,    79
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const unsigned char yyr2[] =
 {
-       0,     2,     1,     3,     3,     0,     3,     1,     1,     1,
-       2,     0,     2,     0,     5,     1,     2,     2,     0,     3,
-       0,     5,     1,     2,     2,     0,     3,     1,     1,     1,
-       3,     1,     1,     1,     2,     0,     4,     0,     3,     1,
-       2,     2,     2,     2,     4,     1,     2,     0,     1,     2,
-       0,     8,     0,     0,     0,    15,     2,     1,     2
+       0,     2,     1,     3,     3,     2,     3,     0,     3,     0,
+       3,     1,     1,     1,     2,     0,     2,     0,     5,     1,
+       2,     2,     0,     3,     0,     5,     1,     2,     2,     0,
+       3,     1,     1,     1,     3,     1,     1,     1,     2,     0,
+       4,     0,     3,     1,     2,     2,     2,     2,     4,     1,
+       2,     0,     1,     2,     0,     8,     0,     0,     0,    15,
+       2,     1,     2
 };
 
 /* YYDPREC[RULE-NUM] -- Dynamic precedence of rule #RULE-NUM (0 if none).  */
@@ -461,7 +468,8 @@ static const unsigned char yydprec[] =
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0
 };
 
 /* YYMERGER[RULE-NUM] -- Index of merging function for rule #RULE-NUM.  */
@@ -472,7 +480,8 @@ static const unsigned char yymerger[] =
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0
 };
 
 /* YYDEFACT[S] -- default reduction number in state S.  Performed when
@@ -480,70 +489,74 @@ static const unsigned char yymerger[] =
    is an error.  */
 static const unsigned char yydefact[] =
 {
-       0,     0,     0,     0,     2,     0,     0,     1,     8,     3,
-      11,     7,     5,     4,    10,     0,     0,     0,    18,    12,
-       0,     0,     6,     0,     9,    15,     0,    35,    34,     0,
-      19,     0,    16,     0,     0,    28,    31,    32,     0,    33,
-      29,     0,    22,    17,    14,    47,    47,    47,    47,     0,
-       0,    20,     0,    23,     0,     0,    40,    45,    41,    43,
-      42,     0,    37,    36,    39,    48,    30,     0,    24,    46,
-       0,    58,     0,     0,    49,    25,    27,    21,    47,     0,
-       0,    38,     0,    44,     0,     0,    26,     0,     0,    50,
-      52,     0,     0,     0,     0,     0,    51,    57,     0,    56,
-      53,     0,     0,    54,     0,     0,    55
+       0,     0,     0,     0,     0,     2,     0,     0,     5,     0,
+       1,    12,     3,    15,    11,     0,     9,     4,    14,     0,
+       0,     7,     6,     0,    22,    16,     0,     0,     0,    10,
+       0,    13,    19,     0,     8,    39,    38,     0,    23,     0,
+      20,     0,     0,    32,    35,    36,     0,    37,    33,     0,
+      26,    21,    18,    51,    51,    51,    51,     0,     0,    24,
+       0,    27,     0,     0,    44,    49,    45,    47,    46,     0,
+      41,    40,    43,    52,    34,     0,    28,    50,     0,    62,
+       0,     0,    53,    31,    29,    25,    51,     0,     0,    42,
+       0,    48,     0,     0,    30,     0,     0,    54,    56,     0,
+       0,     0,     0,     0,    55,    61,     0,    60,    57,     0,
+       0,    58,     0,     0,    59
 };
 
 /* YYPDEFGOTO[NTERM-NUM].  */
 static const signed char yydefgoto[] =
 {
-      -1,     3,     4,    13,    17,     9,    10,    25,    11,    14,
-      15,    16,    26,    32,    19,    23,    30,    67,    41,    53,
-      77,    82,    42,    22,    28,    34,    63,    73,    49,    56,
-      57,    64,    74,    91,    92,   101,   104,    96,    97
+      -1,     4,     5,     8,    22,    27,    17,    23,    12,    13,
+      32,    14,    18,    19,    20,    33,    40,    25,    30,    38,
+      75,    49,    61,    85,    90,    50,    29,    36,    42,    71,
+      81,    57,    64,    65,    72,    82,    99,   100,   109,   112,
+     104,   105
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -37
+#define YYPACT_NINF -47
 static const signed char yypact[] =
 {
-      -4,    -1,     9,    10,   -37,    15,    16,   -37,   -37,   -37,
-      -2,   -37,   -37,   -37,   -37,    23,     0,     1,   -37,   -37,
-      21,    22,   -37,     4,   -37,     3,     5,   -37,   -37,    -5,
-     -37,    21,   -37,    23,    -3,   -37,   -37,   -37,     6,   -37,
-     -37,     7,    11,   -37,   -37,   -20,   -20,   -20,   -20,   -19,
-      26,   -37,    -5,   -37,    17,    37,   -37,   -37,   -37,   -37,
-     -37,    12,    18,   -37,   -37,   -37,   -37,   -11,   -37,   -37,
-      13,   -37,   -18,    22,   -37,   -37,   -37,   -37,    25,    27,
-      28,   -37,     4,   -37,    24,    29,   -37,    36,    40,   -37,
-     -37,    30,    31,    -8,    32,    18,   -37,   -37,    41,   -37,
-     -37,    33,    42,   -37,    34,    -8,   -37
+      -4,     6,   -17,     0,    24,   -47,    17,    21,   -47,    19,
+     -47,   -47,   -47,    -1,   -47,    22,   -47,   -47,   -47,    26,
+       2,   -47,   -47,     4,   -47,   -47,    27,     8,    29,   -47,
+       5,   -47,     7,     9,   -47,   -47,   -47,     3,   -47,    27,
+     -47,    26,     1,   -47,   -47,   -47,    10,   -47,   -47,    11,
+      12,   -47,   -47,   -22,   -22,   -22,   -22,   -28,    32,   -47,
+       3,   -47,    13,    43,   -47,   -47,   -47,   -47,   -47,    18,
+      28,   -47,   -47,   -47,   -47,   -30,   -47,   -47,    15,   -47,
+     -21,    29,   -47,   -47,   -47,   -47,    30,    31,    33,   -47,
+       5,   -47,    25,    34,   -47,    39,    45,   -47,   -47,    35,
+      36,    -7,    37,    28,   -47,   -47,    47,   -47,   -47,    38,
+      48,   -47,    40,    -7,   -47
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const signed char yypgoto[] =
 {
-     -37,   -37,   -37,   -37,   -37,   -37,   -37,   -37,   -37,   -37,
-     -37,   -37,    19,   -37,    35,   -37,   -25,   -37,     8,   -37,
-     -37,   -37,   -37,   -37,   -15,   -37,   -37,   -37,   -37,   -26,
-     -16,   -37,   -29,   -37,   -37,   -37,   -37,   -36,    38
+     -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,   -47,
+     -47,   -47,   -47,   -47,   -47,    23,   -47,    41,   -47,   -34,
+     -47,    14,   -47,   -47,   -47,   -47,   -47,   -18,   -47,   -47,
+     -47,   -47,   -29,   -20,   -47,   -38,   -47,   -47,   -47,   -47,
+     -46,    16
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
    positive, shift that token.  If negative, reduce the rule which
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
-#define YYTABLE_NINF -14
+#define YYTABLE_NINF -18
 static const signed char yytable[] =
 {
-       1,    35,    36,    54,     5,    79,    37,    80,    38,    39,
-       7,    40,    55,     2,    61,    62,    45,    46,    47,    48,
-      58,    59,    60,    75,    76,    61,    95,     6,     8,    12,
-     -13,    18,    20,    21,    24,    27,    29,    31,    33,    66,
-      51,    69,    50,    70,    72,    52,    78,    71,    54,    89,
-      43,    84,    85,    90,   100,   103,    87,    86,    81,    98,
-      68,    88,    83,    93,    94,   102,    99,   105,    44,   106,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,    65
+       1,    62,    87,    83,    88,     2,    84,    69,    70,    43,
+      44,     6,    63,     3,    45,     7,    46,    47,     9,    48,
+      53,    54,    55,    56,    10,    66,    67,    68,    69,   103,
+      11,    15,    16,   -17,    24,    21,    26,    77,    28,    37,
+      31,    34,    35,    39,    41,    74,    59,    58,    60,    78,
+      86,    79,    97,    62,    80,    92,    94,    93,    98,    95,
+     108,   111,    51,    89,   106,   107,    91,   114,    96,     0,
+     101,   102,   110,    73,    76,   113,     0,     0,     0,     0,
+       0,     0,    52
 };
 
 /* YYCONFLP[YYPACT[STATE-NUM]] -- Pointer into YYCONFL of start of
@@ -560,7 +573,7 @@ static const unsigned char yyconflp[] =
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0
+       0,     0,     0
 };
 
 /* YYCONFL[I] -- lists of conflicting rule numbers, each terminated by
@@ -572,32 +585,33 @@ static const short int yyconfl[] =
 
 static const signed char yycheck[] =
 {
-       4,     6,     7,    23,     5,    23,    11,    25,    13,    14,
-       0,    16,    32,    17,    33,    34,    19,    20,    21,    22,
-      46,    47,    48,    34,    35,    33,    34,    18,    13,    13,
-      32,     8,    32,    32,    13,    13,    32,    34,    33,    13,
-      33,    24,    36,     6,    26,    34,    33,    35,    23,    13,
-      31,    24,    24,    13,    13,    13,    32,    82,    73,    27,
-      52,    32,    78,    33,    33,    32,    95,    33,    33,   105,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    49
+       4,    23,    23,    33,    25,     9,    36,    35,    36,     6,
+       7,     5,    34,    17,    11,    32,    13,    14,    18,    16,
+      19,    20,    21,    22,     0,    54,    55,    56,    35,    36,
+      13,    10,    13,    34,     8,    13,    34,    24,    34,    34,
+      13,    33,    13,    36,    35,    13,    35,    37,    36,     6,
+      35,    33,    13,    23,    26,    24,    90,    24,    13,    34,
+      13,    13,    39,    81,    27,   103,    86,   113,    34,    -1,
+      35,    35,    34,    57,    60,    35,    -1,    -1,    -1,    -1,
+      -1,    -1,    41
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const unsigned char yystos[] =
 {
-       0,     4,    17,    38,    39,     5,    18,     0,    13,    42,
-      43,    45,    13,    40,    46,    47,    48,    41,     8,    51,
-      32,    32,    60,    52,    13,    44,    49,    13,    61,    32,
-      53,    34,    50,    33,    62,     6,     7,    11,    13,    14,
-      16,    55,    59,    49,    51,    19,    20,    21,    22,    65,
-      36,    33,    34,    56,    23,    32,    66,    67,    66,    66,
-      66,    33,    34,    63,    68,    75,    13,    54,    55,    24,
-       6,    35,    26,    64,    69,    34,    35,    57,    33,    23,
-      25,    61,    58,    67,    24,    24,    53,    32,    32,    13,
-      13,    70,    71,    33,    33,    34,    74,    75,    27,    69,
-      13,    72,    32,    13,    73,    33,    74
+       0,     4,     9,    17,    39,    40,     5,    32,    41,    18,
+       0,    13,    46,    47,    49,    10,    13,    44,    50,    51,
+      52,    13,    42,    45,     8,    55,    34,    43,    34,    64,
+      56,    13,    48,    53,    33,    13,    65,    34,    57,    36,
+      54,    35,    66,     6,     7,    11,    13,    14,    16,    59,
+      63,    53,    55,    19,    20,    21,    22,    69,    37,    35,
+      36,    60,    23,    34,    70,    71,    70,    70,    70,    35,
+      36,    67,    72,    79,    13,    58,    59,    24,     6,    33,
+      26,    68,    73,    33,    36,    61,    35,    23,    25,    65,
+      62,    71,    24,    24,    57,    34,    34,    13,    13,    74,
+      75,    35,    35,    36,    78,    79,    27,    73,    13,    76,
+      34,    13,    77,    35,    78
 };
 
 
@@ -1036,10 +1050,17 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 
   switch (yyn)
     {
-        case 5:
+        case 7:
 
 /* Line 936 of glr.c  */
-#line 106 "c.y"
+#line 110 "c.y"
+    {table_select = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));}
+    break;
+
+  case 9:
+
+/* Line 936 of glr.c  */
+#line 112 "c.y"
     {
 		datas.name_table_create = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 
@@ -1051,10 +1072,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 8:
+  case 12:
 
 /* Line 936 of glr.c  */
-#line 119 "c.y"
+#line 125 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("nome tabela[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
@@ -1065,10 +1086,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 9:
+  case 13:
 
 /* Line 936 of glr.c  */
-#line 128 "c.y"
+#line 134 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("nome coluna[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
@@ -1078,10 +1099,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 11:
+  case 15:
 
 /* Line 936 of glr.c  */
-#line 138 "c.y"
+#line 144 "c.y"
     {
 	count = 1;
 	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
@@ -1094,10 +1115,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 13:
+  case 17:
 
 /* Line 936 of glr.c  */
-#line 148 "c.y"
+#line 154 "c.y"
     {
 	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 	if (temp != NULL)
@@ -1110,24 +1131,24 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 18:
-
-/* Line 936 of glr.c  */
-#line 165 "c.y"
-    {i++;j = countField = 0; datas.numberOfColumns[i] = 0;}
-    break;
-
-  case 20:
-
-/* Line 936 of glr.c  */
-#line 168 "c.y"
-    {i++; j =0;}
-    break;
-
   case 22:
 
 /* Line 936 of glr.c  */
-#line 170 "c.y"
+#line 171 "c.y"
+    {i++;j = countField = 0; datas.numberOfColumns[i] = 0;}
+    break;
+
+  case 24:
+
+/* Line 936 of glr.c  */
+#line 174 "c.y"
+    {i++; j =0;}
+    break;
+
+  case 26:
+
+/* Line 936 of glr.c  */
+#line 176 "c.y"
     {
 	if( (countField > countColumn || countField < countColumn) && count == 0)
 		fprintf(stderr, "Number of fields %d specified doesn't match number of columns %d.\n",countField,countColumn);
@@ -1135,10 +1156,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 25:
+  case 29:
 
 /* Line 936 of glr.c  */
-#line 180 "c.y"
+#line 186 "c.y"
     {
 	int *temp = (int*)realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 
@@ -1152,27 +1173,27 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 26:
+  case 30:
 
 /* Line 936 of glr.c  */
-#line 190 "c.y"
+#line 196 "c.y"
     {
 	// i++;
 	j = 0;
 	}
     break;
 
-  case 27:
+  case 31:
 
 /* Line 936 of glr.c  */
-#line 194 "c.y"
+#line 200 "c.y"
     { datas.numberOfRows++; }
     break;
 
-  case 28:
+  case 32:
 
 /* Line 936 of glr.c  */
-#line 205 "c.y"
+#line 211 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("INT[%d][%d]: %s\n", i,j,datas.insert[i][j].str);
@@ -1184,10 +1205,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 29:
+  case 33:
 
 /* Line 936 of glr.c  */
-#line 214 "c.y"
+#line 220 "c.y"
     {
 
 	char *c = remove_quotes((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
@@ -1201,10 +1222,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 30:
+  case 34:
 
 /* Line 936 of glr.c  */
-#line 225 "c.y"
+#line 231 "c.y"
     {
 	char *c = remove_quotes((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (3))].yystate.yysemantics.yysval.str));
 	datas.insert[i][j].str = c;
@@ -1217,10 +1238,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 31:
+  case 35:
 
 /* Line 936 of glr.c  */
-#line 235 "c.y"
+#line 241 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("DOUBLE[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
@@ -1232,10 +1253,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 32:
+  case 36:
 
 /* Line 936 of glr.c  */
-#line 244 "c.y"
+#line 250 "c.y"
     {
 	datas.insert[i][j].str = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	//printf("BOOL[%d][%d]: %s\n",i,j, datas.insert[i][j].str);
@@ -1247,10 +1268,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 33:
+  case 37:
 
 /* Line 936 of glr.c  */
-#line 253 "c.y"
+#line 259 "c.y"
     {
 	char *c = remove_single_quotes((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));
 	datas.insert[i][j].str = c;
@@ -1263,17 +1284,17 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 35:
+  case 39:
 
 /* Line 936 of glr.c  */
-#line 270 "c.y"
+#line 276 "c.y"
     {datas.create_new_table[datas.number_columns].name_column_table = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((1) - (1))].yystate.yysemantics.yysval.str));}
     break;
 
-  case 37:
+  case 41:
 
 /* Line 936 of glr.c  */
-#line 273 "c.y"
+#line 279 "c.y"
     {
 	
 	CreateTB *temp = (CreateTB*) realloc (datas.create_new_table, (datas.number_columns+2)*sizeof(CreateTB));
@@ -1289,10 +1310,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 }
     break;
 
-  case 40:
+  case 44:
 
 /* Line 936 of glr.c  */
-#line 289 "c.y"
+#line 295 "c.y"
     {
 	datas.create_new_table[datas.number_columns].type_column = 'I';
 	if (datas.create_new_table[datas.number_columns].size == -1)
@@ -1304,10 +1325,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 }
     break;
 
-  case 41:
+  case 45:
 
 /* Line 936 of glr.c  */
-#line 298 "c.y"
+#line 304 "c.y"
     {
 	datas.create_new_table[datas.number_columns].type_column = 'C';
 	if (datas.create_new_table[datas.number_columns].size == -1)
@@ -1319,10 +1340,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 }
     break;
 
-  case 42:
+  case 46:
 
 /* Line 936 of glr.c  */
-#line 307 "c.y"
+#line 313 "c.y"
     {
 	datas.create_new_table[datas.number_columns].type_column = 'S';
 	if (datas.create_new_table[datas.number_columns].size == -1)
@@ -1334,10 +1355,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 }
     break;
 
-  case 43:
+  case 47:
 
 /* Line 936 of glr.c  */
-#line 316 "c.y"
+#line 322 "c.y"
     {
 	datas.create_new_table[datas.number_columns].type_column = 'D';
 
@@ -1349,38 +1370,38 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 }
     break;
 
-  case 44:
+  case 48:
 
 /* Line 936 of glr.c  */
-#line 327 "c.y"
+#line 333 "c.y"
     {datas.create_new_table[datas.number_columns].size = atoi((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (4))].yystate.yysemantics.yysval.str)); }
     break;
 
-  case 45:
+  case 49:
 
 /* Line 936 of glr.c  */
-#line 328 "c.y"
+#line 334 "c.y"
     {datas.create_new_table[datas.number_columns].size = -1;}
-    break;
-
-  case 46:
-
-/* Line 936 of glr.c  */
-#line 330 "c.y"
-    {datas.create_new_table[datas.number_columns].constraint = 1;}
-    break;
-
-  case 47:
-
-/* Line 936 of glr.c  */
-#line 331 "c.y"
-    {datas.create_new_table[datas.number_columns].constraint = 0;}
     break;
 
   case 50:
 
 /* Line 936 of glr.c  */
+#line 336 "c.y"
+    {datas.create_new_table[datas.number_columns].constraint = 1;}
+    break;
+
+  case 51:
+
+/* Line 936 of glr.c  */
 #line 337 "c.y"
+    {datas.create_new_table[datas.number_columns].constraint = 0;}
+    break;
+
+  case 54:
+
+/* Line 936 of glr.c  */
+#line 343 "c.y"
     {
 	int ok = 0;
 	printf("%s\n",(((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.str));
@@ -1401,10 +1422,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 }
     break;
 
-  case 52:
+  case 56:
 
 /* Line 936 of glr.c  */
-#line 355 "c.y"
+#line 361 "c.y"
     {
 		int ok = 0;
 		for (i = 0; i < datas.number_columns; i++)
@@ -1424,10 +1445,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	}
     break;
 
-  case 53:
+  case 57:
 
 /* Line 936 of glr.c  */
-#line 371 "c.y"
+#line 377 "c.y"
     {
 		datas.create_new_table[i].table_foreign = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((3) - (9))].yystate.yysemantics.yysval.str));
 		if (datas.create_new_table[i].table_foreign == NULL)
@@ -1438,10 +1459,10 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 }
     break;
 
-  case 54:
+  case 58:
 
 /* Line 936 of glr.c  */
-#line 379 "c.y"
+#line 385 "c.y"
     {
 		datas.create_new_table[i].constraint = 2;
 		datas.create_new_table[i].name_column_foreign = strdup((((yyGLRStackItem const *)yyvsp)[YYFILL ((2) - (12))].yystate.yysemantics.yysval.str));
@@ -1456,7 +1477,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 
 
 /* Line 936 of glr.c  */
-#line 1460 "c.tab.c"
+#line 1481 "c.tab.c"
       default: break;
     }
 
@@ -1557,7 +1578,7 @@ yylhsNonterm (yyRuleNum yyrule)
 }
 
 #define yypact_value_is_default(yystate) \
-  ((yystate) == (-37))
+  ((yystate) == (-47))
 
 /** True iff LR state STATE has only a default reduction (regardless
  *  of token).  */
@@ -3113,7 +3134,7 @@ yypdumpstack (yyGLRStack* yystackp)
 
 
 /* Line 2659 of glr.c  */
-#line 395 "c.y"
+#line 401 "c.y"
 
 #include"lex.yy.c"
 #include<ctype.h>
@@ -3146,6 +3167,20 @@ Datas execute_create_table(char *sql)
     yylex_destroy();
 
     return datas;
+}
+
+char *execute_select(char *sql)
+{
+	table_select = NULL;
+
+	yy_scan_string(sql);
+    
+    yyparse();
+
+    /* to avoid leakage */
+    yylex_destroy();
+
+    return table_select;//retorna o nome da tabela 
 }
 
 Datas execute_insert(char *sql)

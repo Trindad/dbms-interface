@@ -391,15 +391,15 @@ static yyconst flex_int16_t yy_accept[209] =
        24,   16,   24,   24,   24,   24,   24,   24,   24,   24,
 
        24,   24,   24,   24,   24,   24,   24,   24,   24,   24,
-       24,   24,   24,   24,   24,   24,   24,   10,   24,   24,
-       24,   24,   24,   13,   24,   24,    4,   24,   24,   24,
+       24,   24,   24,   24,   24,   24,   24,   11,   24,   24,
+       24,   24,   24,    7,   24,   24,    4,   24,   24,   24,
        24,   24,   22,   24,   24,   24,   24,   24,   24,   24,
        24,   24,   24,   24,   24,   24,   24,   24,   24,   24,
        24,   24,   23,   24,   24,   24,   24,   24,   24,   24,
-        8,   24,   14,   24,   24,   24,   24,   24,   24,   24,
-       24,   24,   24,   24,   24,    7,   11,   24,    3,   24,
-       24,   24,    6,   12,    5,   24,   24,   24,   24,   24,
-       24,   17,    9,   15,   24,   24,   24,   24,   24,   24,
+        9,   24,   14,   24,   24,   24,   24,   24,   24,   24,
+       24,   24,   24,   24,   24,    8,   12,   24,    3,   24,
+       24,   24,    6,   13,    5,   24,   24,   24,   24,   24,
+       24,   17,   10,   15,   24,   24,   24,   24,   24,   24,
 
        24,   24,   24,   24,   24,   18,   19,    0
     } ;
@@ -901,37 +901,37 @@ YY_RULE_SETUP
 case 7:
 YY_RULE_SETUP
 #line 11 "c.l"
-{yylval.str = yytext; return CREATE;}
+{yylval.str = yytext; return FROM;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 12 "c.l"
-{yylval.str = yytext; return TABLE;}
+{yylval.str = yytext; return CREATE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 13 "c.l"
-{yylval.str = yytext; return INTEGER;}
+{yylval.str = yytext; return TABLE;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 14 "c.l"
-{yylval.str = yytext; return CHAR;}
+{yylval.str = yytext; return INTEGER;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 15 "c.l"
-{yylval.str = yytext; return DOUBLE;}
+{yylval.str = yytext; return CHAR;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 16 "c.l"
-{yylval.str = yytext; return STRING;}
+{yylval.str = yytext; return DOUBLE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 17 "c.l"
-{yylval.str = yytext; return FROM;}
+{yylval.str = yytext; return STRING;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP

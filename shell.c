@@ -12,11 +12,12 @@ void shell()
 
     char *current_db_name = ">";//inicializa com nenhum banco conectado
 
+
     while(1){       
         
         fgets(inicio,1000,stdin);
         
-		if(strcmp(inicio,"dbms-start\n")==0){
+		if(strcmp(inicio,"dbms-start\n") == 0){
 			printf("\nDatabase initialized\n");
 			
 			while(1){
@@ -137,6 +138,13 @@ void shell()
 				   
 				} 
 				/**
+				 * Comando temporário para imprimir tabela
+				 */
+				else if (strcmp(strtolower(tokens[0]),"select")==0)
+				{
+					selectTable(entrada,current_database);
+				}
+				/**
 				 * Imprime os registros da tabela passada
 				 */
 				else if (strcmp(strtolower(tokens[0]),"show")==0)
@@ -244,11 +252,22 @@ void shell()
 				}
 			}  
 		}
-		
-		if(strcmp(inicio,"exit\n")==0)
+		else if(strcmp(inicio,"exit\n") == 0) 
+		{
 			break;
-		
-		else{
+		}
+		else
+		{
+			printf("Invalid command. Type help to show de interface usage.\n");
+			continue;
+		}
+
+		if(strcmp(inicio,"exit\n") == 0) 
+		{
+			break;
+		}
+		else
+		{
 			printf("Invalid command. Type help to show de interface usage.\n");
 			continue;
 		}	

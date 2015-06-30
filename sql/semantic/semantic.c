@@ -280,6 +280,24 @@ char *table_name_cat(char *name,int database)
     return table_name;
 }
 
+void selectTable(char *sql, int index_database)
+{
+	char *table_name = execute_select(sql);
+
+	if (table_name == NULL)
+	{
+		printf("Invalid number of arguments. Type help to show de interface usage.\n");
+		return;
+	}
+
+	if ( existeArquivo(table_name_cat(table_name,index_database)) == 1)
+	{
+		printf("Table %s already exists.\n",table_name);
+		return;
+	}
+
+	imprime(table_name_cat(table_name,index_database));
+}
 
 void createTable(char *sql, int index_database)
 {
