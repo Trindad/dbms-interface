@@ -270,7 +270,7 @@ char *table_name_cat(char *name,int database)
 	if (table_name == NULL)
 	{
 		printf("Out of memory.\nAborting...\n");
-		exit(1);
+		abort();
 	}
 
 	sprintf(table_name,"%d",database);
@@ -309,7 +309,7 @@ void createTable(char *sql, int index_database)
 	if (datas.name_table_create == NULL)
 	{
 		printf("Out of memory.\nAborting...\n");
-		exit(1);
+		abort();
 	}
 
 	// for (i = 0; i < datas.number_columns; i++)
@@ -370,7 +370,7 @@ int table_exist(char *tablename,int database)
     if (tb_name == NULL)
     {
     	printf("Out of memory.\nAborting...\n");
-    	exit(1);
+    	abort();
     }
 
     if((dictionary = fopen("fs_object.dat","a+b")) == NULL){

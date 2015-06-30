@@ -11,7 +11,7 @@ tp_buffer * initbuffer(){
 
     if(bp == NULL){
         printf("Out of memory.\nAborting...\n");
-        exit(1);
+        abort();
     }
 
     for (i = 0;i < PAGES; i++){
@@ -234,7 +234,7 @@ column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, 
         if (colunas[h].valorCampo == NULL)
         {
             printf("Out of memory.\nAborting...");
-            exit(1);
+            abort();
         }
         colunas[h].tipoCampo = campos[j].tipo;  //Guarda tipo do campo
         strcpy(colunas[h].nomeCampo, campos[j].nome); //Guarda nome do campo

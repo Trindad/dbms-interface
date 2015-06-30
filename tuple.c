@@ -22,7 +22,7 @@ char *getTupla(tp_table *campos,struct fs_objects objeto, int from){ //Pega uma 
     if (linha == NULL)
     {
         printf("Out of memory.\nAborting...\n");
-        exit(1);
+        abort();
     }
     FILE *dados;
 

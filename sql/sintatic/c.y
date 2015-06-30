@@ -115,7 +115,7 @@ create_next_name: ID{
 		if (datas.name_table_create == NULL)
 		{
 			printf("Out of memory.\nAborting...\n");
-			exit(1);
+			abort();
 		}
 	}create_columns
 	;
@@ -156,7 +156,7 @@ columns: {
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else {
-		fprintf(stderr, "Out of memory.\nAborting...\n");exit(1);
+		fprintf(stderr, "Out of memory.\nAborting...\n");abort();
 	}
 	datas.numberOfColumns[i] = countColumn = 0;
 	datas.numberOfRows++;
@@ -189,7 +189,7 @@ continue:  ',' {
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
 	else {
-		fprintf(stderr, "Out of memory.\nAborting...\n");exit(1);
+		fprintf(stderr, "Out of memory.\nAborting...\n");abort();
 	}
 	datas.numberOfRows++;
 	datas.numberOfColumns[i] = 0;
@@ -283,7 +283,7 @@ plus_columns: ',' {
 	if (temp == NULL)
 	{
 		printf("Out of memory.\nAborting...\n");
-		exit(1);
+		abort();
 	}
 
 	datas.create_new_table = temp;
@@ -379,7 +379,7 @@ constraints: CONSTRAINT PRIMARY KEY '(' ID  {
 		if (datas.create_new_table[i].table_foreign == NULL)
 		{
 			printf("Out of memory.\nAborting...\n");
-			exit(1);
+			abort();
 		}
 }'('ID 
 	{
@@ -388,7 +388,7 @@ constraints: CONSTRAINT PRIMARY KEY '(' ID  {
 		if (datas.create_new_table[i].name_column_foreign == NULL)
 		{
 			printf("Out of memory.\nAborting...\n");
-			exit(1);
+			abort();
 		}
 	}')'next_constraints 
 	;
@@ -420,7 +420,7 @@ Datas execute_create_table(char *sql)
 	if (datas.create_new_table == NULL)
 	{
 		printf("Out of memory.\nAborting...\n");
-		exit(1);
+		abort();
 	}
 
 	yy_scan_string(sql);
@@ -458,7 +458,7 @@ Datas execute_insert(char *sql)
 	if (datas.insert == NULL)
 	{
 		fprintf(stderr, "Out of memory.\nAborting...\n");
-		exit(1);
+		abort();
 	}
 	int it = 0;
 
@@ -469,7 +469,7 @@ Datas execute_insert(char *sql)
 		if (datas.insert[it] == NULL)
 		{
 		  fprintf(stderr, "Out of memory.\nAborting...\n");
-		  exit(1);
+		  abort();
 		}
 	}
 
@@ -477,7 +477,7 @@ Datas execute_insert(char *sql)
 	if (datas.numberOfColumns == NULL)
 	{
 		printf("Out of memory.\nAborting...\n");
-		exit(1);
+		abort();
 	}
 	datas.numberOfColumns[0] = 0;
 

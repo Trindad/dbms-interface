@@ -30,7 +30,7 @@ int verificaNomeTabela(char *nomeTabela)
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL){
         free(tupla);
         printf("Out of memory.\nAborting...\n");
-        exit(1);
+        abort();
     }
 
     while(fgetc (dicionario) != EOF){
@@ -66,7 +66,7 @@ table *iniciaTabela(char *nome){
     if (t == NULL)
     {
         printf("Out of memory.\nAborting...\n");
-        exit(1);
+        abort();
     }
     int n = strlen(nome);
 
@@ -93,7 +93,7 @@ table *adicionaCampo(table *t,char *nomeCampo, char tipoCampo, int tamanhoCampo,
         if (e == NULL)
         {
             printf("Out of memory.\nAborting...\n");
-            exit(1);
+            abort();
         }
         e->next = NULL;
         int n = strlen(nomeCampo)+1;
@@ -352,7 +352,7 @@ int finalizaInsert(char *nome, column *c){
     if (tab == NULL || tab2 == NULL)
     {
         printf("Out of memory.\nAborting...\n");
-        exit(1);
+        abort();
     }
 
     tab->esquema = abreTabela(nome, &objeto, &tab->esquema);
@@ -374,7 +374,7 @@ int finalizaInsert(char *nome, column *c){
                     //free(temp); // Libera a memoria da estrutura.   
                     free(tab); // Libera a memoria da estrutura.
                     free(tab2); // Libera a memoria da estrutura.
-                    exit(1);
+                    abort();
                 }
 
                 break;
@@ -620,7 +620,7 @@ void imprime(char nomeTabela[]) {
                 if (str == NULL)
                 {
                     printf("Out of memory.\nAborting...\n");
-                    exit(1);
+                    abort();
                 }
                 sprintf(str, "%d", pagina[j].valorCampo);
                 
@@ -716,7 +716,7 @@ void imprime(char nomeTabela[]) {
                 if (str == NULL)
                 {
                     printf("Out of memory.\nAborting...\n");
-                    exit(1);
+                    abort();
                 }
                 sprintf(str, "%d", pagina[j].valorCampo);
 
@@ -775,7 +775,7 @@ int TrocaArquivosObj(char *nomeTabela, char *linha){
     if (tabela == NULL)
     {
         printf("Out memory.\nAborting...\n");
-        exit(1);
+        abort();
     }
 
     while(x < TAMANHO_NOME_TABELA){
@@ -808,7 +808,7 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
     if (esquema == NULL || vetEsqm == NULL || tupla == NULL)
     {
         printf("Out of memory.\nAborting...\n");
-        exit(1);
+        abort();
     }
 
     if((schema = fopen("fs_schema.dat", "a+b")) == NULL){
@@ -816,7 +816,7 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
         free(tupla);
         free(esquema);
         free(vetEsqm);
-        exit(1);
+        abort();
     }
     
     while((fgetc (schema) != EOF) && i < objeto.qtdCampos){ // Varre o arquivo ate encontrar todos os campos com o codigo da tabela.
@@ -884,7 +884,7 @@ int excluirTabela(char *nomeTabela) {
     if (tupla == NULL)
     {
         printf("Out of memory.\nAborting...");
-        exit(1);
+        abort();
     }
     for(i=0; i<qtTable; i++) {
         tupla[i] = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
@@ -892,7 +892,7 @@ int excluirTabela(char *nomeTabela) {
         if (tupla[i] == NULL)
         {
             printf("Out of memory.\nAborting...");
-            exit(1);
+            abort();
         }
     }
 
@@ -929,7 +929,7 @@ int excluirTabela(char *nomeTabela) {
                     if (tab3 == NULL)
                     {
                         printf("Out of memory.\nAborting...");
-                        exit(1);
+                        abort();
                     }
                     tab3 = procuraAtributoFK(objeto1);
 

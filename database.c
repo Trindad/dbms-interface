@@ -10,7 +10,7 @@ int cod_id_banco(){
     if (database == NULL)
     {
         fprintf(stderr, "Out of memory.\n");
-        exit(1);
+        abort();
     }
 
     file = fopen("fs_database.dat","r");
@@ -38,7 +38,7 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
     if (database == NULL)
     {
         printf("Out of memory.\n");
-        exit(1);
+        abort();
     }
     
     if(!existeArquivo("fs_database.dat"))
@@ -134,7 +134,7 @@ void listaBancos()
     if (database == NULL)
     {
         printf("Out of memory.\n");
-        exit(1);
+        abort();
     }
     
     if(!existeArquivo("fs_database.dat")) {

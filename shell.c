@@ -329,6 +329,7 @@ char **tokenize(char *str, char delim, int *size)
    if (tokens == NULL)
   {
   	printf("Out of memory.\nAborting...\n");
+  	abort();
   }
 
   int current = 0, pos = 0, i;
@@ -360,7 +361,7 @@ char *remove_newline(char *str)
   if (temp == NULL)
   {
   	printf("Out of memory.\nAborting...\n");
-  	exit(1);
+  	abort();
   }
 
   int i, pos = 0;
@@ -383,7 +384,7 @@ char *remove_semicolon(char *str)
   if (temp == NULL)
   {
   	printf("Out of memory.\nAborting...\n");
-  	exit(1);
+  	abort();
   }
 
   int i, pos = 0;
@@ -536,7 +537,7 @@ char *table_name_real(char *name,int database)
 	if (table_name == NULL)
 	{
 		printf("Out of memory.\n");
-		exit(1);
+		abort();
 	}
 
 	sprintf(table_name,"%d",database);

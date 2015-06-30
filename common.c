@@ -192,7 +192,7 @@ int procuraObjectArquivo(char *nomeTabela){
     if (table == NULL)
     {
         printf("Out of memory.\nAborting...\n");
-        exit(1);
+        abort();
     }
 
     FILE *dicionario, *fp;
@@ -250,7 +250,7 @@ int procuraSchemaArquivo(struct fs_objects objeto){
     if (esquema == NULL || tupla == NULL)
     {
         printf("Out of memory.\nAborting...\n");
-        exit(1);
+        abort();
     }
     
     if((schema = fopen("fs_schema.dat", "a+b")) == NULL)
