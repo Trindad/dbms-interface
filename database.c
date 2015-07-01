@@ -211,7 +211,7 @@ void listaBancos()
 void listaTabelas(int database)
 {
     FILE *dicionario;
-    int i = 0;
+    int i = 0, cnt = 0;
     char *nome_tabela = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
 
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL){
@@ -238,13 +238,16 @@ void listaTabelas(int database)
                 }
 
                 temp++;
-
+				cnt++;
+				
                 printf("%s\n",temp);
-            }
+            }	
         }
-        
         fseek(dicionario, 28, 1);
     }
-
+	if(cnt == 0){
+		printf("No table created!\n");
+	}
+	
     fclose(dicionario);
 }

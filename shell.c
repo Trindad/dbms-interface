@@ -36,6 +36,12 @@ void shell()
 				 */
 				if (strcmp(strtolower(tokens[0]),"create")==0)
 				{
+					if (nTokens != 2)
+					{
+						printf("Invalid number of arguments. Type help to show de interface usage.\n");
+
+						continue;
+					}
 					if(strcmp(strtolower(tokens[1]),"table")==0)
 					{
 					   createTable(entrada,current_database);
@@ -131,6 +137,11 @@ void shell()
 				 */
 				else if(strcmp(strtolower(tokens[0]),"\\d")==0)
 				{
+					if (current_database == -1)
+					{
+						printf("Not connected to any database.\n");
+						continue;
+					}
 					if (nTokens >= 3)
 					{
 						printf("Invalid number of arguments. Type help to show de interface usage.\n");
