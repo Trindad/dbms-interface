@@ -44,7 +44,12 @@ void shell()
 					}
 					if(strcmp(strtolower(tokens[1]),"table")==0)
 					{
-					   createTable(entrada,current_database);
+						if (current_database == -1)
+						{
+							printf("Not connected to any database.\n");
+							continue;
+						}
+						createTable(entrada,current_database);
 					}
 					else if(strcmp(strtolower(tokens[1]),"database")==0)
 					{
@@ -224,8 +229,24 @@ void shell()
 						continue;
 					}
 					else if(strcmp(strtolower(tokens[1]),"table") == 0){
+						if (current_database == -1)
+						{
+							printf("Not connected to any database.\n");
+							continue;
+						}
+						
 						char *t = table_name_real(remove_semicolon(tokens[2]),current_database);
+						char *file = table_name_real(remove_semicolon(tokens[2]),current_database);
+						strcat(file,".dat");
+						
+						if (existeArquivo(file) == 0)
+						{
+							printf("Table doesn't exist.\n" );
+							continue;
+						}		
+						
 						excluirTabela(t);
+						free(file);
 						free(t);
 					}
 					else if(strcmp(strtolower(tokens[1]),"database") == 0){
