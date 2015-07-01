@@ -32,7 +32,7 @@ int cod_id_banco(){
 void reescreve(char *str)
 {
     FILE *file;
-    int quant_db = cod_id_bancoj(), aux = 0, cont = 0;
+    int quant_db = cod_id_banco(), aux = 0, cont = 0;
     db *database = (db *)malloc(sizeof(db));
     db *aux_arq = (db *)malloc(sizeof(db)*quant_db);
 
