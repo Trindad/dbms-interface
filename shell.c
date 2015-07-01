@@ -11,13 +11,15 @@ void shell()
     nomeBD[0]='\0';
 
     char *current_db_name = strdup(">");//inicializa com nenhum banco conectado
-
-    while(1){       
+	
+	printf("\nWelcome to our DBMS Interface\n");	
+	
+    while(1){       	
         
         fgets(inicio,1000,stdin);
         
 		if(strcmp(inicio,"dbms-start\n") == 0){
-			printf("\nDatabase initialized\n");
+			printf("\nInterface initialized\n");
 			
 			while(1){
 		
@@ -271,7 +273,7 @@ void shell()
 		}
 		else
 		{
-			printf("Invalid command. Type help to show de interface usage.\n");
+			printf("Invalid command. Type dbms-start to inicializate the interface or type exit.\n");
 			continue;
 		}
 
