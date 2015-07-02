@@ -26,6 +26,7 @@ int cod_id_banco(){
     }
     else printf("\nCannot read fs_database");
     fclose(file);
+    free(database);
     return cod_id;
 }
 
@@ -68,6 +69,8 @@ void reescreve(char *str)
     {
         printf("\nCannot open fs_database!\n");
     }
+    free(database);
+    free(aux_arq);
     fclose(file);
 }
 
@@ -102,6 +105,7 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
                 if(!strcmp(str,database->nome))
                 {
                     fclose(file);
+                    free(database);
                     return database->cod;
                 }
             }
@@ -116,6 +120,7 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
         printf("\nCannot open fs_database!\n");
     }
     
+    free(database);
     fclose(file);
     return -2;
 }
@@ -137,6 +142,7 @@ void grava_banco(char *str){
         fwrite(&database->nome, sizeof(char), TAM_NOME_BANCO, file);
         fclose(file);
     }
+    free(database);
 }
 
 int checkCreateDB(char *nome){
@@ -202,6 +208,7 @@ void listaBancos()
         printf("\nCannot open fs_database!\n");
     }
     
+    free(database);
     fclose(file);
 }
 
