@@ -36,7 +36,7 @@ void shell()
 				 */
 				if (strcmp(strtolower(tokens[0]),"create")==0)
 				{
-					if (nTokens != 2)
+					if (nTokens != 3)
 					{
 						printf("Invalid number of arguments. Type help to show de interface usage.\n");
 
@@ -53,12 +53,7 @@ void shell()
 					}
 					else if(strcmp(strtolower(tokens[1]),"database")==0)
 					{
-						if (nTokens != 3)
-						{
-							printf("Invalid number of arguments. Type help to show de interface usage.\n");
-							continue;
-						}
-						else if (strlen(tokens[2]) > TAM_NOME_BANCO )
+						if (strlen(tokens[2]) > TAM_NOME_BANCO )
 						{
 							printf("Database name too big.\n");
 							continue;
@@ -119,7 +114,7 @@ void shell()
 					}
 					else
 					{
-						printf("\nNo such database '%s'.\n", name_db);
+						printf("No such database '%s'.\n", name_db);
 						continue;
 					}
 				}
@@ -236,21 +231,38 @@ void shell()
 						}
 						
 						char *t = table_name_real(remove_semicolon(tokens[2]),current_database);
-						char *file = table_name_real(remove_semicolon(tokens[2]),current_database);
-						strcat(file,".dat");
+						char *exist = table_name_real(remove_semicolon(tokens[2]),current_database);
+						strcat(exist,".dat");
 						
-						if (existeArquivo(file) == 0)
+						if (existeArquivo(exist) == 0)
 						{
 							printf("Table doesn't exist.\n" );
 							continue;
 						}		
 						
 						excluirTabela(t);
-						free(file);
+						free(exist);
 						free(t);
 					}
 					else if(strcmp(strtolower(tokens[1]),"database") == 0){
+						if (current_database == -1)
+						{
+							printf("Not connected to database for drop.\n");
+							continue;
+						}
+						
+						char *exist = table_name_real(remove_semicolon(tokens[2]),current_database);
+						strcat(exist,".dat");
+						
+						if (existeArquivo(exist) != 0)
+						{
+							printf("The database is not empty for drop, there are existing tables.\n" );
+							continue;
+						}
+						
 						dropDatabase(remove_semicolon(tokens[2]));
+						
+						free(exist);
 					}
 				}
 				/**
@@ -288,6 +300,11 @@ void shell()
 					break;
 				}
 				else if(strcmp(strtolower(remove_semicolon(tokens[0])),"bye")==0)
+				{
+					strcpy(inicio,"exit\n");
+					break;
+				}
+				else if(strcmp(strtolower(remove_semicolon(tokens[0])),"\\q")==0)
 				{
 					strcpy(inicio,"exit\n");
 					break;

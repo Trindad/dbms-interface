@@ -105,7 +105,6 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
                 if(!strcmp(str,database->nome))
                 {
                     fclose(file);
-                    free(database);
                     return database->cod;
                 }
             }
