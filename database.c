@@ -76,7 +76,8 @@ void reescreve(char *str)
 
 //busca por nome do banco se estiver cadastrado retorna a id dele
 int busca(char *str, int identificacao){//a identificacao indicara qual if será executado
-   
+	
+	int cod_retorno;
     FILE *file;
     db *database = (db *)malloc(sizeof(db));
 
@@ -105,7 +106,9 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
                 if(!strcmp(str,database->nome))
                 {
                     fclose(file);
-                    return database->cod;
+                    cod_retorno = database->cod;
+                    free(database);
+                    return cod_retorno;
                 }
             }
             if(identificacao==2)
@@ -139,9 +142,9 @@ void grava_banco(char *str){
         strcpy(database->nome,str);
         fwrite(&database->cod, sizeof(int), 1, file);
         fwrite(&database->nome, sizeof(char), TAM_NOME_BANCO, file);
-        fclose(file);
     }
     free(database);
+    fclose(file);
 }
 
 int checkCreateDB(char *nome){
@@ -254,6 +257,6 @@ void listaTabelas(int database)
 	if(cnt == 0){
 		printf("No table created!\n");
 	}
-	
+	//free(nome_tabela);
     fclose(dicionario);
 }

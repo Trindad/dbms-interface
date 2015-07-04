@@ -968,6 +968,8 @@ int excluirTabela(char *nomeTabela) {
         
     remove(str);
     
+    free(tupla);
+    
     return SUCCESS;
 }
 
