@@ -709,8 +709,8 @@ void imprime(char nomeTabela[]) {
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'I'){
-                int *n = (int *)&pagina[j].valorCampo[0];
-                printf(" %d",pagina[j].nomeCampo, *n);
+                
+                printf(" %d",pagina[j].valorCampo);
                 
                 char *str = (char*) malloc (sizeof(char)*1000);
                 
