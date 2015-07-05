@@ -174,13 +174,17 @@ void shell()
 						//strcat(auxiliar,tokens[1]);
 						//strcat(auxiliar,"\0");
 						
-						snprintf (auxiliar, sizeof (auxiliar), "%d_%s\0", codDB,tokens[1]); 
-						//printf("auxiliar é %s",auxiliar);
+						snprintf (auxiliar, sizeof (auxiliar), "%d_%s", codDB,tokens[1]); 
+						strcat(auxiliar,"\0");
+						printf("auxiliar é %s",auxiliar);
 						struct fs_objects objeto = leObjeto(auxiliar);//para verificar se a tabela esta no banco 
+					
+						//imprimir o objeto
 						
+						
+						//leSchema (struct fs_objects objeto);
 						tp_table *esquema = leSchema(objeto);
 						
-						//while que mostra os campos de maneira formatada
 						//printf("tipo %c", esquema[0].tipo);
 						//printf("tipo %d", esquema[0].tam);
 						
