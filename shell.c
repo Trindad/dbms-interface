@@ -162,7 +162,6 @@ void shell()
 					}
 					else
 					{
-						printf("NOME DA TABELA %s\n",(tokens[1]));
 						//nome da tabelas contem o id do banco a que pertencem
 						//char carac=codDB;
 						
@@ -177,16 +176,11 @@ void shell()
 						snprintf (auxiliar, sizeof (auxiliar), "%d_%s", codDB,tokens[1]); 
 						strcat(auxiliar,"\0");
 						printf("auxiliar é %s",auxiliar);
-						struct fs_objects objeto = leObjeto(auxiliar);//para verificar se a tabela esta no banco 
-					
-						//imprimir o objeto
+						struct fs_objects objeto = leObjeto(auxiliar);//para verificar se a tabela esta no banco 						
 						
+						show_schema(objeto);
+						//tp_table *esquema = leSchema(objeto);
 						
-						//leSchema (struct fs_objects objeto);
-						tp_table *esquema = leSchema(objeto);
-						
-						//printf("tipo %c", esquema[0].tipo);
-						//printf("tipo %d", esquema[0].tam);
 						
 						/*
 						 typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
