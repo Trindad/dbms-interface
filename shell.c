@@ -170,18 +170,17 @@ void shell()
 						  se algum algum for igual mande para o leObjeto e para o leSchema caso contr[ario mensagem de erro
 						*/
 						//strcat(auxiliar,carac);
-						strcat(auxiliar,"_");
-						strcat(auxiliar,tokens[1]);
-						strcat(auxiliar,"\0");
-						printf("auxiliar é %s",auxiliar);
-						//struct fs_objects objeto = leObjeto(tokens[1]);//para verificar se a tabela esta no banco 
-					
-						//imprimir o objeto
+						//strcat(auxiliar,"_");
+						//strcat(auxiliar,tokens[1]);
+						//strcat(auxiliar,"\0");
 						
+						snprintf (auxiliar, sizeof (auxiliar), "%d_%s\0", codDB,tokens[1]); 
+						//printf("auxiliar é %s",auxiliar);
+						struct fs_objects objeto = leObjeto(auxiliar);//para verificar se a tabela esta no banco 
 						
-						//leSchema (struct fs_objects objeto);
-						//tp_table *esquema = leSchema(objeto);
+						tp_table *esquema = leSchema(objeto);
 						
+						//while que mostra os campos de maneira formatada
 						//printf("tipo %c", esquema[0].tipo);
 						//printf("tipo %d", esquema[0].tam);
 						
