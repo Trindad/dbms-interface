@@ -604,11 +604,15 @@ void help()
 	printf("\\d <table_name> - Display schema of table\n");
 	printf("\\l - Lists all databases\n");
 	printf("show <table_name> - Displays the table's data\n");
+	printf("drop <database_name> - Drops database\n");
+	printf("drop <table_name> - Drops table\n");
 	
 	printf("\nFor database creation and insertion on tables, you can type standard SQL queries, like in the examples below.\n");
 	printf("\nDatabase creation example:\n");
 	printf("\t create database example_db;\n");
 	printf("\nTable insertion example:\n");
 	printf("\t insert into table1 values(\"val1\", 12.5), (\"val2\", 55.5);\n\n");
-	
+	printf("Table creation example:\n");
+	printf("\t create table table1 (name string(100),cod integer, constraint primary key (name) , constraint foreign key ( cod ) references table2(cod));");
+	printf("\n");
 }
