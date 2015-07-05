@@ -117,7 +117,15 @@ int procuraSchemaArquivo(struct fs_objects objeto);
                 SUCCESS,
                 ERRO_REMOVER_ARQUIVO_SCHEMA
  ---------------------------------------------------------------------------------------------*/
-
+ 
+ void *show_schema(struct fs_objects objeto);
+/* ---------------------------------------------------------------------------------------------- 
+    Objetivo:   
+    Parametros: 
+    Retorno:   
+                
+ ---------------------------------------------------------------------------------------------*/
+ 
 /**
  * Funções para conversões
  */
