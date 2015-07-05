@@ -259,6 +259,7 @@ void shell()
 				free(t);
 			}
 			else if(strcmp(strtolower(tokens[1]),"database") == 0){
+				
 				if (current_database == -1)
 				{
 					printf("Not connected to database for drop.\n");

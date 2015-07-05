@@ -615,13 +615,14 @@ void imprime(char nomeTabela[]) {
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'I'){
-                char *str = (char*) malloc (sizeof(char)*sizeof(int));
+                char *str = (char*) malloc (sizeof(char)*1000);
                 
                 if (str == NULL)
                 {
                     printf("Out of memory.\nAborting...\n");
                     abort();
                 }
+
                 sprintf(str, "%d", pagina[j].valorCampo);
                 
                 if (limit[controler_] < strlen(str))
@@ -711,7 +712,7 @@ void imprime(char nomeTabela[]) {
                 int *n = (int *)&pagina[j].valorCampo[0];
                 printf(" %d",pagina[j].nomeCampo, *n);
                 
-                char *str = (char*) malloc (sizeof(char)*sizeof(int));
+                char *str = (char*) malloc (sizeof(char)*1000);
                 
                 if (str == NULL)
                 {
