@@ -118,7 +118,7 @@ int procuraSchemaArquivo(struct fs_objects objeto);
                 ERRO_REMOVER_ARQUIVO_SCHEMA
  ---------------------------------------------------------------------------------------------*/
  
- void *show_schema(struct fs_objects objeto);
+ void *show_schema(struct fs_objects objeto,char *name_table);
 /* ---------------------------------------------------------------------------------------------- 
     Objetivo:   
     Parametros: 
@@ -140,3 +140,5 @@ double get_decimal(char u[]);
 double get_inteiro(char v[]);
 
 double convertD(char u[]);
+
+int *tamanho_maximo_campo(struct fs_objects objeto);//verifica o tamanho máximo dos campos para imprimir formatado o esquema

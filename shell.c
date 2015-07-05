@@ -159,9 +159,16 @@ void shell()
 				//imprime o esquema de uma tabela
 				char *t = table_name_real(remove_semicolon(tokens[1]),current_database);
 
+				if(!verificaNomeTabela(t)){
+			        printf("Invalid table name.\n");
+					free(t);
+			        continue;			    
+			    }
+			    
 				struct fs_objects objeto = leObjeto(t);//para verificar se a tabela esta no banco 						
 				
-				show_schema(objeto);
+
+				show_schema(objeto,tokens[1]);
 
 				free(t);
 			}

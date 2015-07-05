@@ -5,7 +5,7 @@ struct fs_objects leObjeto(char *nTabela){
 
     FILE *dicionario;
     char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
-    int cod;
+    int cod = 0;
     dicionario = fopen("fs_object.dat", "a+b"); // Abre o dicionario de dados.
 
     struct fs_objects objeto;
@@ -85,7 +85,6 @@ tp_table *leSchema (struct fs_objects objeto){
 
                 fread(&esquema[i].chave, sizeof(int),1,schema);
                 
-                
                 fread(tuplaT, sizeof(char), TAMANHO_NOME_TABELA, schema);
                 strcpy(esquema[i].tabelaApt,tuplaT);
 
@@ -111,55 +110,166 @@ tp_table *leSchema (struct fs_objects objeto){
     return esquema;
 }
 
-void *show_schema(struct fs_objects objeto){
-	int i = 0, cod = 0;
-	FILE *schema;
-	char *tupla = (char *)malloc(sizeof(char)*TAMANHO_NOME_CAMPO);
-    char *tuplaT = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA+1);
-    tp_table *esquema = (tp_table *)malloc(sizeof(tp_table)*objeto.qtdCampos); // Aloca esquema com a quantidade de campos necessarios.
+//guardo o tamanho máximo de cada campo para impressão
+int *tamanho_maximo_campo(struct fs_objects objeto)
+{
 
-    if(esquema == NULL){
+    int i = 0, cod = 0;
+    FILE *schema;
+
+    char *tupla = (char *) malloc (sizeof(char)*TAMANHO_NOME_CAMPO);
+    char *tuplaT = (char *) malloc (sizeof(char)*TAMANHO_NOME_TABELA+1);
+
+    if (tupla == NULL || tuplaT == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+
+    if (tuplaT == NULL)
+    {
+        free(tupla);
+
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+
+    tp_table *esquema = (tp_table *) malloc (sizeof(tp_table)*objeto.qtdCampos); // Aloca esquema com a quantidade de campos necessarios.
+
+    if(esquema == NULL)
+    {
         free(tupla);
         free(tuplaT);
-        return ERRO_DE_ALOCACAO;
+
+        printf("Out of memory.\nAborting...\n");
+        abort();
     }
 
     schema = fopen("fs_schema.dat", "a+b"); // Abre o arquivo de esquemas de tabelas.
 
-    if (schema == NULL){
+    if (schema == NULL)
+    {
         free(tupla);
         free(tuplaT);
         free(esquema);
-        return ERRO_ABRIR_ESQUEMA;
+
+        printf("Error while reading schema.\n");
+        return NULL;
     }
-    
-	 while((fgetc (schema) != EOF) && (i < objeto.qtdCampos)){ // Varre o arquivo ate encontrar todos os campos com o codigo da tabela.
+    if (objeto.qtdCampos == 0)
+    {
+        printf("Empty table.\n");
+        return NULL;
+    }
+
+    int *tamanho_campo = (int*) malloc (sizeof(int)*5);//aloca 3 informações para adicionar
+
+    if (tamanho_campo == NULL)
+    {
+        free(tupla);
+        free(tuplaT);
+        free(esquema);
+        free(schema);
+
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+
+    tamanho_campo[0] = strlen("Column");
+    tamanho_campo[1] = strlen("Type");
+    tamanho_campo[2] = strlen("Size");
+    tamanho_campo[3] = strlen("Index");
+
+    // Varre o arquivo ate encontrar todos os campos com o codigo da tabela.
+    while((fgetc (schema) != EOF) && (i < objeto.qtdCampos))
+    { 
         fseek(schema, -1, 1);
 
-        if(fread(&cod, sizeof(int), 1, schema)){ // Le o codigo da tabela.
-            if(cod == objeto.cod){ // Verifica se o campo a ser copiado e da tabela que esta na estrutura fs_objects.
+        // Le o codigo da tabela.
+        if(fread(&cod, sizeof(int), 1, schema))
+        {   
+            // Verifica se o campo a ser copiado e da tabela que esta na estrutura fs_objects.
+            if(cod == objeto.cod)
+            { 
                 
                 fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
-                printf("nome %s\n", tupla);
-                //strcpy(esquema[i].nome,tupla);                  // Copia dados do campo para o esquema.
-               
+                
+                if (strlen(tupla) > tamanho_campo[0])
+                {
+                    tamanho_campo[0] = strlen(tupla);
+                }                 
+
                 fread(&esquema[i].tipo, sizeof(char),1,schema);
-                printf("tipo %c\n", esquema[i].tipo);
+
+                if (esquema[i].tipo == 'S')
+                {
+                    if (tamanho_campo[1] < strlen("string"))
+                    {
+                        tamanho_campo[1] = strlen("string");
+                    }
+                }
+                else if (esquema[i].tipo == 'C')
+                {
+                    if (tamanho_campo[1] < strlen("char"))
+                    {
+                        tamanho_campo[1] = strlen("char");
+                    }
+                }
+                else if (esquema[i].tipo == 'D' )
+                {
+                    if (tamanho_campo[1] < strlen("double"))
+                    {
+                        tamanho_campo[1] = strlen("double");
+                    }
+                }
+                else if (esquema[i].tipo == 'I' )
+                {
+                    if (tamanho_campo[1] < strlen("integer"))
+                    {
+                        tamanho_campo[1] = strlen("integer");
+                    }
+                }
                 
                 fread(&esquema[i].tam, sizeof(int),1,schema);
-                printf("tamanho %d\n", esquema[i].tam);
+
+                char *str = (char*) malloc (sizeof(char)*1000);
+
+                if (str == NULL)
+                {
+                    printf("Out of memory.\nAborting...\n");
+                    abort();
+                }
+
+                sprintf(str,"%d",esquema[i].tam);
+
+                if (tamanho_campo[2] < strlen(str))
+                {
+                    tamanho_campo[2] = strlen(str);
+                }
                 
+                free(str);
+
                 fread(&esquema[i].chave, sizeof(int),1,schema);
-                printf("chave %d\n", esquema[i].tam);
+               
+                if (esquema[i].chave == 1)
+                {
+                    if (tamanho_campo[3] < strlen("primary key"))
+                    {
+                        tamanho_campo[3] = strlen("primary key");
+                    }
+                }
+                else if (esquema[i].chave == 2)
+                {
+                    if (tamanho_campo[3] < strlen("foreign key"))
+                    {
+                        tamanho_campo[3] = strlen("foreign key");
+                    }
+                }
                 
                 fread(tuplaT, sizeof(char), TAMANHO_NOME_TABELA, schema);
-                printf("tamanho nome da tabela %s\n", tuplaT);
-                strcpy(esquema[i].tabelaApt,tuplaT);
-                
+               
 
                 fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
-                printf("tamanho do campo %s\n", tupla);
-                strcpy(esquema[i].attApt,tupla);
                 
                 if (i >= 1 )
                 {
@@ -168,7 +278,9 @@ void *show_schema(struct fs_objects objeto){
                 esquema[i].next = NULL;
 
                 i++;
-            } else {
+            } 
+            else 
+            {
                 fseek(schema, 109, 1); // Pula a quantidade de caracteres para a proxima verificacao (40B do nome, 1B do tipo e 4B do tamanho,4B da chave, 20B do nome da Tabela Apontada e 40B do atributo apontado).
             }
 
@@ -177,9 +289,215 @@ void *show_schema(struct fs_objects objeto){
 
     free(tupla);
     free(tuplaT);
+
     fclose(schema);
-	
-	return esquema;
+
+    return tamanho_campo;//retorna o tamanho máximo de cada campo a ser imprimido
+
+}
+
+void *show_schema(struct fs_objects objeto, char *name_table)
+{
+    printf("         Table \"%s\"\n",name_table);
+	int i = 0, cod = 0;
+	FILE *schema;
+
+	char *tupla = (char *) malloc (sizeof(char)*TAMANHO_NOME_CAMPO);
+    char *tuplaT = (char *) malloc (sizeof(char)*TAMANHO_NOME_TABELA+1);
+
+    if (tupla == NULL || tuplaT == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+
+    if (tuplaT == NULL)
+    {
+        free(tupla);
+
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+
+    tp_table *esquema = (tp_table *) malloc (sizeof(tp_table)*objeto.qtdCampos); // Aloca esquema com a quantidade de campos necessarios.
+
+    if(esquema == NULL)
+    {
+        free(tupla);
+        free(tuplaT);
+
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+
+    int *limit = tamanho_maximo_campo(objeto);
+
+    schema = fopen("fs_schema.dat", "a+b"); // Abre o arquivo de esquemas de tabelas.
+
+    //esquema da tabela não existe
+    if (schema == NULL)
+    {
+        free(tupla);
+        free(tuplaT);
+        free(esquema);
+
+        printf("Error while reading schema.\n");
+        return;
+    }
+
+    //nenhum campo foi adicionado na tabela
+    if (objeto.qtdCampos == 0 )
+    {
+        printf("Empty table.\n");
+        return;
+    }
+
+    /**
+     * Imprime formatado pelo tamanho máximo
+     */
+    int size = 0;
+
+    printf(" Column");
+    size = limit[0]-strlen("Column")+1;
+    for (i = 0; i < size; i++) printf(" ");
+    printf("|");
+
+    printf(" Type");
+    size = limit[1]-strlen("Type")+1;
+    for (i = 0; i < size; i++) printf(" ");
+    printf("|");
+
+    printf(" Size");
+    size = limit[2]-strlen("Size")+1;
+    for (i = 0; i < size; i++) printf(" ");
+    printf("|");
+
+    printf(" Index");
+    size = limit[3]-strlen("Index")+1;
+    for (i = 0; i < size; i++) printf(" ");
+    printf("|");
+
+	printf("\n");
+
+    int c = 0;
+
+    while(c < 4)
+    {
+        for (i = 0; i < limit[c]+2; i++)printf("-");
+        printf("+");
+        c++;
+    }
+    
+    printf("\n");
+    i = 0;
+
+    while((fgetc (schema) != EOF) && (i < objeto.qtdCampos)){ // Varre o arquivo ate encontrar todos os campos com o codigo da tabela.
+        fseek(schema, -1, 1);
+
+        if(fread(&cod, sizeof(int), 1, schema)){ // Le o codigo da tabela.
+            if(cod == objeto.cod){ // Verifica se o campo a ser copiado e da tabela que esta na estrutura fs_objects.
+                
+                fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
+                
+                printf(" %s", tupla);
+                size = limit[0]-strlen(tupla)+1;
+                for (c = 0; c < size; c++)printf(" ");
+                printf("|");
+               
+                fread(&esquema[i].tipo, sizeof(char),1,schema);
+                
+                if (esquema[i].tipo == 'S')
+                {
+                   printf(" string");
+                   size = limit[1]-strlen("string")+1;
+                   for (c = 0; c < size; c++)printf(" ");
+                   printf("|");
+                }
+                else if (esquema[i].tipo == 'C')
+                {
+                    printf(" char");
+                    size = limit[1]-strlen("char")+1;
+                    for (c = 0; c < size; c++)printf(" ");
+                    printf("|");
+                }
+                else if (esquema[i].tipo == 'D' )
+                {
+                    printf(" double");
+                    size = limit[1]-strlen("double")+1;
+                    for (c = 0; c < size; c++)printf(" ");
+                    printf("|");
+                }
+                else if (esquema[i].tipo == 'I' )
+                {
+                    printf(" integer");
+                    size = limit[1]-strlen("integer")+1;
+                    for (c = 0; c < size; c++)printf(" ");
+                    printf("|");
+                }
+                
+                fread(&esquema[i].tam, sizeof(int),1,schema);
+                printf(" %d",esquema[i].tam);
+
+                char *str = (char*) malloc (sizeof(char)*(limit[2]+1));
+                if (str == NULL)
+                {
+                    printf("Out of memory.\nAborting...\n");
+                    abort();
+                }
+                sprintf(str,"%d", esquema[i].tam);
+                size = limit[2]-strlen(str)+1;
+                for (c = 0; c < size; c++)printf(" ");
+                printf("|");
+                
+                fread(&esquema[i].chave, sizeof(int),1,schema);
+
+                if (esquema[i].chave == 0)
+                {
+                   printf(" ");
+                   size = limit[3]+1;
+                   for (c = 0; c < size; c++)printf(" ");
+                   printf("|");
+                }
+                if (esquema[i].chave == 1)
+                {
+                    printf(" primary key");
+                    size = limit[3]-strlen("primary key")+1;
+                    for (c = 0; c < size; c++)printf(" ");
+                    printf("|");
+                    
+                }
+                else if (esquema[i].chave == 2)
+                {
+                    printf(" foreign key");
+                    size = limit[3]-strlen("foreign key")+1;
+                    for (c = 0; c < size; c++)printf(" ");
+                    printf("|");
+                }
+                
+                fread(tuplaT, sizeof(char), TAMANHO_NOME_TABELA, schema);
+
+                fread(tupla, sizeof(char), TAMANHO_NOME_CAMPO, schema);
+                
+                if (i >= 1 )
+                {
+                    esquema[i-1].next = &esquema[i];
+                }
+                esquema[i].next = NULL;
+
+                i++;
+                printf("\n");
+            } 
+            else
+            {
+                fseek(schema, 109, 1); // Pula a quantidade de caracteres para a proxima verificacao (40B do nome, 1B do tipo e 4B do tamanho,4B da chave, 20B do nome da Tabela Apontada e 40B do atributo apontado).
+            }
+        }
+    }
+
+    free(tupla);
+    free(tuplaT);
+
+    fclose(schema);
 }
 
 int pot10(int n)
