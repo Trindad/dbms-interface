@@ -1,12 +1,18 @@
 #include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "shell.h"
+#include "table.h"
 
 int current_database = -1;
 
 void shell()
 {
+
+
 	current_database = -1;
-	char entrada[1000],inicio[1000], nomeBD[TAM_NOME_BANCO];
+	char entrada[1000],inicio[1000], nomeBD[TAM_NOME_BANCO],auxiliar[150];
     int resultado=0, codDB=-1;
     nomeBD[0]='\0';
 
@@ -156,7 +162,42 @@ void shell()
 					}
 					else
 					{
-						//imprime esquema da tabela
+						printf("NOME DA TABELA %s\n",(tokens[1]));
+						//nome da tabelas contem o id do banco a que pertencem
+						//char carac=codDB;
+						
+						/*opcao = leia do disco os nomes das tabelas e quebre os nomes testando cod do banco e nome da tabela
+						  se algum algum for igual mande para o leObjeto e para o leSchema caso contr[ario mensagem de erro
+						*/
+						//strcat(auxiliar,carac);
+						strcat(auxiliar,"_");
+						strcat(auxiliar,tokens[1]);
+						strcat(auxiliar,"\0");
+						printf("auxiliar é %s",auxiliar);
+						//struct fs_objects objeto = leObjeto(tokens[1]);//para verificar se a tabela esta no banco 
+					
+						//imprimir o objeto
+						
+						
+						//leSchema (struct fs_objects objeto);
+						//tp_table *esquema = leSchema(objeto);
+						
+						//printf("tipo %c", esquema[0].tipo);
+						//printf("tipo %d", esquema[0].tam);
+						
+						/*
+						 typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
+							char nome[TAMANHO_NOME_CAMPO];	// Nome do Campo.                    40bytes   
+							char tipo;						// Tipo do Campo.                     1bytes
+							int tam;						// Tamanho do Campo.                  4bytes
+							int chave;						// Tipo da chave                      4bytes
+							char tabelaApt[TAMANHO_NOME_TABELA]; //Nome da Tabela Apontada        20bytes 
+							char attApt[TAMANHO_NOME_CAMPO];	//Nome do Atributo Apontado       40bytes
+							struct tp_table *next;			// Encadeamento para o próximo campo.
+							struct fs_objects objetos;				//objetos que pertence a um esquema
+						}tp_table;
+
+						 * */
 					}
 				   
 				} 
