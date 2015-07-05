@@ -710,7 +710,7 @@ void imprime(char nomeTabela[]) {
             }
             else if(pagina[j].tipoCampo == 'I'){
                 
-                printf(" %d",pagina[j].valorCampo);
+                printf(" %s",pagina[j].valorCampo);
                 
                 char *str = (char*) malloc (sizeof(char)*1000);
                 
