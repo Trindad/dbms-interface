@@ -388,16 +388,21 @@ Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem d
 É possível se conectar a um banco a qualquer momento, ou seja, posso estar em um banco de dados e utilizar o comando \c nome_banco e me conectar a um outro banco (saindo do atual).
 
  - \d
-Lista as tabelas do banco, para isso é acionado a função listaTabelas.
+	Lista as tabelas do banco, para isso é acionado a função listaTabelas.
+
+- \d <nome_tabela>
+	Lista o esquema de uma tabela
 
  - show name_table
-Mostra os dados dentro das tabelas, para isso faz uso da função imprime.
+	Mostra os dados dentro das tabelas, para isso faz uso da função imprime.
 
  - \l
-Lista o nomes dos bancos existentes no SGBD. Podendo ser utilizada, estando ou não conectado a um banco. 
-Mesmo que o programa seja recompilado por completo os bancos criados permanecem lá. A listagem é feita através da função listaBancos, do arquivo database.c.
+	Lista o nomes dos bancos existentes no SGBD. Podendo ser utilizada, estando ou não conectado a um banco. 
+	Mesmo que o programa seja recompilado por completo os bancos criados permanecem lá. A listagem é feita através da função listaBancos, do arquivo database.c.
 
 -help
+	ajuda ao usuário
+-\h
 	ajuda ao usuário
 
  - INSERT:
@@ -429,6 +434,17 @@ Mesmo que o programa seja recompilado por completo os bancos criados permanecem 
 	onde contêm dois diretórios, o sintátic e semantic. O código desenvolvido básicamente recebe uma string com o comando sql, verifica a questão léxica, em seguida a análise semântica utiliza de expressões para verificar a string passada que deve seguir o padrão dos exemplos anteriores, caso algum erro ocorra então é lançado uma mensagem de erro, as mensagens são geradas com o padrão do bison. 
 	Na análise semântica, é verificado se os tipos estão corretos, se a tabela existe para o banco logado, estando tudo certo ele faz a inserção das tuplas na tabela.  
 
+-CREATE
+	Banco de dados
+		create database <nome_db>
+	Tabela
+		create table <nome_tabela> ( <nome coluna> <tipo coluna> [ <atributo constraint> ]{ , <nome coluna> <tipo coluna> [ <atributo constrain> ] } [ <constraint da tabela> { , <constraint da tabela> } ] );
+
+		Exemplos:
+			create table curso (nome string primary key,creditos integer,professor string(100));
+
+			create table cursoverao (nome string,cod integer, creditos integer,professor string(100),constraint primary key (nome) , CONSTRAINT FOREIGN KEY ( cod ) REFERENCES Inst(CodInst));
+
 PASSOS PARA UTILIZAR A INTERFACE
 
 Comando para saída do shell, simplesmente verifica se o token de entrada é exit, dá um break e encerra o programa.
@@ -455,7 +471,7 @@ OPÇÃO 1: Manual
 		Voltar ao diretório root
 	4º Passo
 		Compilar com GCC
-			gcc *.c sql/semantic/semantic.c -o <nome_executavel> -g -ll -ly
+			gcc *.c sql/semantic/semantic.c -o <nome_executavel> -g -lfl -L/usr/local/lib -I/usr/local/include -lreadline
 	5º Passo 
 		Executar
 			./<nome_executavel>
