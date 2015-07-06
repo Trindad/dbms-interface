@@ -377,7 +377,7 @@ constraints: CONSTRAINT PRIMARY KEY '(' ID  {
 			printf("Column %s doesn't exist.\n",$5);
 			YYABORT;
 		}
-	} ')' REFERENCES id_references '(' column_fk ID  ')'next_constraints 
+	} ')' REFERENCES id_references '(' column_fk ')' next_constraints 
 	;
 
 column_fk: ID{
