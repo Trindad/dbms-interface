@@ -615,16 +615,17 @@ void imprime(char nomeTabela[]) {
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'I'){
-                char *str = (char*) malloc (sizeof(char)*1000);
-                
+
+                int *n = (int *)&pagina[j].valorCampo[0];
+
+                char *str = (char*) malloc (sizeof(char)*50);
                 if (str == NULL)
                 {
                     printf("Out of memory.\nAborting...\n");
                     abort();
                 }
+                sprintf(str,"%d",*n);
 
-                sprintf(str, "%d", pagina[j].valorCampo);
-                
                 if (limit[controler_] < strlen(str))
                 {
                     limit[controler_] = strlen(str);
@@ -633,20 +634,41 @@ void imprime(char nomeTabela[]) {
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'C'){
-                if (limit[controler_] < strlen(pagina[j].valorCampo))
+
+                char *str = (char*) malloc (sizeof(char));
+                if (str == NULL)
                 {
-                    limit[controler_] = strlen(pagina[j].valorCampo);
+                    printf("Out of memory.\nAborting...\n");
+                    abort();
+                }
+                sprintf(str,"%c",pagina[j].valorCampo[0]);
+
+                if (limit[controler_] < strlen(str))
+                {
+                    limit[controler_] = strlen(str);
                 }
 
+                free(str);
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'D'){
 
-                if (limit[controler_] < strlen(pagina[j].valorCampo))
+                double *n = (double *)&pagina[j].valorCampo[0];
+
+                char *str = (char*) malloc (sizeof(char)*150);
+                
+                if (str == NULL)
                 {
-                    limit[controler_] = strlen(pagina[j].valorCampo)+1;//mais um por causa do '.'
+                    printf("Out of memory.\nAborting...\n");
+                    abort();
                 }
 
+                sprintf(str,"%f",*n);
+                if (limit[controler_] < strlen(str))
+                {
+                    limit[controler_] = strlen(str)+1;//mais um por causa do '.'
+                }
+                free(str);
                 free(pagina[j].valorCampo);
             }
             if(j >= 1 && ((j+1)%objeto.qtdCampos)==0){
@@ -709,22 +731,23 @@ void imprime(char nomeTabela[]) {
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'I'){
-                
-                printf(" %s",pagina[j].valorCampo);
-                
-                char *str = (char*) malloc (sizeof(char)*1000);
-                
+                int *n = (int *)&pagina[j].valorCampo[0];
+
+                printf(" %d",*n);
+
+                char *str = (char*) malloc (sizeof(char)*50);
                 if (str == NULL)
                 {
                     printf("Out of memory.\nAborting...\n");
                     abort();
                 }
-                sprintf(str, "%d", pagina[j].valorCampo);
+                sprintf(str,"%d",*n);
 
-                tam = (limit[ii] - strlen(str))+1;
+                tam = ( limit[ii] - strlen(str) )+1;
 
                 for (v = 0; v < tam; v++) printf(" ");
                 printf("|");
+                free(str);
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'C'){
@@ -737,9 +760,19 @@ void imprime(char nomeTabela[]) {
             else if(pagina[j].tipoCampo == 'D'){
                 double *n = (double *)&pagina[j].valorCampo[0];
                 printf(" %f",*n);
-                tam = (limit[ii] - strlen(pagina[j].valorCampo));
+
+                char *str = (char*) malloc (sizeof(char)*150);
+                if (str == NULL)
+                {
+                    printf("Out of memory.\nAborting...\n");
+                    abort();
+                }
+                sprintf(str,"%f",*n);
+
+                tam = (limit[ii] - strlen(str))+1;
                 for (v = 0; v < tam; v++) printf(" ");
                 printf("|");
+                free(str);
                  free(pagina[j].valorCampo);
 
             }
