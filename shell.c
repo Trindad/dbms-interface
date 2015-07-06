@@ -292,7 +292,7 @@ void shell()
 				{
 					printf("Table deleted successfully.\n");
 				}
-				
+
 				free(exist);
 				free(t);
 			}
@@ -639,8 +639,8 @@ void help()
 {
 	printf("\nDBMS Interface Help\n");
 	printf("Here is a list of commands you can enter:\n\n");
-	printf("dbms-start - start the database\n");
 	printf("help - Shows this help\n");
+	printf("\\h - Shows this help\n");
 	printf("exit - Exits DBMS interface\n");
 	printf("bye - Exits DBMS interface\n");
 	printf("quit - Exits DBMS interface\n");
@@ -650,6 +650,7 @@ void help()
 	printf("\\d <table_name> - Display schema of table\n");
 	printf("\\l - Lists all databases\n");
 	printf("show <table_name> - Displays the table's data\n");
+	printf("select * from <table_name> - Displays the table's data\n");
 	printf("drop <database_name> - Drops database\n");
 	printf("drop <table_name> - Drops table\n");
 	
