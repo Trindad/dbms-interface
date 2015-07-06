@@ -178,8 +178,9 @@ int finalizaTabela(table *t, int database){
     int codTbl = quantidadeTabelas() + 1, qtdCampos = 0; // Conta a quantidade de tabelas já no dicionario e soma 1 no codigo dessa nova tabela.
     char nomeArquivo[TAMANHO_NOME_ARQUIVO];
 
-    if((esquema = fopen("fs_schema.dat","a+b")) == NULL)
+    if((esquema = fopen("fs_schema.dat","a+b")) == NULL) {
         return ERRO_ABRIR_ARQUIVO;
+    }
 
     for(aux = t->esquema; aux != NULL; aux = aux->next){ // Salva novos campos no esquema da tabela, fs_schema.dat
 
@@ -196,8 +197,9 @@ int finalizaTabela(table *t, int database){
 
     fclose(esquema);
 
-    if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
+    if((dicionario = fopen("fs_object.dat","a+b")) == NULL) {
         return ERRO_ABRIR_ARQUIVO;
+    }
 
     // char *table_name = (char*) malloc (sizeof(char)*1000);
 
@@ -219,7 +221,6 @@ int finalizaTabela(table *t, int database){
     strcat(nomeArquivo, ".dat\0");
     strcat(t->nome, "\0");
 
-    // printf("nomeArquivo %s\n",nomeArquivo );
     // Salva dados sobre a tabela no dicionario.
     fwrite(&t->nome,sizeof(t->nome),1,dicionario);
     fwrite(&codTbl,sizeof(codTbl),1,dicionario);
@@ -227,6 +228,7 @@ int finalizaTabela(table *t, int database){
     fwrite(&qtdCampos,sizeof(qtdCampos),1,dicionario);
 
     fclose(dicionario);
+
     return SUCCESS;
 }
 

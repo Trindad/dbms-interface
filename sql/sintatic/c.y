@@ -149,8 +149,9 @@ columns: {
 	int *temp = realloc(datas.numberOfColumns, (i+2)*sizeof(int));
 	if (temp != NULL)
 		datas.numberOfColumns = temp;
-	else
-		fprintf(stderr, "Out of memory.\n");
+	else{
+		fprintf(stderr, "Out of memory.\nAborting...\n");abort();
+	}
 	datas.numberOfColumns[i] = countColumn = 0;
 	datas.numberOfRows++;
 	}insertOrder 
@@ -486,6 +487,7 @@ Datas execute_insert(char *sql)
 	}
 
 	datas.numberOfColumns = (int*) malloc (sizeof(int));
+
 	if (datas.numberOfColumns == NULL)
 	{
 		printf("Out of memory.\nAborting...\n");
@@ -505,8 +507,9 @@ Datas execute_insert(char *sql)
 }
          
 int yyerror(const char *s) {
+	j = -1;
 	printf("%d : %s %s\n", yylineno, s, yytext );
-	return 0;
+	return 1;
 }         
 
 union TOKEN **output(void)

@@ -157,6 +157,13 @@ void insert(char *sql,int index_database)
 
 	Datas datas = execute_insert(sql);
 
+	if (j == -1)
+	{
+		printf("Invalid command. Type help to show the interface usage.\n");
+		j = 0;
+		return;
+	}
+
 	int rows = 0,columns = 0;
 
     char *file = table_name_cat(datas.insert[rows][columns].str,database);
@@ -284,6 +291,13 @@ void selectTable(char *sql, int index_database)
 {
 	char *table_name = execute_select(sql);
 
+	if (j == -1)
+	{
+		printf("Invalid command. Type help to show the interface usage.\n");
+		j = 0;
+		return;
+	}
+
 	if (table_name == NULL)
 	{
 		printf("Invalid number of arguments. Type help to show de interface usage.\n");
@@ -301,10 +315,16 @@ void selectTable(char *sql, int index_database)
 
 void createTable(char *sql, int index_database)
 {
-	// printf("%s\n",sql);
 	database = index_database;
 
 	Datas datas = execute_create_table(sql);
+
+	if (j == -1)
+	{
+		printf("Invalid command. Type help to show the interface usage.\n");
+		j = 0;
+		return;
+	}
 
 	if (datas.name_table_create == NULL)
 	{
@@ -334,21 +354,6 @@ void createTable(char *sql, int index_database)
 	table  *tab[1];
 	tab[0] = iniciaTabela(table_name_cat(datas.name_table_create,database));
 
-	if (tab[0] == NULL)
-	{
-		for (i = 0; i < datas.number_columns; i++)
-	    {
-	    	free(datas.create_new_table[i].name_column_table);
-	    }
-
-	    free(datas.create_new_table);
-	    
-	    i = 0;
-
-		printf("Out of memory.\nAborting...\n");
-		abort();
-	}
-
 	for (i = 0; i < datas.number_columns; i++)
 	{
 		//chave estrangeira = 2
@@ -375,6 +380,10 @@ void createTable(char *sql, int index_database)
     if (i == SUCCESS)
     {
     	printf("Table created successfully\n");
+    }
+    else if (i == ERRO_DE_PARAMETRO)
+    {
+    	printf("Table %s already exists.\n",datas.name_table_create);
     }
 }
 
