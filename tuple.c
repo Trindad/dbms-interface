@@ -94,7 +94,6 @@ int retornaTamanhoValorCampo(char *nomeCampo, table  *tab) {
        if (strcmp(nomeCampo,temp->nome) == 0)
        {
             tam = temp->tam;
-
             return tam;
        }
 

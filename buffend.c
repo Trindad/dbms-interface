@@ -229,7 +229,7 @@ column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, 
         t=0;
         if(j >= objeto.qtdCampos)
             j=0;
-        colunas[h].valorCampo = (char *)malloc(sizeof(char)*campos[j].tam);
+        colunas[h].valorCampo = (char *)malloc(sizeof(char)*campos[j].tam+1);
 
         if (colunas[h].valorCampo == NULL)
         {
@@ -244,6 +244,8 @@ column * getPage(tp_buffer *buffer, tp_table *campos, struct fs_objects objeto, 
             t++;
             i++;
         }
+        colunas[h].valorCampo[t] = '\0';
+        
         h++;
         j++;
     }

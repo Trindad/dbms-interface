@@ -238,13 +238,16 @@ int finalizaTabela(table *t, int database){
 column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
     
     column *aux;
-    if(c == NULL){ // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
-    
+
+    // Se o valor a ser inserido é o primeiro, adiciona primeiro campo.
+    if(c == NULL)
+    { 
         column *e = (column *)malloc(sizeof(column));
 
         if (e == NULL)
         {
-            return ERRO_DE_ALOCACAO;
+            printf("Out of memory.\nAborting...\n");
+            abort();
         }
 
         int tam = retornaTamanhoValorCampo(nomeCampo, tab);
@@ -280,11 +283,11 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
         
         if (n > tam && tipo == 'S')
         {
-            n = tam-1;
+            n = tam;
         }
 
         strncpy(e->valorCampo, valorCampo,n);
-
+        e->valorCampo[n] = '\0';
         e->next = NULL;
         c = e;
         return c;
@@ -296,12 +299,14 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
 
                 if (e == NULL)
                 {
-                    return ERRO_DE_ALOCACAO;
+                    printf("Out of memory.\nAborting...\n");
+                    abort();
                 }
+
                 int tam = retornaTamanhoValorCampo(nomeCampo, tab);
                 char tipo = retornaTipoDoCampo(nomeCampo,tab); 
 
-                int nTam = strlen(valorCampo);
+                int nTam = strlen(valorCampo)+1;
 
                 if (tipo == 'S')
                 {
@@ -333,10 +338,14 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
         
                 if (n > tam && tipo == 'S')
                 {
-                    n = tam-1;
+                    // printf("tamanho valorCampo %d %s\n",n, valorCampo);
+                    // printf("tam %d\n",tam );
+                    n = tam;
                 }
 
                 strncpy(e->valorCampo, valorCampo,n);
+                e->valorCampo[n] = '\0';
+                // printf("valorCampo %s\n",e->valorCampo);
                 aux->next = e;
                 
                 return c;
@@ -349,6 +358,7 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo){
 
 
 int finalizaInsert(char *nome, column *c){
+
     column *auxC, *temp;
     int x = 0, t = 0, erro, j = 0;
     FILE *dados;
@@ -374,15 +384,13 @@ int finalizaInsert(char *nome, column *c){
             case NPK:
                 erro = SUCCESS;
                 break;
-
             case PK:
-                // printf("NOME %s TEMP NOME Campo %s\n", nome,temp->nomeCampo);
                 erro = verificaChavePK(nome, temp , temp->nomeCampo, temp->valorCampo);
                 if(erro == ERRO_CHAVE_PRIMARIA){
                     printf("There was an error due to primary key. Check the table's schema.\nAborting...\n");
                     free(c);    // Libera a memoria da estrutura.
                     free(auxT); // Libera a memoria da estrutura.
-                    //free(temp); // Libera a memoria da estrutura.   
+                       
                     free(tab); // Libera a memoria da estrutura.
                     free(tab2); // Libera a memoria da estrutura.
                     abort();
@@ -399,13 +407,12 @@ int finalizaInsert(char *nome, column *c){
                         printf("Error due to foreign key constraint.\n");
                         free(c);    // Libera a memoria da estrutura.
                         free(auxT); // Libera a memoria da estrutura.
-                        // free(temp); // Libera a memoria da estrutura.
+                       
                         free(tab); // Libera a memoria da estrutura.
                         free(tab2); // Libera a memoria da estrutura.
                         return ERRO_CHAVE_ESTRANGEIRA;
                     }
                 }
-
                 break;
         }
     }
@@ -565,14 +572,16 @@ void imprime(char nomeTabela[]) {
     
     tp_table *esquema = leSchema(objeto);
 
-    if(esquema == ERRO_ABRIR_ESQUEMA){
+    if(esquema == ERRO_ABRIR_ESQUEMA)
+    {
         printf("Out of memory...Aborting\n");
         return;
     }
 
     tp_buffer *bufferpoll = initbuffer();
 
-    if(bufferpoll == ERRO_DE_ALOCACAO){
+    if(bufferpoll == ERRO_DE_ALOCACAO)
+    {
        printf("Out of memory...Aborting\n");
        return;
     }
@@ -739,6 +748,7 @@ void imprime(char nomeTabela[]) {
                 swprintf(ws,500,L"%hs",pagina[j].valorCampo);
                 int wn = wcslen(ws);
 
+                // printf(" %d", wn);
                 printf(" %s", pagina[j].valorCampo);
                 tam = (limit[ii] - wn)+1;
                 for (v = 0; v < tam; v++) printf(" ");
