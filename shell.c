@@ -9,8 +9,6 @@ int current_database = -1;
 
 void shell()
 {
-
-
 	current_database = -1;
 	char entrada[1000], nomeBD[TAM_NOME_BANCO],auxiliar[150];
     int resultado = 0, codDB = -1;
@@ -30,7 +28,7 @@ void shell()
 	 * ****************************
 	 */
 	using_history ();//função para usar o histórico
-	read_history ("history_file");
+	read_history (".history_file");
 
 	while(1)
 	{
@@ -60,7 +58,7 @@ void shell()
 			strncpy (entrada, expansion, sizeof (entrada) - 1);
 			free (expansion);
 
-			write_history ("history_file");//adiciona no histórico
+			write_history (".history_file");//adiciona no histórico
         }
 
 		char **tokens = tokenize(remove_newline(entrada),' ',&nTokens);
@@ -121,12 +119,12 @@ void shell()
 				
 			if (nTokens != 2)
 			{
-				printf("Invalid number of arguments. Type help to show de interface usage.\n");
+				printf("Invalid number of arguments. Type help to show the interface usage.\n");
 
 				continue;
 			}
 			char *name_db = remove_semicolon(tokens[1]);
-			codDB = busca(name_db,1);     //função chamada para conecção no banco, retorna o codigo do banco ao conectar
+			codDB = busca(name_db,1); //função chamada para conecção no banco, retorna o codigo do banco ao conectar
 		   
 			if (codDB >= 0)
 			{
@@ -178,7 +176,7 @@ void shell()
 			}
 			if (nTokens >= 3)
 			{
-				printf("Invalid number of arguments. Type help to show de interface usage.\n");
+				printf("Invalid number of arguments. Type help to show the interface usage.\n");
 
 				continue;
 			}
@@ -221,7 +219,7 @@ void shell()
 		{
 			if (nTokens != 2)
 			{
-				printf("Invalid number of arguments. Type help to show de interface usage.\n");
+				printf("Invalid number of arguments. Type help to show the interface usage.\n");
 
 				continue;
 			}
@@ -252,7 +250,7 @@ void shell()
 		{
 			if (nTokens != 1)
 			{
-				printf("Invalid number of arguments. Type help to show de interface usage.\n");
+				printf("Invalid number of arguments. Type help to show the interface usage.\n");
 
 				continue;
 			}
@@ -266,11 +264,12 @@ void shell()
 		{
 			if (nTokens != 3)
 			{
-				printf("Invalid number of arguments. Type help to show de interface usage.\n");
+				printf("Invalid number of arguments. Type help to show the interface usage.\n");
 
 				continue;
 			}
 			else if(strcmp(strtolower(tokens[1]),"table") == 0){
+				
 				if (current_database == -1)
 				{
 					printf("Not connected to any database.\n");
@@ -310,6 +309,7 @@ void shell()
 				
 				exist = remove_semicolon(tokens[2]);
 				codDB = busca(exist,1);
+
 				if(codDB == current_database)
 				{
                 	printf("Cannot drop the currently open database.\n");
@@ -328,7 +328,7 @@ void shell()
 		{
 			if (nTokens != 1)
 			{
-				printf("Invalid number of arguments. Type help to show de interface usage.\n");
+				printf("Invalid number of arguments. Type help to show the interface usage.\n");
 			}
 
 			help();
@@ -363,7 +363,7 @@ void shell()
 		}
 		else
 		{
-			printf("Invalid command. Type help to show de interface usage.\n");
+			printf("Invalid command. Type help to show the interface usage.\n");
 			continue;
 		}
 	}  

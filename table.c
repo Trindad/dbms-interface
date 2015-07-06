@@ -900,15 +900,20 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
    ---------------------------------------------------------------------------------------------*/
 
 int excluirTabela(char *nomeTabela) {
+
     struct fs_objects objeto, objeto1;
     tp_table *esquema, *esquema1;
     int x,erro, i, j, k, l, qtTable;
-    char str[20]; 
-    char dat[5] = ".dat";
-
+    char *str = (char*) malloc (sizeof(char)*(strlen(nomeTabela)+strlen(".dat")+1)); 
+    
+    if (str == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
 
     strcpy (str, nomeTabela); 
-    strcat (str, dat);              //Concatena e junta o nome com .dat
+    strcat (str, ".dat");              //Concatena e junta o nome com .dat
 
     abreTabela(nomeTabela, &objeto, &esquema);
     qtTable = quantidadeTabelas();
@@ -917,7 +922,7 @@ int excluirTabela(char *nomeTabela) {
 
     if (tupla == NULL)
     {
-        printf("Out of memory.\nAborting...");
+        printf("Out of memory.\nAborting...\n");
         abort();
     }
     for(i=0; i<qtTable; i++) {
@@ -925,7 +930,7 @@ int excluirTabela(char *nomeTabela) {
 
         if (tupla[i] == NULL)
         {
-            printf("Out of memory.\nAborting...");
+            printf("Out of memory.\nAborting...\n");
             abort();
         }
     }
@@ -962,7 +967,7 @@ int excluirTabela(char *nomeTabela) {
                     
                     if (tab3 == NULL)
                     {
-                        printf("Out of memory.\nAborting...");
+                        printf("Out of memory.\nAborting...\n");
                         abort();
                     }
                     tab3 = procuraAtributoFK(objeto1);
@@ -1001,7 +1006,7 @@ int excluirTabela(char *nomeTabela) {
        return ERRO_REMOVER_ARQUIVO_OBJECT;
         
     remove(str);
-    
+    free(str);
     free(tupla);
     
     return SUCCESS;

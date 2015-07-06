@@ -151,12 +151,28 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
 
 void dropDatabase(char *str){
 
+    printf("'%s'\n",str );
     FILE *dicionario;
-    char *name = (char *)malloc(sizeof(TAM_NOME_BANCO));
-    strcpy(name,str);
+
     int i = 0, cnt = 0, cod_db = busca(str,1), n = 0;
-    char *nome_tabela = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+    printf("%d\n",cod_db );
+    char *nome_tabela = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA+1);
+    
+    if (nome_tabela == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+
     char **tables, **aux_name;
+    tables = (char**) malloc (sizeof(char*)*200);
+
+    if (tables == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+
 
     if(cod_db == -2)
     {
@@ -193,34 +209,57 @@ void dropDatabase(char *str){
 	else
 	{
         fclose(dicionario);
+
         if((dicionario = fopen("fs_object.dat","a+b")) == NULL){
             printf("Error while opening the database file\n");
             return;
         }
         cnt = 0;
 
+        n = 0;
+
         while(fgetc (dicionario) != EOF)
         {
             fseek(dicionario, -1, 1);
             fread(nome_tabela, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
-            n = 0;
-            aux_name = tokenize(nome_tabela,'_',&n);
+            printf("nome tabela '%s'\n",nome_tabela );
+
+            n = strlen(nome_tabela);
+
             if (n >= 2) {
-                n = atoi(aux_name[0]);
+
+                char **str = tokenize(nome_tabela,'_',&n);
+                n = atoi(str[0]);
+
                 if(n == cod_db){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
-                    tables[cnt] = malloc(sizeof(char *)*strlen(nome_tabela));
-                    strcpy(tables[cnt],nome_tabela);
+                    tables[cnt] = strdup(nome_tabela);
+                    printf("cont %d '%s'\n",n,tables[cnt] );
+                    
+                    if (tables[cnt] == NULL)
+                    {
+                        printf("Out of memory.\nAborting...\n");
+                        abort();
+                    }
                     cnt++;
                 }
             }
+
             fseek(dicionario, 28, 1);
         }
-        while(cnt--)
+        printf("CNT %d \n",cnt );
+
+        while(cnt > 0)
         {
-            excluirTabela(tables[cnt]);
+            printf("tabela '%s'\n",tables[cnt-1] );
+            int del = excluirTabela(tables[cnt-1]);
+            printf("ao deletar %d\n",del );
+            if (del == SUCCESS)
+            {
+                cnt--;
+            }
         }
-        reescreve(name);
-        free(name);
+
+        reescreve(str);
         free(tables);
         free(aux_name);
         free(nome_tabela);
@@ -355,6 +394,6 @@ void listaTabelas(int database)
 	if(cnt == 0){
 		printf("No table created!\n");
 	}
-	//free(nome_tabela);
+
     fclose(dicionario);
 }
