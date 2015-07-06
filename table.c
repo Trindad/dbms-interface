@@ -391,7 +391,7 @@ int finalizaInsert(char *nome, column *c){
                         // free(temp); // Libera a memoria da estrutura.
                         free(tab); // Libera a memoria da estrutura.
                         free(tab2); // Libera a memoria da estrutura.
-                        return;
+                        return ERRO_CHAVE_ESTRANGEIRA;
                     }
                 }
 

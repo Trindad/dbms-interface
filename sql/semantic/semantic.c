@@ -376,7 +376,7 @@ int table_exist(char *tablename,int database)
     if((dictionary = fopen("fs_object.dat","a+b")) == NULL){
         free(tb_name);
         printf("No table created.\n");
-        return;
+        return 0;
     }
 
     while(fgetc (dictionary) != EOF)
