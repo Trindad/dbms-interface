@@ -46,6 +46,7 @@ char *table_select;
 
 int i = 0;
 int j = 0;
+int index_fk = -1;
 int countColumn = 0;//controle para o número de campos inseridos
 int countField = 0;
 int count = 0;
@@ -360,13 +361,13 @@ constraints: CONSTRAINT PRIMARY KEY '(' ID  {
 		YYABORT;
 	}
 }')' next_constraints
-	|CONSTRAINT FOREIGN KEY '('ID {
+	|CONSTRAINT FOREIGN KEY '(' ID {
 		int ok = 0;
 		for (i = 0; i < datas.number_columns; i++)
 		{
-			//printf("%s\n",$5);
 			if (strcmp(datas.create_new_table[i].name_column_table,$5) == 0)
 			{
+				index_fk = i;
 				ok = 1;
 			}
 		}
@@ -376,23 +377,29 @@ constraints: CONSTRAINT PRIMARY KEY '(' ID  {
 			printf("Column %s doesn't exist.\n",$5);
 			YYABORT;
 		}
-	}')' REFERENCES ID{
-		datas.create_new_table[i].table_foreign = strdup($3);
-		if (datas.create_new_table[i].table_foreign == NULL)
+	} ')' REFERENCES id_references '(' column_fk ID  ')'next_constraints 
+	;
+
+column_fk: ID{
+		datas.create_new_table[index_fk].constraint = 2;
+		datas.create_new_table[index_fk].name_column_foreign = strdup($1);
+		
+		if (datas.create_new_table[index_fk].name_column_foreign == NULL)
 		{
 			printf("Out of memory.\nAborting...\n");
 			abort();
 		}
-}'('ID 
-	{
-		datas.create_new_table[i].constraint = 2;
-		datas.create_new_table[i].name_column_foreign = strdup($2);
-		if (datas.create_new_table[i].name_column_foreign == NULL)
+	}
+
+id_references: ID {
+
+		datas.create_new_table[index_fk].table_foreign = strdup($1);
+		if (datas.create_new_table[index_fk].table_foreign == NULL)
 		{
 			printf("Out of memory.\nAborting...\n");
 			abort();
 		}
-	}')'next_constraints 
+	} 
 	;
 next_constraints: ','constraints
 	| end_create
@@ -436,6 +443,9 @@ Datas execute_create_table(char *sql)
 
 char *execute_select(char *sql)
 {
+	j = 0;
+	i = 0;
+
 	table_select = NULL;
 
 	yy_scan_string(sql);

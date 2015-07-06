@@ -79,7 +79,7 @@ void shell()
 			}
 			else if(strcmp(strtolower(tokens[1]),"database")==0)
 			{
-				if (nTokens != 4)
+				if (nTokens >= 5)
 				{
 					printf("Invalid command. Type help to show de interface usage.\n");
 					continue;
@@ -235,9 +235,10 @@ void shell()
 			
 			if (existeArquivo(file) == 0)
 			{
-				printf("Table doesn't exist.\n" );
+				printf("Table is empty.\n" );
 				continue;
 			}
+
 			imprime(t);
 			free(file);
 			free(t);

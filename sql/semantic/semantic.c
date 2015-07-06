@@ -301,7 +301,7 @@ void selectTable(char *sql, int index_database)
 
 void createTable(char *sql, int index_database)
 {
-	printf("%s\n",sql);
+	// printf("%s\n",sql);
 	database = index_database;
 
 	Datas datas = execute_create_table(sql);
@@ -320,6 +320,7 @@ void createTable(char *sql, int index_database)
 	// 	printf("tamanho %d\n",datas.create_new_table[i].size );
 	// 	printf("constraint %d\n",datas.create_new_table[i].constraint );
 	// }
+	// printf("\n------------------------------------------------------\n");
 
 	//verifica se a tabela já não existe
 	if ( existeArquivo(table_name_cat(datas.name_table_create,database)) == 1)
@@ -330,21 +331,38 @@ void createTable(char *sql, int index_database)
 	int object      = existeArquivo("fs_object.dat");
 	int schema      = existeArquivo("fs_schema.dat");
 
-	table  *tab = iniciaTabela(table_name_cat(datas.name_table_create,database));
+	table  *tab[1];
+	tab[0] = iniciaTabela(table_name_cat(datas.name_table_create,database));
+
+	if (tab[0] == NULL)
+	{
+		for (i = 0; i < datas.number_columns; i++)
+	    {
+	    	free(datas.create_new_table[i].name_column_table);
+	    }
+
+	    free(datas.create_new_table);
+	    
+	    i = 0;
+
+		printf("Out of memory.\nAborting...\n");
+		abort();
+	}
 
 	for (i = 0; i < datas.number_columns; i++)
 	{
 		//chave estrangeira = 2
-		if (datas.create_new_table[i].constraint == 2)
+		if (datas.create_new_table[i].constraint == FK)
 		{
-			tab = adicionaCampo(tab,datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint,table_name_cat(datas.create_new_table[i].table_foreign,database),datas.create_new_table[i].name_column_foreign);
+			tab[0] = adicionaCampo(tab[0],datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint,table_name_cat(datas.create_new_table[i].table_foreign,database),datas.create_new_table[i].name_column_foreign);
 		}
 		else
 		{
-        	tab = adicionaCampo(tab,datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint,"","");
+        	tab[0] = adicionaCampo(tab[0],datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint,"","");
 		}
 	}
 
+	//limpa memória utilizada por datas
     for (i = 0; i < datas.number_columns; i++)
     {
     	free(datas.create_new_table[i].name_column_table);
@@ -352,9 +370,12 @@ void createTable(char *sql, int index_database)
 
     free(datas.create_new_table);
     
-    i = 0;
+    i  = finalizaTabela(tab[0],database);
 
-    finalizaTabela(tab,database);
+    if (i == SUCCESS)
+    {
+    	printf("Table created successfully\n");
+    }
 }
 
 /**
