@@ -15,4 +15,6 @@ int table_exist(char *tablename,int database);
 
 extern char **tokenize(char *str, char delim, int *size);//quebra string
 
+void selectTable(char *sql, int index_database);
+
 #endif
