@@ -10,7 +10,7 @@ typedef struct db_db{
 
 }db;
 
-int cod_id_banco();
+int cod_id_db(int flag);
 
 int busca(char *str, int identificacao);
 
