@@ -52,6 +52,7 @@ int count = 0;
 char *str_replace(char *search , char *replace , char *subject);
 char *remove_quotes(char *str);
 char *remove_single_quotes(char *str);
+int yyerror(const char *s);
 %}
 
 
@@ -492,7 +493,7 @@ Datas execute_insert(char *sql)
     return datas;
 }
          
-yyerror(char *s) {
+int yyerror(const char *s) {
 	printf("%d : %s %s\n", yylineno, s, yytext );
 	return 0;
 }         
