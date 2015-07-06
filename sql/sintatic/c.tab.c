@@ -3231,6 +3231,7 @@ Datas execute_insert(char *sql)
          
 yyerror(char *s) {
 	printf("%d : %s %s\n", yylineno, s, yytext );
+	return 0;
 }         
 
 union TOKEN **output(void)
