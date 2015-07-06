@@ -22,13 +22,46 @@ void shell()
     start = strdup("dbms-start");
 	printf("\nWelcome to the DBMS Interface.\nType 'help' '\\h' for help.\n\n");	
 
-	while(1){
+	/**
+	 * ****************************
+	 * 
+	 *   Comandos do shell
+	 *
+	 * ****************************
+	 */
+	using_history ();//função para usar o histórico
+	read_history ("history_file");
 
+	while(1)
+	{
 		int nTokens;
 
-		printf("%s",current_db_name);
-		
-		fgets(entrada,1000,stdin);
+		strcpy(entrada, readline(current_db_name));
+
+		/**
+		 * Adiciona ao histórico
+		 */
+		if (entrada[0])
+        {
+			char *expansion;
+			int result;
+
+			result = history_expand (entrada, &expansion);
+			if (result)
+			fprintf (stderr, "%s", expansion);
+
+			if (result < 0 || result == 2)
+			{
+			  free (expansion);
+			  continue;
+			}
+
+			add_history (expansion);
+			strncpy (entrada, expansion, sizeof (entrada) - 1);
+			free (expansion);
+
+			write_history ("history_file");//adiciona no histórico
+        }
 
 		char **tokens = tokenize(remove_newline(entrada),' ',&nTokens);
 		

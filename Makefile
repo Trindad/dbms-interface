@@ -1,7 +1,7 @@
 all: sgbd
 	
 sgbd: sintatic
-	gcc *.c sql/semantic/semantic.c -o sgbd -g -lfl
+	gcc *.c sql/semantic/semantic.c -o sgbd -g -lfl -L/usr/local/lib -I/usr/local/include -lreadline
 
 clean:
 	rm *.dat

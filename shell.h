@@ -1,5 +1,7 @@
 #ifndef SHELL_H
 #define SHELL_H
+#include <readline/readline.h>
+#include <readline/history.h>
 #include "database.h"
 #include "./sql/semantic/semantic.h"
 
