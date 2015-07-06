@@ -52,6 +52,7 @@ int count = 0;
 char *str_replace(char *search , char *replace , char *subject);
 char *remove_quotes(char *str);
 char *remove_single_quotes(char *str);
+int yylex(void);
 int yyerror(const char *s);
 %}
 
