@@ -119,7 +119,7 @@ int procuraSchemaArquivo(struct fs_objects objeto);
                 ERRO_REMOVER_ARQUIVO_SCHEMA
  ---------------------------------------------------------------------------------------------*/
  
- void *show_schema(struct fs_objects objeto,char *name_table);
+ void show_schema(struct fs_objects objeto,char *name_table);
 /* ---------------------------------------------------------------------------------------------- 
     Objetivo:   
     Parametros: 
@@ -143,3 +143,12 @@ double get_inteiro(char v[]);
 double convertD(char u[]);
 
 int *tamanho_maximo_campo(struct fs_objects objeto);//verifica o tamanho máximo dos campos para imprimir formatado o esquema
+
+extern int verificaNomeTabela(char *nomeTabela);
+/*
+    Esta função verifica se um nome de tabela já está inserido no dicionario. 
+    Retorna:
+        -> 1 se o nome existe no dicionario;
+        -> 0 se existe no dicionário.
+    *nomeTabela - Nome de uma tabela,  a qual deseja-se saber se existe no dicionario.
+*/

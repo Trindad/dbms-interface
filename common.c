@@ -296,7 +296,7 @@ int *tamanho_maximo_campo(struct fs_objects objeto)
 
 }
 
-void *show_schema(struct fs_objects objeto, char *name_table)
+void show_schema(struct fs_objects objeto, char *name_table)
 {
     printf("         Table \"%s\"\n",name_table);
 	int i = 0, cod = 0;

@@ -142,6 +142,8 @@ column *insereValor(table  *tab, column *c, char *nomeCampo, char *valorCampo);
     *nomeCampo - Nome do campo que o usuário vai inserir um valor.
     *valorCampo - Valor do campo que vai ser inserido.
 */
+    
+int cabecalho(tp_table *s, int num_reg);
 
 int finalizaInsert(char *nome, column *c);
 /*

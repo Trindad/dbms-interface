@@ -29,6 +29,8 @@ int tamTupla(tp_table *esquema, struct fs_objects objeto);
 
 */
 
+void setTupla(tp_buffer *buffer,char *tupla, int tam, int pos);
+
 char *getTupla(tp_table *campos,struct fs_objects objeto, int from);
 
 #endif
