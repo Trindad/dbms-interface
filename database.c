@@ -116,6 +116,8 @@ void reescreve(char *str)
 //busca por nome do banco se estiver cadastrado retorna a id dele
 int busca(char *str, int identificacao){//a identificacao indicara qual if será executado
 	
+    id_max = 0;
+
 	int cod_retorno;
     FILE *file;
     db *database = (db *)malloc(sizeof(db));
@@ -139,8 +141,10 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
            
             fread(&database->cod,sizeof(int),1,file);
             fread(&database->nome,sizeof(char),TAM_NOME_BANCO,file);
+            
+            if (id_max < database->cod) id_max = database->cod;
 
-            if(identificacao==1)
+            if(identificacao == 1)
             {
                 if(!strcmp(str,database->nome))
                 {
@@ -150,7 +154,7 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
                     return cod_retorno;
                 }
             }
-            if(identificacao==2)
+            if(identificacao == 2)
             {
                 printf("\nDatabase: %s", database->nome);
             }
@@ -166,11 +170,12 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
     return -2;
 }
 
-void dropDatabase(char *str){
+int dropDatabase(char *str){
 
     FILE *dicionario;
 
     int i = 0, cnt = 0, cod_db = busca(str,1), n = 0;
+
     char *nome_tabela = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA+1);
     
     if (nome_tabela == NULL)
@@ -179,7 +184,7 @@ void dropDatabase(char *str){
         abort();
     }
 
-    char **tables, **aux_name;
+    char **tables;
     tables = (char**) malloc (sizeof(char*)*200);
 
     if (tables == NULL)
@@ -192,20 +197,20 @@ void dropDatabase(char *str){
     if(cod_db == -2)
     {
         printf("There is no registered table named %s\n", str);
-        return;
+        return 0;
     }
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
     {
         free(nome_tabela);
         printf("Error while opening the database file\n");
-        return;
+        return 0;
     }
     while(fgetc (dicionario) != EOF)
     {
         fseek(dicionario, -1, 1);
         fread(nome_tabela, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
         n = 0;
-        aux_name = tokenize(nome_tabela,'_',&n);
+        char **aux_name = tokenize(nome_tabela,'_',&n);
 
         if (n >= 2) 
         {
@@ -217,25 +222,32 @@ void dropDatabase(char *str){
 				cnt++;
             }
         }
+        free(aux_name);
         fseek(dicionario, 28, 1);
     }
-	if(cnt == 0){
-        free(aux_name);
-        free(nome_tabela);
 
+	if(cnt == 0)
+    {   
+        reescreve(str);
+
+        free(nome_tabela);
         fclose(dicionario);
-		return;
+		return 1;
 	}
 	else
 	{
         fclose(dicionario);
 
-        if((dicionario = fopen("fs_object.dat","a+b")) == NULL){
-            printf("Error while opening the database file\n");
-            return;
-        }
-        cnt = 0;
+        if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
+        {
+            free(nome_tabela);
+            free(tables);
 
+            printf("Error while opening the database file\n");
+            return 0;
+        }
+
+        cnt = 0;
         n = 0;
 
         while(fgetc (dicionario) != EOF)
@@ -257,6 +269,8 @@ void dropDatabase(char *str){
                     
                     if (tables[cnt] == NULL)
                     {
+                        free(tables);
+                        free(nome_tabela);
                         printf("Out of memory.\nAborting...\n");
                         abort();
                     }
@@ -281,13 +295,16 @@ void dropDatabase(char *str){
         reescreve(str);
 
         for(cnt = 0; cnt < n; cnt++) free(tables[cnt]);
+        
         free(tables);
-
-        free(aux_name);
         free(nome_tabela);
 
         fclose(dicionario);
+
+        return 1;
     }
+
+    return 0;
 }
 //criar banco
 void grava_banco(char *str){
@@ -297,7 +314,7 @@ void grava_banco(char *str){
 
     file = fopen("fs_database.dat", "a+");
     if(file != NULL){
-        database->cod = cod_id_db(1);                                 //id proximo banco
+        database->cod = id_max+1;                                 //id proximo banco
         strcpy(database->nome,str);
         fwrite(&database->cod, sizeof(int), 1, file);
         fwrite(&database->nome, sizeof(char), TAM_NOME_BANCO, file);

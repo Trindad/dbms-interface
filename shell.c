@@ -125,7 +125,7 @@ void shell()
 			}
 			char *name_db = remove_semicolon(tokens[1]);
 			codDB = busca(name_db,1); //função chamada para conecção no banco, retorna o codigo do banco ao conectar
-		   
+		
 			if (codDB >= 0)
 			{
 				strcpy(nomeBD, name_db);  //passa o nome do bd, para a variavel mostrar ao usuario qual o banco conectado
@@ -286,7 +286,13 @@ void shell()
 					continue;
 				}		
 				
-				excluirTabela(t);
+				int ok = excluirTabela(t);
+
+				if (ok == SUCCESS)
+				{
+					printf("Table deleted successfully.\n");
+				}
+				
 				free(exist);
 				free(t);
 			}
@@ -309,15 +315,17 @@ void shell()
 				
 				exist = remove_semicolon(tokens[2]);
 				codDB = busca(exist,1);
-
+				
 				if(codDB == current_database)
 				{
                 	printf("Cannot drop the currently open database.\n");
                     continue;
 				}
 
-				dropDatabase(remove_semicolon(tokens[2]));
-				printf("Database deleted successfully.\n");
+				int drop = dropDatabase(remove_semicolon(tokens[2]));
+
+				if(drop == 1)printf("Database deleted successfully.\n");
+                
                 free(exist);
 			}
 		}
@@ -505,108 +513,104 @@ void example()
 
 	    nTabela[2]  = existeArquivo(table_name_real("Inscri",current_database));
 
-	    
-	    if(!object || !schema)
-	    {
-	        if(!nTabela[0]){ 
-	    		
-	            tab[0] = iniciaTabela(table_name_real("Aluno",current_database));                //Cria a tabela 
-	            tab[0] = adicionaCampo(tab[0], "CPF"     , 'I', (sizeof(int))   ,PK,"","");     //Cria os atributos
-	            tab[0] = adicionaCampo(tab[0], "Nome"    , 'S', 20              ,NPK,"","");        
-	            tab[0] = adicionaCampo(tab[0], "Endereco", 'S', 20              ,NPK,"","");
-	            tab[0] = adicionaCampo(tab[0], "Peso"    , 'D', (sizeof(double)),NPK,"","");
-	            finalizaTabela(tab[0],current_database);
-	            
-	         }
-	         if(!nTabela[1]){   
-	         	
-	            tab[1] = iniciaTabela(table_name_real("Inst",current_database)); 
-	            tab[1] = adicionaCampo(tab[1], "CodInst"  , 'I', (sizeof(int))   ,PK , "","");
-	            tab[1] = adicionaCampo(tab[1], "Nome"     , 'S', 20              ,NPK, "","");
-	            tab[1] = adicionaCampo(tab[1], "Endereco" , 'S', 20              ,NPK, "","");
-	            tab[1] = adicionaCampo(tab[1], "Reitor"   , 'S', 10              ,NPK, "","");
-	            finalizaTabela(tab[1],current_database);
-	        }
-	        if(!nTabela[2]){
-	        	
-	            tab[2] = iniciaTabela(table_name_real("Inscri",current_database)); 
-	            tab[2] = adicionaCampo(tab[2], "CodMat"     , 'I', (sizeof(int))  ,PK, "","");
-	            tab[2] = adicionaCampo(tab[2], "CPF"        , 'I', (sizeof(int))  ,FK, table_name_real("Aluno",current_database),"CPF");
-	            tab[2] = adicionaCampo(tab[2], "CodInst"    , 'I', (sizeof(int))  ,FK , table_name_real("Inst",current_database),"CodInst");
-	            tab[2] = adicionaCampo(tab[2], "Curso"   , 'S',  20  ,NPK,"","");
-	            finalizaTabela(tab[2],current_database);
-	        }
-	         
-	         //Inserção de tuplas na tabela1   
-	        colunas = NULL;     
-	        colunas = insereValor(tab[0],colunas, "CPF", "123456");
-	        colunas = insereValor(tab[0],colunas, "Nome", "Rogerio");
-	        colunas = insereValor(tab[0],colunas, "Endereco", "Rua Marechal");
-	        colunas = insereValor(tab[0],colunas, "Peso", "81.4");
-	        finalizaInsert(table_name_real("Aluno",current_database), colunas); 
-	        
-	        colunas = NULL;     
-	        colunas = insereValor(tab[0],colunas, "CPF", "654321");
-	        colunas = insereValor(tab[0],colunas, "Nome", "Ricardo");
-	        colunas = insereValor(tab[0],colunas, "Endereco", "RuaClevela");
-	        colunas = insereValor(tab[0],colunas, "Peso", "88.9");
-	        finalizaInsert(table_name_real("Aluno",current_database), colunas); 
 
-	        colunas = NULL;     
-	        colunas = insereValor(tab[0],colunas, "CPF", "1234567");
-	        colunas = insereValor(tab[0],colunas, "Nome", "Natan");
-	        colunas = insereValor(tab[0],colunas, "Endereco", "RuaDelmi");
-	        colunas = insereValor(tab[0],colunas, "Peso", "58.9");
-	        finalizaInsert(table_name_real("Aluno",current_database), colunas); 
-	            
-	        
-	        //Inserção de tuplas na tabela2 
-	        colunas = NULL;
-	        colunas = insereValor(tab[1],colunas, "CodInst", "111");
-	        colunas = insereValor(tab[1],colunas, "Nome", "UFFS");
-	        colunas = insereValor(tab[1],colunas, "Endereco", "RuadeTerra");
-	        colunas = insereValor(tab[1],colunas, "Reitor", "MandaChuva");
-	        finalizaInsert(table_name_real("Inst",current_database), colunas);
-	        
-	        colunas = NULL;
-	        colunas = insereValor(tab[1],colunas, "CodInst", "222");
-	        colunas = insereValor(tab[1],colunas, "Nome", "CEFET");
-	        colunas = insereValor(tab[1],colunas, "Endereco", "RuadePedra");
-	        colunas = insereValor(tab[1],colunas, "Reitor", "MandaVento");
-	        finalizaInsert(table_name_real("Inst",current_database), colunas);
+        if(!nTabela[0]){ 
+    		
+            tab[0] = iniciaTabela(table_name_real("Aluno",current_database));                //Cria a tabela 
+            tab[0] = adicionaCampo(tab[0], "CPF"     , 'I', (sizeof(int))   ,PK,"","");     //Cria os atributos
+            tab[0] = adicionaCampo(tab[0], "Nome"    , 'S', 20              ,NPK,"","");        
+            tab[0] = adicionaCampo(tab[0], "Endereco", 'S', 20              ,NPK,"","");
+            tab[0] = adicionaCampo(tab[0], "Peso"    , 'D', (sizeof(double)),NPK,"","");
+            finalizaTabela(tab[0],current_database);
+            
+         }
+         if(!nTabela[1]){   
+         	
+            tab[1] = iniciaTabela(table_name_real("Inst",current_database)); 
+            tab[1] = adicionaCampo(tab[1], "CodInst"  , 'I', (sizeof(int))   ,PK , "","");
+            tab[1] = adicionaCampo(tab[1], "Nome"     , 'S', 20              ,NPK, "","");
+            tab[1] = adicionaCampo(tab[1], "Endereco" , 'S', 20              ,NPK, "","");
+            tab[1] = adicionaCampo(tab[1], "Reitor"   , 'S', 10              ,NPK, "","");
+            finalizaTabela(tab[1],current_database);
+        }
+        if(!nTabela[2]){
+        	
+            tab[2] = iniciaTabela(table_name_real("Inscri",current_database)); 
+            tab[2] = adicionaCampo(tab[2], "CodMat"     , 'I', (sizeof(int))  ,PK, "","");
+            tab[2] = adicionaCampo(tab[2], "CPF"        , 'I', (sizeof(int))  ,FK, table_name_real("Aluno",current_database),"CPF");
+            tab[2] = adicionaCampo(tab[2], "CodInst"    , 'I', (sizeof(int))  ,FK , table_name_real("Inst",current_database),"CodInst");
+            tab[2] = adicionaCampo(tab[2], "Curso"   , 'S',  20  ,NPK,"","");
+            finalizaTabela(tab[2],current_database);
+        }
+         
+         //Inserção de tuplas na tabela1   
+        colunas = NULL;     
+        colunas = insereValor(tab[0],colunas, "CPF", "123456");
+        colunas = insereValor(tab[0],colunas, "Nome", "Rogerio");
+        colunas = insereValor(tab[0],colunas, "Endereco", "Rua Marechal");
+        colunas = insereValor(tab[0],colunas, "Peso", "81.4");
+        finalizaInsert(table_name_real("Aluno",current_database), colunas); 
+        
+        colunas = NULL;     
+        colunas = insereValor(tab[0],colunas, "CPF", "654321");
+        colunas = insereValor(tab[0],colunas, "Nome", "Ricardo");
+        colunas = insereValor(tab[0],colunas, "Endereco", "RuaClevela");
+        colunas = insereValor(tab[0],colunas, "Peso", "88.9");
+        finalizaInsert(table_name_real("Aluno",current_database), colunas); 
 
-	        colunas = NULL;
-	        colunas = insereValor(tab[1],colunas, "CodInst", "333");
-	        colunas = insereValor(tab[1],colunas, "Nome", "UNOESC");
-	        colunas = insereValor(tab[1],colunas, "Endereco", "RuadeAsfal");
-	        colunas = insereValor(tab[1],colunas, "Reitor", "MandaAgua");
-	        finalizaInsert(table_name_real("Inst",current_database), colunas);
-	        
-	        
-	        
-	        //Inserção de tupla na tabela3
-	        colunas = NULL;
-	        colunas = insereValor(tab[2],colunas, "CodMat", "1401");
-	        colunas = insereValor(tab[2],colunas, "CPF", "123456");
-	        colunas = insereValor(tab[2],colunas, "CodInst", "333");
-	        colunas = insereValor(tab[2],colunas, "Curso", "CC");
-	        finalizaInsert(table_name_real("Inscri",current_database), colunas);
-	        
-	        colunas = NULL;
-	        colunas = insereValor(tab[2],colunas, "CodMat", "1402");
-	        colunas = insereValor(tab[2],colunas, "CPF", "654321");
-	        colunas = insereValor(tab[2],colunas, "CodInst", "222");
-	        colunas = insereValor(tab[2],colunas, "Curso", "CC");
-	        finalizaInsert(table_name_real("Inscri",current_database), colunas);
-	        
-	        colunas = NULL;
-	        colunas = insereValor(tab[2],colunas, "CodMat", "1403");
-	        colunas = insereValor(tab[2],colunas, "CPF", "1234567");
-	        colunas = insereValor(tab[2],colunas, "CodInst", "111");
-	        colunas = insereValor(tab[2],colunas, "Curso", "ADM");
-	        finalizaInsert(table_name_real("Inscri",current_database), colunas);
+        colunas = NULL;     
+        colunas = insereValor(tab[0],colunas, "CPF", "1234567");
+        colunas = insereValor(tab[0],colunas, "Nome", "Natan");
+        colunas = insereValor(tab[0],colunas, "Endereco", "RuaDelmi");
+        colunas = insereValor(tab[0],colunas, "Peso", "58.9");
+        finalizaInsert(table_name_real("Aluno",current_database), colunas); 
+            
+        
+        //Inserção de tuplas na tabela2 
+        colunas = NULL;
+        colunas = insereValor(tab[1],colunas, "CodInst", "111");
+        colunas = insereValor(tab[1],colunas, "Nome", "UFFS");
+        colunas = insereValor(tab[1],colunas, "Endereco", "RuadeTerra");
+        colunas = insereValor(tab[1],colunas, "Reitor", "MandaChuva");
+        finalizaInsert(table_name_real("Inst",current_database), colunas);
+        
+        colunas = NULL;
+        colunas = insereValor(tab[1],colunas, "CodInst", "222");
+        colunas = insereValor(tab[1],colunas, "Nome", "CEFET");
+        colunas = insereValor(tab[1],colunas, "Endereco", "RuadePedra");
+        colunas = insereValor(tab[1],colunas, "Reitor", "MandaVento");
+        finalizaInsert(table_name_real("Inst",current_database), colunas);
 
-	    }
+        colunas = NULL;
+        colunas = insereValor(tab[1],colunas, "CodInst", "333");
+        colunas = insereValor(tab[1],colunas, "Nome", "UNOESC");
+        colunas = insereValor(tab[1],colunas, "Endereco", "RuadeAsfal");
+        colunas = insereValor(tab[1],colunas, "Reitor", "MandaAgua");
+        finalizaInsert(table_name_real("Inst",current_database), colunas);
+        
+        
+        
+        //Inserção de tupla na tabela3
+        colunas = NULL;
+        colunas = insereValor(tab[2],colunas, "CodMat", "1401");
+        colunas = insereValor(tab[2],colunas, "CPF", "123456");
+        colunas = insereValor(tab[2],colunas, "CodInst", "333");
+        colunas = insereValor(tab[2],colunas, "Curso", "CC");
+        finalizaInsert(table_name_real("Inscri",current_database), colunas);
+        
+        colunas = NULL;
+        colunas = insereValor(tab[2],colunas, "CodMat", "1402");
+        colunas = insereValor(tab[2],colunas, "CPF", "654321");
+        colunas = insereValor(tab[2],colunas, "CodInst", "222");
+        colunas = insereValor(tab[2],colunas, "Curso", "CC");
+        finalizaInsert(table_name_real("Inscri",current_database), colunas);
+        
+        colunas = NULL;
+        colunas = insereValor(tab[2],colunas, "CodMat", "1403");
+        colunas = insereValor(tab[2],colunas, "CPF", "1234567");
+        colunas = insereValor(tab[2],colunas, "CodInst", "111");
+        colunas = insereValor(tab[2],colunas, "Curso", "ADM");
+        finalizaInsert(table_name_real("Inscri",current_database), colunas);
 	}
   
     current_database = -1;//não existe nenhum banco logado

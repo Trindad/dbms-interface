@@ -918,37 +918,58 @@ int excluirTabela(char *nomeTabela) {
     abreTabela(nomeTabela, &objeto, &esquema);
     qtTable = quantidadeTabelas();
 
-    char **tupla = malloc(sizeof(char)*qtTable);
+    char **tupla = (char**) malloc (sizeof(char)*qtTable);
 
     if (tupla == NULL)
     {
+        free(str);
         printf("Out of memory.\nAborting...\n");
+
         abort();
     }
-    for(i=0; i<qtTable; i++) {
-        tupla[i] = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+    for(i = 0; i < qtTable; i++) {
+
+        tupla[i] = (char *) malloc (sizeof(char)*TAMANHO_NOME_TABELA);
 
         if (tupla[i] == NULL)
         {
+            free(tupla);
+            free(str);
             printf("Out of memory.\nAborting...\n");
+
             abort();
         }
     }
 
     tp_table *tab2 = (tp_table *)malloc(sizeof(struct tp_table));
+
+    if (tab2 == NULL)
+    {
+        free(tupla);
+        free(str);
+        printf("Out of memory.\nAborting...\n");
+
+        abort();
+    }
+
     tab2 = procuraAtributoFK(objeto);   //retorna o tipo de chave que e cada campo
 
     FILE *dicionario;
 
-    if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
+    if((dicionario = fopen("fs_object.dat","a+b")) == NULL) 
+    {
+        free(str);
+        free(tab2);
+        free(tupla);
         return ERRO_ABRIR_ARQUIVO;
+    }
 
-    k=0;
+    k = 0;
     while(fgetc (dicionario) != EOF){
         fseek(dicionario, -1, 1);
 
         //coloca o nome de todas as tabelas em tupla
-        fread(tupla[k], sizeof(char), TAMANHO_NOME_TABELA , dicionario);
+        fread(tupla[k], sizeof(char),TAMANHO_NOME_TABELA , dicionario);
         k++;
 
         fseek(dicionario, 28, 1);
@@ -958,7 +979,7 @@ int excluirTabela(char *nomeTabela) {
     
     for(i = 0; i < objeto.qtdCampos; i++){
         if(tab2[i].chave == PK){
-            for(j=0; j<qtTable; j++) {                      //se tiver chave primaria verifica se ela e chave
+            for(j=0; j < qtTable; j++) {                      //se tiver chave primaria verifica se ela e chave
                 if(strcmp(tupla[j], nomeTabela) != 0) {     //estrangeira em outra tabela
 
                     abreTabela(tupla[j], &objeto1, &esquema1);
@@ -967,15 +988,22 @@ int excluirTabela(char *nomeTabela) {
                     
                     if (tab3 == NULL)
                     {
+                        free(tab2);
+                        free(tupla);
                         printf("Out of memory.\nAborting...\n");
                         abort();
                     }
                     tab3 = procuraAtributoFK(objeto1);
 
-                    for(l=0; l<objeto1.qtdCampos; l++) {
+                    for(l = 0; l < objeto1.qtdCampos; l++) {
+                        
                         if(tab3[l].chave == FK) {                               //verifica se a outra tabela possui
                             if(strcmp(nomeTabela, tab3[l].tabelaApt) == 0) {    //chave estrangeira
                                 printf("Cannot delete row due to foreign key constraint!\n");            //se sim, verifica se e da tabela
+                                free(tab2);
+                                free(tupla);
+                                free(str);
+                                free(tab3);
                                 return ERRO_CHAVE_ESTRANGEIRA;                  //anterior
                             }
                         }
@@ -991,19 +1019,30 @@ int excluirTabela(char *nomeTabela) {
     tp_buffer *bufferpoll = initbuffer();
 
     if(bufferpoll == ERRO_DE_ALOCACAO){
-        printf("Out of memory.\n");
+        free(str);
+        free(tupla);
+        printf("Out of memory.\nAborting...\n");
         return ERRO_LEITURA_DADOS;
     }
 
     erro = SUCCESS;
-    for(x = 0; erro == SUCCESS; x++)
-        erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);        
-    
-    if(procuraSchemaArquivo(objeto) != 0)
-        return ERRO_REMOVER_ARQUIVO_SCHEMA;
 
-    if(procuraObjectArquivo(nomeTabela) != 0)
+    for(x = 0; erro == SUCCESS; x++){
+        erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);        
+    }
+    
+    if(procuraSchemaArquivo(objeto) != 0){
+        free(str);
+        free(tupla);
+        return ERRO_REMOVER_ARQUIVO_SCHEMA;
+        
+    }
+
+    if(procuraObjectArquivo(nomeTabela) != 0){
+        free(str);
+        free(tupla);
        return ERRO_REMOVER_ARQUIVO_OBJECT;
+    }
         
     remove(str);
     free(str);

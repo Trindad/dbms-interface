@@ -10,6 +10,8 @@ typedef struct db_db{
 
 }db;
 
+int id_max; //identificador máximo do banco para controle de inserção
+
 int cod_id_db(int flag);
 
 int busca(char *str, int identificacao);
@@ -22,7 +24,7 @@ void grava_banco(char *str);
 
 int checkCreateDB(char *nome);
 
-void dropDatabase(char *name);//exclui banco de dados
+int dropDatabase(char *name);//exclui banco de dados
 
 extern char **tokenize(char *str, char delim, int *size);//quebra string 
 /*
