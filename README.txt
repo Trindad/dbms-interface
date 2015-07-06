@@ -353,34 +353,21 @@ Todos os comandos aceitam ';' no final com exceção dos \l e \d.
 			insert into Aluno values (8079, "Joca", "Rua dos martins", 258.0),(100000, "Joao", "Rua dos capitaes", 70.0);
 			insert into Aluno (CPF,Nome,Endereco,Peso) values (2138, "Joca", "Rua dos martins", 258.0),(6778, "Joao", "Rua dos capitaes", 70.0);
 
-	Sair do Shell (interface)
+Sair do Shell (interface)
 		exit
 		bye
 		quit
-	Copyright
+Copyright
 		\copyright
-	Excluir banco de dados
-		drop database <database_name>
-	Excluir tabela do banco de dados
-		drop table <table_name>
-	Criar tabela
-		CREATE TABLE <table name> ( <column name> <column type> [ <attribute constraint> ]...);
-		CREATE TABLE <table name> ( <column name> <column type>, <column name> <column type> , [ <attribute constraint> ]);
-		Exemplos:
-			create table curso (nome string primary key,creditos integer,professor string(100));
-
-			create table cursoverao (nome string,cod integer, creditos integer,professor string(100),constraint primary key (nome) , CONSTRAINT FOREIGN KEY ( cod ) REFERENCES Inst(CodInst));
-
+Excluir banco de dados
+	drop database <database_name>
+	O banco não pode ser excluído caso esteja esteja logado nele mesmo
+Excluir tabela do banco de dados
+	drop table <table_name>
+	A ordem de exlusão das tabelas obdece o esquema de chaves estrangeiras
 Implementação das funções:
 
 A implementação das funções está no arquivo database.c e seus protótipos em database.h. 
-
- - create database name_my_db
-Nessa nova versão cada tabela criada no banco recebe o id do banco ao qual ela pertence. 
-As tabelas são guardadas no dicionário com os ids e são escritas em arquivo com o id também. 
-O id é controlado por uma varíavel que é atualizada a cada conexão ao banco, assim sendo necessário que o usuário crie e se conecte ao banco para depois inserir as tabelas e os dados no respectivo banco. 
-Para criar um banco utiliza-se o comando create database nome_do_banco, sendo que o nome do banco pode conter letras maiúsculas e minúsculas. 
-Pode se criar um novo banco estando ou não conectado a  um banco.
 
  - \c name_my_db: 
 Para realizar conexão a um banco é utilizado o comando \c nome_banco.
@@ -436,6 +423,11 @@ Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem d
 
 -CREATE
 	Banco de dados
+		Nessa nova versão cada tabela criada no banco recebe o id do banco ao qual ela pertence. 
+		As tabelas são guardadas no dicionário com os ids e são escritas em arquivo com o id também. 
+		O id é controlado por uma varíavel que é atualizada a cada conexão ao banco, assim sendo necessário que o usuário crie e se conecte ao banco para depois inserir as tabelas e os dados no respectivo banco. 
+		Para criar um banco utiliza-se o comando create database nome_do_banco, sendo que o nome do banco pode conter letras maiúsculas e minúsculas. 
+		Pode se criar um novo banco estando ou não conectado a  um banco.
 		create database <nome_db>
 	Tabela
 		create table <nome_tabela> ( <nome coluna> <tipo coluna> [ <atributo constraint> ]{ , <nome coluna> <tipo coluna> [ <atributo constrain> ] } [ <constraint da tabela> { , <constraint da tabela> } ] );
@@ -444,43 +436,47 @@ Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem d
 			create table curso (nome string primary key,creditos integer,professor string(100));
 
 			create table cursoverao (nome string,cod integer, creditos integer,professor string(100),constraint primary key (nome) , CONSTRAINT FOREIGN KEY ( cod ) REFERENCES Inst(CodInst));
+		OBS: pode ser minúsculo ou maiúsculo
+
+-DIRETÓRIO 'sql'
+	Neste diretório tem as funções que tratam a análise sintática e léxica, para trabalhos futuros podrá ser inserido facilmente mais informações na estrutura Datas que está no arquivo c.y (sql/sintatic).
 
 PASSOS PARA UTILIZAR A INTERFACE
 
-Comando para saída do shell, simplesmente verifica se o token de entrada é exit, dá um break e encerra o programa.
+	Comando para saída do shell, simplesmente verifica se o token de entrada é exit, dá um break e encerra o programa.
 
-COMPILAR:
-	Além do gcc é necessário ter na máquina instalado o bison e o lex.
-	lex versão: lex 2.5.35
-	bison versão: bison (GNU bison) 2.5
-	Para conferir se você já possuim instalado digite no terminal:
-		lex --version
-		bison --version
+	COMPILAR:
+		Além do gcc é necessário ter na máquina instalado o bison e o lex.
+		lex versão: lex 2.5.35
+		bison versão: bison (GNU bison) 2.5
+		Para conferir se você já possuim instalado digite no terminal:
+			lex --version
+			bison --version
 
-OPÇÃO 1: Manual
-	1º Passo
-		Estar no diretório root do projeto
-	2º Passo
-		Entrar no diretório sintatic, por exemplo
-			cd sql/sintatic
-		Em seguida 
-			lex c.l
-			bison c.y
-			gcc c.tab.c -o bf -g -lfl
-	3° Passo
-		Voltar ao diretório root
-	4º Passo
-		Compilar com GCC
-			gcc *.c sql/semantic/semantic.c -o <nome_executavel> -g -lfl -L/usr/local/lib -I/usr/local/include -lreadline
-	5º Passo 
-		Executar
-			./<nome_executavel>
+	OPÇÃO 1: Manual
+		1º Passo
+			Estar no diretório root do projeto
+		2º Passo
+			Entrar no diretório sintatic, por exemplo
+				cd sql/sintatic
+			Em seguida 
+				lex c.l
+				bison c.y
+				gcc c.tab.c -o bf -g -lfl
+		3° Passo
+			Voltar ao diretório root
+		4º Passo
+			Compilar com GCC
+				gcc *.c sql/semantic/semantic.c -o <nome_executavel> -g -lfl -L/usr/local/lib -I/usr/local/include -lreadline
+		5º Passo 
+			Executar
+				./<nome_executavel>
 
-OPÇÃO 2: usando Make
-	1º Passo 
-		make
-	2º Passo
-		./sgbd
-	Para remover os dados usar 'make clean'
+	OPÇÃO 2: usando Make
+		1º Passo 
+			make
+		2º Passo
+			./sgbd
+		Para remover os dados usar 'make clean'
 
-	
+		
