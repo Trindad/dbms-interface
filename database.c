@@ -1,6 +1,6 @@
 #include "database.h"
 
-int cod_id_banco(){
+int cod_id_db(int flag){
 
     int cod_id = 0;
     FILE *file;
@@ -14,17 +14,37 @@ int cod_id_banco(){
     }
 
     file = fopen("fs_database.dat","r");
-    
-    if(file != NULL){
-        while(ch!=EOF){
-            ungetc(ch,file);
-            fread(&database->cod,sizeof(int),1,file);
-            fread(&database->nome,sizeof(char),TAM_NOME_BANCO,file);
+
+    if(file != NULL)
+    {
+        if(flag == 1)
+        {                       //quantidade de bancos ja cadastrados
+            while(ch!=EOF)
+            {
+                ungetc(ch,file);
+                fread(&database->cod,sizeof(int),1,file);
+                fread(&database->nome,sizeof(char),TAM_NOME_BANCO,file);
+                cod_id++;
+                ch = getc(file);
+            }
+        }
+        else
+        {                       //id novo banco
+            int quant_db = cod_id_db(1), cont = 1;
+            for(; cont < quant_db; cont++)
+            {
+                fread(&database->cod,sizeof(int),1,file);
+                fread(&database->nome,sizeof(char),TAM_NOME_BANCO,file);
+                cod_id = database->cod;
+            }
             cod_id++;
-            ch = getc(file);
         }
     }
-    else printf("\nCannot read fs_database");
+    else
+    {
+        printf("Cannot read fs_database.\n");
+        return;
+    }
     fclose(file);
     free(database);
     return cod_id;
@@ -33,7 +53,7 @@ int cod_id_banco(){
 void reescreve(char *str)
 {
     FILE *file;
-    int quant_db = cod_id_banco(), aux = 0, cont = 0;
+    int quant_db = cod_id_db(1), aux = 0, cont = 0;
     db *database = (db *)malloc(sizeof(db));
     db *aux_arq = (db *)malloc(sizeof(db)*quant_db);
 
@@ -63,11 +83,13 @@ void reescreve(char *str)
             }
         }
         else
-            printf("\nError while writing in database file");
+            printf("Error while writing in database file.\n");
+            return;
     }
     else
     {
-        printf("\nCannot open fs_database!\n");
+        printf("Cannot open fs_database!\n");
+        return;
     }
     free(database);
     free(aux_arq);
@@ -127,8 +149,84 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
     return -2;
 }
 
-void dropDatabase(char *name){
+void dropDatabase(char *str){
 
+    FILE *dicionario;
+    char *name = (char *)malloc(sizeof(TAM_NOME_BANCO));
+    strcpy(name,str);
+    int i = 0, cnt = 0, cod_db = busca(str,1), n = 0;
+    char *nome_tabela = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
+    char **tables, **aux_name;
+
+    if(cod_db == -2)
+    {
+        printf("There is no registered table named %s\n", str);
+        return;
+    }
+    if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
+    {
+        free(nome_tabela);
+        printf("Error while opening the database file\n");
+        return;
+    }
+    while(fgetc (dicionario) != EOF)
+    {
+        fseek(dicionario, -1, 1);
+        fread(nome_tabela, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
+        n = 0;
+        aux_name = tokenize(nome_tabela,'_',&n);
+        if (n >= 2) {
+            n = atoi(aux_name[0]);
+            if(n == cod_db){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
+				cnt++;
+            }
+        }
+        fseek(dicionario, 28, 1);
+    }
+	if(cnt == 0){
+        free(aux_name);
+        free(nome_tabela);
+
+        fclose(dicionario);
+		return;
+	}
+	else
+	{
+        fclose(dicionario);
+        if((dicionario = fopen("fs_object.dat","a+b")) == NULL){
+            printf("Error while opening the database file\n");
+            return;
+        }
+        cnt = 0;
+
+        while(fgetc (dicionario) != EOF)
+        {
+            fseek(dicionario, -1, 1);
+            fread(nome_tabela, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
+            n = 0;
+            aux_name = tokenize(nome_tabela,'_',&n);
+            if (n >= 2) {
+                n = atoi(aux_name[0]);
+                if(n == cod_db){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
+                    tables[cnt] = malloc(sizeof(char *)*strlen(nome_tabela));
+                    strcpy(tables[cnt],nome_tabela);
+                    cnt++;
+                }
+            }
+            fseek(dicionario, 28, 1);
+        }
+        while(cnt--)
+        {
+            excluirTabela(tables[cnt]);
+        }
+        reescreve(name);
+        free(name);
+        free(tables);
+        free(aux_name);
+        free(nome_tabela);
+
+        fclose(dicionario);
+    }
 }
 //criar banco
 void grava_banco(char *str){
@@ -138,7 +236,7 @@ void grava_banco(char *str){
 
     file = fopen("fs_database.dat", "a+");
     if(file != NULL){
-        database->cod = cod_id_banco();                                 //id proximo banco
+        database->cod = cod_id_db(1);                                 //id proximo banco
         strcpy(database->nome,str);
         fwrite(&database->cod, sizeof(int), 1, file);
         fwrite(&database->nome, sizeof(char), TAM_NOME_BANCO, file);
@@ -191,13 +289,13 @@ void listaBancos()
         printf("No database created.\n");
     }
     
-    int cod = (cod_id_banco()), cont = 1;
+    int quant_db = (cod_id_db(1)), cont = 1;
 
     file = fopen("fs_database.dat", "r");  
          
     if(file != NULL)
     {
-       for(; cont < cod; cont++){
+       for(; cont < quant_db; cont++){
            
             fread(&database->cod,sizeof(int),1,file);
             fread(&database->nome,sizeof(char),TAM_NOME_BANCO,file);
