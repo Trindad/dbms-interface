@@ -112,7 +112,7 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
     if(!existeArquivo("fs_database.dat"))
         return -1;
     
-    int cod = (cod_id_banco()), cont = 1;
+    int cod = (cod_id_db(1)), cont = 1;
 
     file = fopen("fs_database.dat", "r");  
          
