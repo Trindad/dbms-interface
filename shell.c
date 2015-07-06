@@ -275,9 +275,17 @@ void shell()
 					continue;
 				}
 				
+				exist = remove_semicolon(tokens[2]);
+				codDB = busca(exist,1);
+				if(codDB == current_database)
+				{
+                	printf("Cannot drop the currently open database.\n");
+                    continue;
+				}
+
 				dropDatabase(remove_semicolon(tokens[2]));
-				
-				free(exist);
+				printf("Database deleted successfully.\n");
+                free(exist);
 			}
 		}
 		/**
