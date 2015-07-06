@@ -152,3 +152,5 @@ extern int verificaNomeTabela(char *nomeTabela);
         -> 0 se existe no dicionário.
     *nomeTabela - Nome de uma tabela,  a qual deseja-se saber se existe no dicionario.
 */
+
+extern int quantidadeTabelas();

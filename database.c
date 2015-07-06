@@ -31,6 +31,7 @@ int cod_id_db(int flag){
         else
         {                       //id novo banco
             int quant_db = cod_id_db(1), cont = 1;
+            
             for(; cont < quant_db; cont++)
             {
                 fread(&database->cod,sizeof(int),1,file);
@@ -43,8 +44,9 @@ int cod_id_db(int flag){
     else
     {
         printf("Cannot read fs_database.\n");
-        return;
+        return 0;
     }
+
     fclose(file);
     free(database);
     return cod_id;

@@ -64,5 +64,6 @@ column *excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_object
     *nTupla - Número da tupla a ser excluida, este número é relativo a página do buffer e não a 
               todos os registros carregados
 */
+void cria_campo(int tam, int header, char *val, int x);
 
 #endif
