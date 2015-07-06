@@ -342,7 +342,7 @@ init_constraints: end_create
 	;
 constraints: CONSTRAINT PRIMARY KEY '(' ID  {
 	int ok = 0;
-	printf("%s\n",$5);
+	//printf("%s\n",$5);
 	for (i = 0; i < datas.number_columns; i++)
 	{
 		if (strcmp(datas.create_new_table[i].name_column_table,$5) == 0)
@@ -355,14 +355,14 @@ constraints: CONSTRAINT PRIMARY KEY '(' ID  {
 	if (ok == 0)
 	{
 		printf("Column %s doesn't exist.\n",$5);
-		return;
+		YYABORT;
 	}
 }')' next_constraints
 	|CONSTRAINT FOREIGN KEY '('ID {
 		int ok = 0;
 		for (i = 0; i < datas.number_columns; i++)
 		{
-			printf("%s\n",$5);
+			//printf("%s\n",$5);
 			if (strcmp(datas.create_new_table[i].name_column_table,$5) == 0)
 			{
 				ok = 1;
@@ -372,7 +372,7 @@ constraints: CONSTRAINT PRIMARY KEY '(' ID  {
 		if (ok == 0)
 		{
 			printf("Column %s doesn't exist.\n",$5);
-			return;
+			YYABORT;
 		}
 	}')' REFERENCES ID{
 		datas.create_new_table[i].table_foreign = strdup($3);

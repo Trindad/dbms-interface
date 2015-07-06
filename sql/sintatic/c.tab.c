@@ -1404,7 +1404,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 #line 343 "c.y"
     {
 	int ok = 0;
-	printf("%s\n",(((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.str));
+	//printf("%s\n",$5);
 	for (i = 0; i < datas.number_columns; i++)
 	{
 		if (strcmp(datas.create_new_table[i].name_column_table,(((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.str)) == 0)
@@ -1417,7 +1417,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 	if (ok == 0)
 	{
 		printf("Column %s doesn't exist.\n",(((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.str));
-		return;
+		YYABORT;
 	}
 }
     break;
@@ -1430,7 +1430,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 		int ok = 0;
 		for (i = 0; i < datas.number_columns; i++)
 		{
-			printf("%s\n",(((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.str));
+			//printf("%s\n",$5);
 			if (strcmp(datas.create_new_table[i].name_column_table,(((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.str)) == 0)
 			{
 				ok = 1;
@@ -1440,7 +1440,7 @@ yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
 		if (ok == 0)
 		{
 			printf("Column %s doesn't exist.\n",(((yyGLRStackItem const *)yyvsp)[YYFILL ((5) - (5))].yystate.yysemantics.yysval.str));
-			return;
+			YYABORT;
 		}
 	}
     break;

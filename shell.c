@@ -68,12 +68,6 @@ void shell()
 		 */
 		if (strcmp(strtolower(tokens[0]),"create")==0)
 		{
-			if (nTokens != 3)
-			{
-				printf("Invalid number of arguments. Type help to show de interface usage.\n");
-
-				continue;
-			}
 			if(strcmp(strtolower(tokens[1]),"table")==0)
 			{
 				if (current_database == -1)
@@ -85,6 +79,11 @@ void shell()
 			}
 			else if(strcmp(strtolower(tokens[1]),"database")==0)
 			{
+				if (nTokens != 4)
+				{
+					printf("Invalid command. Type help to show de interface usage.\n");
+					continue;
+				}
 				if (strlen(tokens[2]) > TAM_NOME_BANCO )
 				{
 					printf("Database name too big.\n");
