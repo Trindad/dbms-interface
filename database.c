@@ -53,44 +53,61 @@ int cod_id_db(int flag){
 void reescreve(char *str)
 {
     FILE *file;
-    int quant_db = cod_id_db(1), aux = 0, cont = 0;
-    db *database = (db *)malloc(sizeof(db));
-    db *aux_arq = (db *)malloc(sizeof(db)*quant_db);
 
-    if (database == NULL)
+    int quant_db = cod_id_db(1), aux = 0, cont = 0;
+
+    db *database = (db *)malloc(sizeof(db));
+    db *aux_arq = (db *)malloc(sizeof(db)*quant_db+1);
+
+    if (database == NULL || aux_arq == NULL)
     {
-        printf("Out of memory.\n");
+        printf("Out of memory.\nAborting...\n");
         abort();
     }
+
     file = fopen("fs_database.dat", "r");
+
     if(file != NULL)
     {
-       for(; cont < (quant_db-1); cont++){
+       for(cont = 0; cont < (quant_db-1); cont++){
+
             fread(&database->cod,sizeof(int),1,file);
             fread(&database->nome,sizeof(char),TAM_NOME_BANCO,file);
-            if(strcmp(database->nome,str)!=0){
+
+            if(strcmp(database->nome,str) != 0)
+            {
                 strcpy(aux_arq[aux].nome,database->nome);
                 aux_arq[aux].cod = database->cod;
                 aux++;
             }
         }
+
         fclose(file);
         file = fopen("fs_database.dat","w");
-        if(file != NULL){
+        
+        if(file != NULL)
+        {
             for(cont = 0; cont < aux; cont++){
                 fwrite(&aux_arq[cont].cod, sizeof(int), 1, file);
                 fwrite(&aux_arq[cont].nome, sizeof(char), TAM_NOME_BANCO, file);
             }
         }
         else
+        {
+            free(database);
+            free(aux_arq);
             printf("Error while writing in database file.\n");
             return;
+        }
     }
     else
     {
+        free(database);
+        free(aux_arq);
         printf("Cannot open fs_database!\n");
         return;
     }
+
     free(database);
     free(aux_arq);
     fclose(file);
@@ -151,11 +168,9 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
 
 void dropDatabase(char *str){
 
-    printf("'%s'\n",str );
     FILE *dicionario;
 
     int i = 0, cnt = 0, cod_db = busca(str,1), n = 0;
-    printf("%d\n",cod_db );
     char *nome_tabela = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA+1);
     
     if (nome_tabela == NULL)
@@ -191,9 +206,14 @@ void dropDatabase(char *str){
         fread(nome_tabela, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
         n = 0;
         aux_name = tokenize(nome_tabela,'_',&n);
-        if (n >= 2) {
+
+        if (n >= 2) 
+        {
             n = atoi(aux_name[0]);
-            if(n == cod_db){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
+
+            // Verifica se o nome dado pelo usuario existe no dicionario de dados.
+            if(n == cod_db)
+            { 
 				cnt++;
             }
         }
@@ -222,7 +242,6 @@ void dropDatabase(char *str){
         {
             fseek(dicionario, -1, 1);
             fread(nome_tabela, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
-            printf("nome tabela '%s'\n",nome_tabela );
 
             n = strlen(nome_tabela);
 
@@ -231,9 +250,10 @@ void dropDatabase(char *str){
                 char **str = tokenize(nome_tabela,'_',&n);
                 n = atoi(str[0]);
 
-                if(n == cod_db){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
+                // Verifica se o nome dado pelo usuario existe no dicionario de dados.
+                if(n == cod_db)
+                { 
                     tables[cnt] = strdup(nome_tabela);
-                    printf("cont %d '%s'\n",n,tables[cnt] );
                     
                     if (tables[cnt] == NULL)
                     {
@@ -246,13 +266,12 @@ void dropDatabase(char *str){
 
             fseek(dicionario, 28, 1);
         }
-        printf("CNT %d \n",cnt );
+        
+        n = cnt;
 
         while(cnt > 0)
         {
-            printf("tabela '%s'\n",tables[cnt-1] );
             int del = excluirTabela(tables[cnt-1]);
-            printf("ao deletar %d\n",del );
             if (del == SUCCESS)
             {
                 cnt--;
@@ -260,7 +279,10 @@ void dropDatabase(char *str){
         }
 
         reescreve(str);
+
+        for(cnt = 0; cnt < n; cnt++) free(tables[cnt]);
         free(tables);
+
         free(aux_name);
         free(nome_tabela);
 
