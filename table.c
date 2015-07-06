@@ -723,11 +723,17 @@ void imprime(char nomeTabela[]) {
             }
 
             if(pagina[j].tipoCampo == 'S'){
+                wchar_t *ws = (wchar_t*) malloc (sizeof(wchar_t)*501);
+
+                swprintf(ws,500,L"%hs",pagina[j].valorCampo);
+                int wn = wcslen(ws);
+
                 printf(" %s", pagina[j].valorCampo);
-                tam = (limit[ii] - strlen(pagina[j].valorCampo))+1;
+                tam = (limit[ii] - wn)+1;
                 for (v = 0; v < tam; v++) printf(" ");
                 printf("|");
                 
+                free(ws);
                 free(pagina[j].valorCampo);
             }
             else if(pagina[j].tipoCampo == 'I'){
