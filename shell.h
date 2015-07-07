@@ -29,6 +29,8 @@ char *table_name_real(char *name,int database);//retorna o nome real da tabela g
 
 char *remove_semicolon(char *str); //remove ';' do comando sql
 
+char *trim_white_space(char *str);//remove espaços do inicio e final da linha de comando
+
 void help();//função para ajuda ao usuário com lista de comandos e exemplos básicos
 
 #endif

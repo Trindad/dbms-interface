@@ -61,7 +61,7 @@ void shell()
 			write_history (".history_file");//adiciona no histórico
         }
 
-		char **tokens = tokenize(remove_newline(entrada),' ',&nTokens);
+		char **tokens = tokenize( trim_white_space(remove_newline(entrada)),' ',&nTokens);
 		
 		/**
 		 * Opção para criar tabela e banco de dados
@@ -381,6 +381,25 @@ void shell()
 
 	free(start);
 	free(current_db_name);
+}
+
+char *trim_white_space(char *str)
+{
+  char *end;
+
+  while(isspace(*str)) str++;
+
+  if(*str == 0)  
+    return str;
+
+  end = str + strlen(str) - 1;
+  while(end > str && isspace(*end)) end--;
+
+  //novo \0
+  *(end+1) = 0;
+
+  return str;
+
 }
 
 /**
