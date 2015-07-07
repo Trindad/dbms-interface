@@ -974,6 +974,8 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
  * Exclui a tabela caso queira remover o banco
  * Passa o nome da tabela e o indice do banco
  */
+
+
 int delete_table(char *name)
 {
     struct fs_objects object;
@@ -986,8 +988,12 @@ int delete_table(char *name)
     procuraSchemaArquivo(object);
     procuraObjectArquivo(name);
 
-    char *file = strdup(name);
+    int n = strlen(name)+5;
+
+    char *file = (char*) malloc (sizeof(char)*n);
     
+    strcpy(file,name);
+
     if (file == NULL)
     {
         printf("Out of memory.\nAborting...\n");
@@ -995,10 +1001,16 @@ int delete_table(char *name)
     }
     
     strcat(file,".dat"); 
-    remove(file);
+
+    if(existeArquivo(file)) 
+    {
+        remove(file);
+    }
 
     return SUCCESS;
 }
+
+
 
 
 /* ---------------------------------------------------------------------------------------------- 
