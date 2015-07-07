@@ -222,6 +222,11 @@ void shell()
 
 				continue;
 			}
+			if (verificaNomeTabela(table_name_real(remove_semicolon(tokens[1]),current_database) ) == 0 )
+			{
+				printf("Table %s doesn't exist.\n",remove_semicolon(tokens[1]));
+				continue;
+			}
 			if (current_database == -1)
 			{
 				printf("Not connected to any database.\n");
