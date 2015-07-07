@@ -2,7 +2,7 @@
 #define DATABASE_H
 #include "table.h"
 
-#define TAM_NOME_BANCO 30
+#define TAM_NOME_BANCO 30//limite para o tamanho do nome do banco de dados
 
 typedef struct db_db{
     int cod;//identificador do banco
@@ -26,8 +26,6 @@ int checkCreateDB(char *nome);//cria o banco de dados caso não exista atribuind
 
 int dropDatabase(char *name);//exclui banco de dados
 
-extern char **tokenize(char *str, char delim, int *size);//quebra string 
-/*
- Objetivo: verificar se o nome do banco já existe e se não guarda-lo no arquivo fs_database.dat
- */
+extern char **tokenize(char *str, char delim, int *size);//quebra string pelo demitador 
+
 #endif

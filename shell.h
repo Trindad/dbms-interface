@@ -13,7 +13,7 @@
 
 extern int current_database;//armazena o identificador do banco atual, se tiver 0 nenhum banco esta logado
 
-void shell();
+void shell();//executa o shell 
 
 char *strtolower(char *str);//converte para minuscolos as letras
 

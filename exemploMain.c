@@ -1,6 +1,3 @@
-/**
-* gcc *.c insert/semantic/semantic.c -o bf -g -ll -ly
- */
 #include "shell.h"
 
 int main(){
