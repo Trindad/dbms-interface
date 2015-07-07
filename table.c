@@ -1027,6 +1027,13 @@ int excluirTabela(char *nomeTabela) {
     strcpy (str, nomeTabela); 
     strcat (str, ".dat");              //Concatena e junta o nome com .dat
 
+    if (existeArquivo(nomeTabela) == 0)
+    {
+        delete_table(nomeTabela);
+
+        return SUCCESS;
+    }
+
     abreTabela(nomeTabela, &objeto, &esquema);
     qtTable = quantidadeTabelas();
 
