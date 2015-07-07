@@ -17,7 +17,7 @@ void shell()
     char *current_db_name = strdup(">");//inicializa com nenhum banco conectado
 	char *start;
     
-    start = strdup("dbms-start");
+    start = strdup("dbms-start");//este comando posteriormente como start do banco, no momento ele é automatico
 	printf("\nWelcome to the DBMS Interface.\nType 'help' '\\h' for help.\n\n");	
 
 	/**

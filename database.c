@@ -202,7 +202,7 @@ int dropDatabase(char *str){
         printf("There is no registered table named %s\n", str);
         return 0;
     }
-    if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
+    if((dicionario = fopen("fs_object.dat","a+b")) == NULL)//abrindo dicionario
     {
         free(nome_tabela);
         printf("Error while opening the database file\n");

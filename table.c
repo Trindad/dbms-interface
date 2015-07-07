@@ -1113,14 +1113,14 @@ int excluirTabela(char *nomeTabela) {
         erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);        
     }
     
-    if(procuraSchemaArquivo(objeto) != 0){
+    if(procuraSchemaArquivo(objeto) != 0){//exclui esquema
         free(str);
         free(tupla);
         return ERRO_REMOVER_ARQUIVO_SCHEMA;
         
     }
 
-    if(procuraObjectArquivo(nomeTabela) != 0){
+    if(procuraObjectArquivo(nomeTabela) != 0){//exclui objeto
         free(str);
         free(tupla);
        return ERRO_REMOVER_ARQUIVO_OBJECT;
