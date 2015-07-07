@@ -10,7 +10,7 @@ int current_database = -1;
 void shell()
 {
 	current_database = -1;
-	char entrada[1000], nomeBD[TAM_NOME_BANCO],auxiliar[150];
+	char entrada[1000], nomeBD[TAM_NOME_BANCO];
     int resultado = 0, codDB = -1;
     nomeBD[0]='\0';
 
