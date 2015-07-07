@@ -286,17 +286,15 @@ void shell()
 					printf("Not connected to any database.\n");
 					continue;
 				}
+				if (verificaNomeTabela(table_name_real(remove_semicolon(tokens[2]),current_database) ) == 0 )
+				{
+					printf("Table %s doesn't exist.\n",remove_semicolon(tokens[2]));
+					continue;
+				}
 				
 				char *t = table_name_real(remove_semicolon(tokens[2]),current_database);
 				char *exist = table_name_real(remove_semicolon(tokens[2]),current_database);
-				// strcat(exist,".dat");
-				
-				// if (existeArquivo(exist) == 0)
-				// {
-				// 	printf("Table doesn't exist.\n" );
-				// 	continue;
-				// }		
-				
+			
 				int ok = excluirTabela(t);
 
 				if (ok == SUCCESS)

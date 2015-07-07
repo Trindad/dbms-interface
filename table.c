@@ -1004,7 +1004,7 @@ int excluirTabela(char *nomeTabela) {
 
     if (tupla == NULL)
     {
-        free(str);
+        if(str != NULL)free(str);
         printf("Out of memory.\nAborting...\n");
 
         abort();
@@ -1015,8 +1015,16 @@ int excluirTabela(char *nomeTabela) {
 
         if (tupla[i] == NULL)
         {
-            free(tupla);
-            free(str);
+            if (str != NULL)
+            {
+                free(str);
+                
+            }
+            if (str != NULL)
+            {
+                free(tupla);
+                
+            }
             printf("Out of memory.\nAborting...\n");
 
             abort();
@@ -1027,8 +1035,16 @@ int excluirTabela(char *nomeTabela) {
 
     if (tab2 == NULL)
     {
-        free(tupla);
-        free(str);
+        if (str != NULL)
+        {
+            free(str);
+            
+        }
+        if (str != NULL)
+        {
+            free(tupla);
+            
+        }
         printf("Out of memory.\nAborting...\n");
 
         abort();
@@ -1040,9 +1056,20 @@ int excluirTabela(char *nomeTabela) {
 
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL) 
     {
-        free(str);
-        free(tab2);
-        free(tupla);
+        if (str != NULL)
+        {
+            free(str);
+            
+        }
+        if (str != NULL)
+        {
+            free(tupla);
+            
+        }
+        if(tab2 != NULL)
+        {
+            free(tab2);
+        }
         return ERRO_ABRIR_ARQUIVO;
     }
 
@@ -1070,8 +1097,20 @@ int excluirTabela(char *nomeTabela) {
                     
                     if (tab3 == NULL)
                     {
-                        free(tab2);
-                        free(tupla);
+                        if(tab2 != NULL)
+                        {
+                            free(tab2);
+                        }
+                        if (str != NULL)
+                        {
+                            free(str);
+                            
+                        }
+                        if (str != NULL)
+                        {
+                            free(tupla);
+                            
+                        }
                         printf("Out of memory.\nAborting...\n");
                         abort();
                     }
@@ -1082,27 +1121,49 @@ int excluirTabela(char *nomeTabela) {
                         if(tab3[l].chave == FK) {                               //verifica se a outra tabela possui
                             if(strcmp(nomeTabela, tab3[l].tabelaApt) == 0) {    //chave estrangeira
                                 printf("Cannot delete row due to foreign key constraint!\n");            //se sim, verifica se e da tabela
-                                free(tab2);
-                                free(tupla);
-                                free(str);
-                                free(tab3);
+                                if(tab2 != NULL)
+                                {
+                                    free(tab2);
+                                }
+                                if (str != NULL)
+                                {
+                                    free(str);
+                                    
+                                }
+                                if (str != NULL)
+                                {
+                                    free(tupla);
+                                    
+                                }
+                                if(tab3 != NULL)
+                                {
+                                    free(tab3);
+                                }
                                 return ERRO_CHAVE_ESTRANGEIRA;                  //anterior
                             }
                         }
                     }
-                    free(tab3);
+                    if(tab3 != NULL)free(tab3);
                 }
             }
         }
     }
 
-    free(tab2);
+    if(tab2 != NULL)free(tab2);
 
     tp_buffer *bufferpoll = initbuffer();
 
     if(bufferpoll == ERRO_DE_ALOCACAO){
-        free(str);
-        free(tupla);
+        if (str != NULL)
+        {
+            free(str);
+            
+        }
+        if (str != NULL)
+        {
+            free(tupla);
+            
+        }
         printf("Out of memory.\nAborting...\n");
         return ERRO_LEITURA_DADOS;
     }
@@ -1114,22 +1175,48 @@ int excluirTabela(char *nomeTabela) {
     }
     
     if(procuraSchemaArquivo(objeto) != 0){//exclui esquema
-        free(str);
-        free(tupla);
+        if (str != NULL)
+        {
+            free(str);
+            
+        }
+        if (str != NULL)
+        {
+            free(tupla);
+            
+        }
         return ERRO_REMOVER_ARQUIVO_SCHEMA;
         
     }
 
     if(procuraObjectArquivo(nomeTabela) != 0){//exclui objeto
-        free(str);
-        free(tupla);
-       return ERRO_REMOVER_ARQUIVO_OBJECT;
+         if (str != NULL)
+        {
+            free(str);
+            
+        }
+        if (str != NULL)
+        {
+            free(tupla);
+            
+        }
+
+        return ERRO_REMOVER_ARQUIVO_OBJECT;
     }
         
     remove(str);
-    free(str);
-    free(tupla);
-    
+
+    if (str != NULL)
+    {
+        free(str);
+        
+    }
+    if (str != NULL)
+    {
+        free(tupla);
+        
+    }
+
     return SUCCESS;
 }
 
