@@ -320,11 +320,11 @@ PREFÁCIO:
 
 RESUMO:
 
-	A seguinte parte do trabalho é destinada a criação de uma interface para a manipulação de banco de dados e inserir em tabelas.
-	Implementamos o shell.c e o shell.h, o database.c e o database.h, bem como o semantic.c e c.y e c.l (funções para o insert). 
+	A seguinte parte do trabalho é destinada a criação de uma interface para a manipulação de banco de dados e tabelas.
+	Com relação a veersão anterior foi inserido shell.c e shell.h para chamadas da interface, database.c e database.h para manipulação do banco de dados, bem como a semantic.c e c.y e c.l (funções para o insert,create e select de tabela). 
 	O shell.c e o shell.h possuem funções relacionadas a interface. 
-	O arquivos do database são funções relacionadas ao banco de dados, como criação do banco, buscar bancos entre outras. 
-	O semantic.c faz a análise semântica e chama o arquivo gerado pelo .c gerado pelo bison.
+	O arquivos do database são funções relacionadas ao banco de dados, como criação do banco, buscar bancos e excluir um banco de dados. 
+	O semantic.c faz a análise semântica após a análise sintática feita pelo código gerado pelos arquivos c.y (bison) e c.l (lex). Neste arquivo o retorno será um tipo 'Datas' que contém os dados para inserir criar uma tabela. Neste banco de dados uma coluna que é chave primária não pode ser estrangeira, então em trabalho futuros para modificar deverá alterar a estrutura 'CreateTB' em relação a criação de tabela. Caso for modificado o armazenamento dos dados, também deverá ser mudado pois nesse momento só armazenam string, para isso deve-se fazer uso do tipo union TOKEN. 
 	Além disso, dividimos o arquivo buffend nos arquivos table,tuple,common,databases,hell e buffend, todos com .c e .h.
 
 FUNCIONAMENTO:
