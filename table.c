@@ -380,40 +380,54 @@ int finalizaInsert(char *nome, column *c){
     tab2 = procuraAtributoFK(objeto);
     
     for(j = 0, temp = c; j < objeto.qtdCampos && temp != NULL; j++, temp = temp->next){
-        switch(tab2[j].chave){
-            case NPK:
-                erro = SUCCESS;
-                break;
-            case PK:
-                erro = verificaChavePK(nome, temp , temp->nomeCampo, temp->valorCampo);
-                if(erro == ERRO_CHAVE_PRIMARIA){
-                    printf("There was an error due to primary key. Check the table's schema.\nAborting...\n");
-                    free(c);    // Libera a memoria da estrutura.
-                    free(auxT); // Libera a memoria da estrutura.
-                       
-                    free(tab); // Libera a memoria da estrutura.
-                    free(tab2); // Libera a memoria da estrutura.
-                    abort();
-                }
+        
+        int tamTab = 0;
 
-                break;
+        while(tamTab < objeto.qtdCampos)
+        {
+            if (strcmp(tab2[tamTab].nome,temp->nomeCampo) != 0)
+            {
+                tamTab++;
+                continue;
+            }
 
-            case FK:
-                if(tab2[j].chave == 2 && strlen(tab2[j].attApt) != 0 && strlen(tab2[j].tabelaApt) != 0){
-
-                    erro = verificaChaveFK(nome, temp, tab2[j].nome, temp->valorCampo, tab2[j].tabelaApt, tab2[j].attApt);
-
-                    if(erro != SUCCESS){
-                        printf("Error due to foreign key constraint.\n");
+            switch(tab2[tamTab].chave){
+                case NPK:
+                    erro = SUCCESS;
+                    break;
+                case PK:
+                    erro = verificaChavePK(nome, temp , temp->nomeCampo, temp->valorCampo);
+                    if(erro == ERRO_CHAVE_PRIMARIA){
+                        printf("There was an error due to primary key. Check the table's schema.\nAborting...\n");
                         free(c);    // Libera a memoria da estrutura.
                         free(auxT); // Libera a memoria da estrutura.
-                       
+                           
                         free(tab); // Libera a memoria da estrutura.
                         free(tab2); // Libera a memoria da estrutura.
-                        return ERRO_CHAVE_ESTRANGEIRA;
+                        abort();
                     }
-                }
-                break;
+
+                    break;
+
+                case FK:
+                    if(tab2[tamTab].chave == 2 && strlen(tab2[tamTab].attApt) != 0 && strlen(tab2[tamTab].tabelaApt) != 0){
+                       
+                        erro = verificaChaveFK(nome, temp, tab2[tamTab].nome, temp->valorCampo, tab2[tamTab].tabelaApt, tab2[tamTab].attApt);
+
+                        if(erro != SUCCESS){
+                            printf("Error due to foreign key constraint.\n");
+                            free(c);    // Libera a memoria da estrutura.
+                            free(auxT); // Libera a memoria da estrutura.
+                           
+                            free(tab); // Libera a memoria da estrutura.
+                            free(tab2); // Libera a memoria da estrutura.
+                            return ERRO_CHAVE_ESTRANGEIRA;
+                        }
+                    }
+                    break;
+            }
+
+            tamTab++;
         }
     }
     
@@ -1182,6 +1196,7 @@ int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCamp
 
             else if(pagina[j].tipoCampo == 'I'){ 
                 int *n = (int *)&pagina[j].valorCampo[0];
+                
                 if(*n == atoi(valorCampo)){
                     free(pagina);
                     free(bufferpoll);
