@@ -393,7 +393,7 @@ Todos os comandos aceitam ';' no final com exceção dos \l e \d.
 		A ordem de exlusão das tabelas obdece o esquema de chaves estrangeiras
 
 	Mostrar esquema da tabela
-		\d table
+		\d <nome_tabela>
 
 
 	Ajuda para interação com a interface
@@ -404,7 +404,7 @@ Implementação das funções:
 
 A implementação das funções está no arquivo database.c e seus protótipos em database.h. 
 
- - \c name_my_db: 
+ - \c <nome_db>: 
 	Para realizar conexão a um banco é utilizado o comando \c nome_banco.
 	Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem dois bancos com o mesmo nome. Faz uso da função checkCreateDB do arquivo database.c para testar. 
 	É possível se conectar a um banco a qualquer momento, ou seja, posso estar em um banco de dados e utilizar o comando \c nome_banco e me conectar a um outro banco (saindo do
@@ -481,7 +481,6 @@ A implementação das funções está no arquivo database.c e seus protótipos e
  -DIRETÓRIO 'sql'
 	Neste diretório tem as funções que tratam a análise sintática e léxica, para trabalhos futuros podrá ser inserido facilmente mais informações na estrutura Datas que está no
  	arquivo c.y (sql/sintatic).
-
 
 
  -DROP 

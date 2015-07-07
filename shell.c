@@ -660,6 +660,6 @@ void help()
 	printf("\nTable insertion example:\n");
 	printf("\t insert into table1 values(\"val1\", 12.5), (\"val2\", 55.5);\n\n");
 	printf("Table creation example:\n");
-	printf("\t create table table1 (name string(100),cod integer, constraint primary key (name) , constraint foreign key ( cod ) references table2(cod));");
+	printf("\t create table table1 (column1 string(100), column2 double, constraint primary key (column1) , constraint foreign key ( column2 ) references table2 (column2) );");
 	printf("\n");
 }

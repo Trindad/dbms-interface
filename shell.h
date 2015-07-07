@@ -27,9 +27,9 @@ void example();//cria banco e tabelas, colunas e insere valores.
 
 char *table_name_real(char *name,int database);//retorna o nome real da tabela gravada no banco
 
-char *remove_semicolon(char *str); //remove ; do comando sql
+char *remove_semicolon(char *str); //remove ';' do comando sql
 
-void help();//função para ajuda ao usuário
+void help();//função para ajuda ao usuário com lista de comandos e exemplos básicos
 
 #endif
 
