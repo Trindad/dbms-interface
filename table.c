@@ -1269,7 +1269,6 @@ int excluirTabela(char *nomeTabela) {
     return SUCCESS;
 }
 
-
 /* ---------------------------------------------------------------------------------------------- 
     Objetivo:   Verifica a existência do atributo antes de adicionar na tabela
     Parametros: Nome da tabela, coluna C.    
