@@ -344,7 +344,8 @@ Todos os comandos aceitam ';' no final com exceção dos \l e \d.
 	Listar tabelas existentes
 		\d
 	Mostrar dados de uma tabela
-		show <table_name>
+		show <table_name> ou select *from <table_name>
+
 	Inserções 
 		Segue sintaxe SQL normal (abaixo melhor descritas cada umas das maneiras de inserção interpretadas pelo nosso shell)
 		Exemplos
@@ -380,6 +381,7 @@ Todos os comandos aceitam ';' no final com exceção dos \l e \d.
 
 	Mostrar esquema da tabela
 		\d table
+
 
 	Ajuda para interação com a interface
 		\help ou \h
@@ -471,10 +473,12 @@ A implementação das funções está no arquivo database.c e seus protótipos e
 
  -DROP 
 	banco de dados
-
+		cada banco de dados possui seu id e suas tabelas possuem o mesmo id. Então inicialmente é verificado se o nome do banco passado existe no dicionário de dados e se 
+        	existe e feito a verificação de suas tabelas. Então é realizada a exclusão das tabelas referentes ao id do banco obedecendo ordem para não violar chaves estrangeiras.
+		Posteriormente o nome do banco é retirado do dicionário.
 
 	tabela
-
+		
 
 
 PASSOS PARA UTILIZAR A INTERFACE
