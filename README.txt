@@ -375,7 +375,7 @@ Todos os comandos aceitam ';' no final com exceção dos \l e \d.
 
 	Excluir banco de dados
 		drop database <database_name>
-		O banco não pode ser excluído caso esteja esteja logado nele mesmo
+		O banco não pode ser excluído caso esteja logado nele mesmo
 
 	Criação de tabelas
 		create table <nome_tabela> ( <nome coluna> <tipo coluna> [ <atributo constraint> ]{ , <nome coluna> <tipo coluna> [ <atributo constrain> ] } [ <constraint da tabela>
