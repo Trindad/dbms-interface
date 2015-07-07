@@ -311,7 +311,7 @@ Alunos: EDIMAR ROQUE MARTELLO JUNIOR, GEOVANI KOSTULSKI, LEONARDO BELINSKI, SILV
 ===============================================================================
 
 Link github
-	https://github.com/Trindad/PK_FK
+	https://github.com/Trindad/dbms-interface
 	
 PREFÁCIO:
 	Para suportar o cadastramento de bancos de dados, foi criado um arquivo que servirá para armazenar o nome dos bancos cadastrados na aplicação. Este arquivo
@@ -373,7 +373,6 @@ Todos os comandos aceitam ';' no final com exceção dos \l e \d.
 		bye
 		quit
 		\q
-		
 		
 	Copyright
 		\copyright
