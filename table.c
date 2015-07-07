@@ -433,13 +433,13 @@ int finalizaInsert(char *nome, column *c){
                 case PK:
                     erro = verificaChavePK(nome, temp , temp->nomeCampo, temp->valorCampo);
                     if(erro == ERRO_CHAVE_PRIMARIA){
-                        printf("There was an error due to primary key. Check the table's schema.\nAborting...\n");
+                        printf("There was an error due to primary key. Check the table's schema.\n");
                         free(c);    // Libera a memoria da estrutura.
                         free(auxT); // Libera a memoria da estrutura.
                            
                         free(tab); // Libera a memoria da estrutura.
                         free(tab2); // Libera a memoria da estrutura.
-                        abort();
+                        return ERRO_CHAVE_PRIMARIA;
                     }
 
                     break;
@@ -478,7 +478,7 @@ int finalizaInsert(char *nome, column *c){
     }
 
     if(erro == ERRO_CHAVE_PRIMARIA){
-        printf("There was an error due to primary key. Check the table's schema.\nAborting...\n");
+        printf("There was an error due to primary key. Check the table's schema.\n");
         free(c);    // Libera a memoria da estrutura.
         free(auxT); // Libera a memoria da estrutura.
         // free(temp); // Libera a memoria da estrutura.
