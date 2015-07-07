@@ -304,9 +304,18 @@ void selectTable(char *sql, int index_database)
 		return;
 	}
 
-	if ( existeArquivo(table_name_cat(table_name,index_database)) == 1)
+	if (verificaNomeTabela(table_name_cat(table_name,index_database) ) == 0 )
 	{
-		printf("Table %s already exists.\n",table_name);
+		printf("Table %s doesn't exist.\n",table_name);
+		return;
+	}
+
+	char *filename = table_name_cat(table_name,index_database);
+	strcat(filename, ".dat");
+
+	if ( existeArquivo(filename) == 0)
+	{
+		printf("Table %s is empty.\n",table_name);
 		return;
 	}
 

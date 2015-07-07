@@ -209,6 +209,12 @@ void shell()
 		 */
 		else if (strcmp(strtolower(tokens[0]),"select")==0)
 		{
+			if (current_database == -1)
+			{
+				printf("Not connected to any database.\n");
+				continue;
+			}
+			
 			selectTable(entrada,current_database);
 		}
 		/**
@@ -222,14 +228,14 @@ void shell()
 
 				continue;
 			}
-			if (verificaNomeTabela(table_name_real(remove_semicolon(tokens[1]),current_database) ) == 0 )
-			{
-				printf("Table %s doesn't exist.\n",remove_semicolon(tokens[1]));
-				continue;
-			}
 			if (current_database == -1)
 			{
 				printf("Not connected to any database.\n");
+				continue;
+			}
+			if (verificaNomeTabela(table_name_real(remove_semicolon(tokens[1]),current_database) ) == 0 )
+			{
+				printf("Table %s doesn't exist.\n",remove_semicolon(tokens[1]));
 				continue;
 			}
 
