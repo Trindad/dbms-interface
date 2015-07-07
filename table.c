@@ -619,10 +619,11 @@ void imprime(char nomeTabela[]) {
     int controler_ = 0;
     int limit[objeto.qtdCampos];//insere o tamanho máximo que será o espaço para impressão
     
-    int ii;
+    int ii = 0;
+
     for (ii = 0; ii < objeto.qtdCampos; ii++)
     {
-        limit[ii] = strlen( pagina[controler_].nomeCampo );
+        limit[ii] = strlen(pagina[ii].nomeCampo);
     }
     /**
      * Obtendo configurações do tamanho das variáveis
@@ -659,7 +660,7 @@ void imprime(char nomeTabela[]) {
                     abort();
                 }
                 sprintf(str,"%d",*n);
-
+                
                 if (limit[controler_] < strlen(str))
                 {
                     limit[controler_] = strlen(str);
