@@ -976,6 +976,7 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
  */
 
 
+
 int delete_table(char *name)
 {
     struct fs_objects object;
@@ -1009,9 +1010,6 @@ int delete_table(char *name)
 
     return SUCCESS;
 }
-
-
-
 
 /* ---------------------------------------------------------------------------------------------- 
     Objetivo:   Função para exclusão de tabelas.
