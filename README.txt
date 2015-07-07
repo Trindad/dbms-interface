@@ -456,7 +456,8 @@ A implementação das funções está no arquivo database.c e seus protótipos e
 	Para o desenvolvimento do insert foi feito a análise léxica, semântica e sintática do comando sql. O código pode ser encontrado no diretório insert
 	onde contêm dois diretórios, o sintátic e semantic. O código desenvolvido básicamente recebe uma string com o comando sql, verifica a questão léxica, em seguida a análise 	   semântica utiliza de expressões para verificar a string passada que deve seguir o padrão dos exemplos anteriores, caso algum erro ocorra então é lançado uma mensagem de erro,
  	as mensagens são geradas com o padrão do bison. 
-	Na análise semântica, é verificado se os tipos estão corretos, se a tabela existe para o banco logado, estando tudo certo ele faz a inserção das tuplas na tabela.  
+	Na análise semântica, é verificado se os tipos estão corretos, se a tabela existe para o banco logado, estando tudo certo ele faz a inserção das tuplas na tabela.
+	
 
  -CREATE
 	Banco de dados
@@ -476,7 +477,7 @@ A implementação das funções está no arquivo database.c e seus protótipos e
 
 			create table cursoverao (nome string,cod integer, creditos integer,professor string(100),constraint primary key (nome) , CONSTRAINT FOREIGN KEY ( cod ) 
                 	REFERENCES Inst(CodInst));
-		OBS: pode ser minúsculo ou maiúsculo
+		OBS: pode ser minúsculo ou maiúsculo e os nomes dos campos da tabela não podem indicar tipo. Por exemplo: create table rodovia (integer integer, string string(90)...
 
  -DIRETÓRIO 'sql'
 	Neste diretório tem as funções que tratam a análise sintática e léxica, para trabalhos futuros podrá ser inserido facilmente mais informações na estrutura Datas que está no
