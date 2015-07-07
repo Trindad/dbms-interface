@@ -177,7 +177,7 @@ int dropDatabase(char *str){
 
     FILE *dicionario;
 
-    int i = 0, cnt = 0, cod_db = busca(str,1), n = 0;
+    int cnt = 0, cod_db = busca(str,1), n = 0;
 
     char *nome_tabela = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA+1);
     
