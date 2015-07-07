@@ -831,7 +831,11 @@ void imprime(char nomeTabela[]) {
         x-=bufferpoll[p++].nrec;
     }
 
-    printf("( %d records )\n",number_of_tuples);
+    if (number_of_tuples == 1) {
+        printf("( %d record )\n",number_of_tuples);
+    } else {
+        printf("( %d records )\n",number_of_tuples);
+    }
     printf("\n");
    
     free(pagina);
