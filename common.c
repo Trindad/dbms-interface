@@ -686,7 +686,7 @@ int procuraSchemaArquivo(struct fs_objects objeto){
             }
         }
     }
-    
+    free(esquema);
     fclose(newSchema);
     fclose(schema);
     
