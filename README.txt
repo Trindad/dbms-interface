@@ -509,8 +509,7 @@ PASSOS PARA UTILIZAR A INTERFACE
 		Para conferir se você já possuim instalado digite no terminal:
 			lex --version
 			bison --version
-		*Caso ocorra algum erro do tipo arquivo readline/readline.h não encontrado instale o pacote:
-		sudo apt-get install libreadline6 libreadline6-dev
+		Será necessário ter instalado o pacote readline
 
 	OPÇÃO 1: Manual
 		1º Passo
