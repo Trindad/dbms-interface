@@ -342,12 +342,14 @@ void createTable(char *sql, int index_database)
 	// }
 	// printf("\n------------------------------------------------------\n");
 
+
 	//verifica se a tabela já não existe
 	if ( existeArquivo(table_name_cat(datas.name_table_create,database)) == 1)
 	{
 		printf("Table %s already exists.\n",datas.name_table_create);
 		return;
 	}
+
 	int object      = existeArquivo("fs_object.dat");
 	int schema      = existeArquivo("fs_schema.dat");
 
@@ -359,6 +361,12 @@ void createTable(char *sql, int index_database)
 		//chave estrangeira = 2
 		if (datas.create_new_table[i].constraint == FK)
 		{
+			if (verificaNomeTabela(table_name_cat(datas.create_new_table[i].table_foreign,database) ) == 0 )
+			{
+				printf("Table %s referenced in FK doesn't exist\n",datas.create_new_table[i].table_foreign);
+				return;
+			}
+			
 			tab[0] = adicionaCampo(tab[0],datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint,table_name_cat(datas.create_new_table[i].table_foreign,database),datas.create_new_table[i].name_column_foreign);
 		}
 		else

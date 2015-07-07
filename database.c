@@ -295,8 +295,6 @@ int dropDatabase(char *str){
         }
 
         reescreve(str);
-
-        // for(cnt = 0; cnt < n; cnt++) free(tables[cnt]);
         
         free(tables);
         free(nome_tabela);
