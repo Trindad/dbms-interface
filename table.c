@@ -970,6 +970,36 @@ tp_table *procuraAtributoFK(struct fs_objects objeto){
     return vetEsqm;
 }
 
+/**
+ * Exclui a tabela caso queira remover o banco
+ * Passa o nome da tabela e o indice do banco
+ */
+int delete_table(char *name)
+{
+    struct fs_objects object;
+    tp_table *schema;
+
+    abreTabela(name, &object, &schema);
+    /**
+     * Remove dados do objeto e do esquema
+     */
+    procuraSchemaArquivo(object);
+    procuraObjectArquivo(name);
+
+    char *file = strdup(name);
+    
+    if (file == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+    
+    strcat(file,".dat"); 
+    remove(file);
+
+    return SUCCESS;
+}
+
 
 /* ---------------------------------------------------------------------------------------------- 
     Objetivo:   Função para exclusão de tabelas.
@@ -1133,7 +1163,6 @@ int excluirTabela(char *nomeTabela) {
                                 if (str != NULL)
                                 {
                                     free(tupla);
-                                    
                                 }
                                 if(tab3 != NULL)
                                 {
@@ -1230,6 +1259,7 @@ int excluirTabela(char *nomeTabela) {
    ---------------------------------------------------------------------------------------------*/
 
 int existeAtributo(char *nomeTabela, column *c){
+    
     int erro, x;
     struct fs_objects objeto; 
     tp_table *tabela;         

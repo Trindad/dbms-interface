@@ -574,7 +574,7 @@ int existeArquivo(char* filename){
    ---------------------------------------------------------------------------------------------*/
 
 int procuraObjectArquivo(char *nomeTabela){
-    int teste        = 0, 
+    int teste    = 0, 
     cont         = 0, 
     achou        = 0,
     tamanhoTotal = sizeof(struct fs_objects);

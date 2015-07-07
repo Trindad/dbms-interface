@@ -307,12 +307,6 @@ void shell()
 			}
 			else if(strcmp(strtolower(tokens[1]),"database") == 0){
 				
-				if (current_database == -1)
-				{
-					printf("Not connected to database for drop.\n");
-					continue;
-				}
-				
 				char *exist = table_name_real(remove_semicolon(tokens[2]),current_database);
 				strcat(exist,".dat");
 				

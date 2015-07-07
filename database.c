@@ -48,7 +48,7 @@ int cod_id_db(int flag){
     }
 
     fclose(file);
-    free(database);
+    if(database != NULL)free(database);
 
     return cod_id;
 }
@@ -97,22 +97,22 @@ void reescreve(char *str)
         }
         else
         {
-            free(database);
-            free(aux_arq);
+            if(database != NULL) free(database);
+            if(aux_arq != NULL) free(aux_arq);
             printf("Error while writing in database file.\n");
             return;
         }
     }
     else
     {
-        free(database);
-        free(aux_arq);
+        if(database != NULL) free(database);
+        if(aux_arq != NULL) free(aux_arq);
         printf("Cannot open fs_database!\n");
         return;
     }
 
-    free(database);
-    free(aux_arq);
+    if(database != NULL) free(database);
+    if(aux_arq != NULL) free(aux_arq);
     fclose(file);
 }
 
@@ -153,7 +153,7 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
                 {
                     fclose(file);
                     cod_retorno = database->cod;
-                    free(database);
+                    if(database != NULL)free(database);
                     return cod_retorno;
                 }
             }
@@ -168,7 +168,7 @@ int busca(char *str, int identificacao){//a identificacao indicara qual if será
         printf("\nCannot open fs_database!\n");
     }
     
-    free(database);
+    if(database != NULL)free(database);
     fclose(file);
     return -2;
 }
@@ -204,7 +204,8 @@ int dropDatabase(char *str){
     }
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL)//abrindo dicionario
     {
-        free(nome_tabela);
+        if(nome_tabela != NULL)free(nome_tabela);
+        if(tables != NULL)free(tables);
         printf("Error while opening the database file\n");
         return 0;
     }
@@ -225,7 +226,7 @@ int dropDatabase(char *str){
 				cnt++;
             }
         }
-        free(aux_name);
+        if(aux_name != NULL)free(aux_name);
         fseek(dicionario, 28, 1);
     }
 
@@ -233,7 +234,7 @@ int dropDatabase(char *str){
     {   
         reescreve(str);
 
-        free(nome_tabela);
+        if(nome_tabela != NULL)free(nome_tabela);
         fclose(dicionario);
 		return 1;
 	}
@@ -243,8 +244,8 @@ int dropDatabase(char *str){
 
         if((dicionario = fopen("fs_object.dat","a+b")) == NULL)
         {
-            free(nome_tabela);
-            free(tables);
+            if( nome_tabela != NULL)free(nome_tabela);
+            if( tables != NULL)free(tables);
 
             printf("Error while opening the database file\n");
             return 0;
@@ -272,13 +273,14 @@ int dropDatabase(char *str){
                     
                     if (tables[cnt] == NULL)
                     {
-                        free(tables);
-                        free(nome_tabela);
+                        if(tables != NULL)free(tables);
+                        if(nome_tabela != NULL)free(nome_tabela);
                         printf("Out of memory.\nAborting...\n");
                         abort();
                     }
                     cnt++;
                 }
+                if(str != NULL) free(str);
             }
 
             fseek(dicionario, 28, 1);
@@ -288,23 +290,23 @@ int dropDatabase(char *str){
 
         while(cnt > 0)
         {
-            int del = excluirTabela(tables[cnt-1]);
+            // printf("%s\n",tables[cnt-1]);
+            int del = delete_table(tables[cnt-1]);
+            
             if (del == SUCCESS)
             {
                 cnt--;
             }
         }
-
         reescreve(str);
         
-        free(tables);
-        free(nome_tabela);
+        if(tables != NULL)free(tables);
+        if(nome_tabela != NULL)free(nome_tabela);
 
         fclose(dicionario);
 
         return 1;
     }
-
     return 0;
 }
 //criar banco
@@ -313,6 +315,12 @@ void grava_banco(char *str){
     FILE *file;
     db *database = (db *)malloc(sizeof(db));
 
+    if (database == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+
     file = fopen("fs_database.dat", "a+");
     if(file != NULL){
         database->cod = id_max+1;                                 //id proximo banco
@@ -320,7 +328,7 @@ void grava_banco(char *str){
         fwrite(&database->cod, sizeof(int), 1, file);
         fwrite(&database->nome, sizeof(char), TAM_NOME_BANCO, file);
     }
-    free(database);
+    if(database != NULL)free(database);
     fclose(file);
 }
 
@@ -387,7 +395,7 @@ void listaBancos()
         printf("\nCannot open fs_database!\n");
     }
     
-    free(database);
+    if(database != NULL)free(database);
     fclose(file);
 }
 
@@ -401,7 +409,7 @@ void listaTabelas(int database)
     char *nome_tabela = (char *)malloc(sizeof(char)*TAMANHO_NOME_TABELA);
 
     if((dicionario = fopen("fs_object.dat","a+b")) == NULL){
-        free(nome_tabela);
+        if(nome_tabela != NULL)free(nome_tabela);
         printf("No table created.\n");
         return;
     }
@@ -413,7 +421,9 @@ void listaTabelas(int database)
         fread(nome_tabela, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
         int n = 0;
         char **str = tokenize(nome_tabela,'_',&n);
-        if (n >= 2) {
+
+        if (n >= 2) 
+        {
             n = atoi(str[0]);
 
             if(n == database){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.

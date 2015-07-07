@@ -163,4 +163,8 @@ int finalizaInsert(char *nome, column *c);
 
 int verificaNomeCampo(char *table_name, char *column);//verifica se a coluna existe na tabela
 
+extern char **tokenize(char *str, char delim, int *size);
+
+int delete_table(char *name);//deleta tabela quando der drop no banco
+
 #endif
