@@ -278,13 +278,13 @@ void shell()
 				
 				char *t = table_name_real(remove_semicolon(tokens[2]),current_database);
 				char *exist = table_name_real(remove_semicolon(tokens[2]),current_database);
-				strcat(exist,".dat");
+				// strcat(exist,".dat");
 				
-				if (existeArquivo(exist) == 0)
-				{
-					printf("Table doesn't exist.\n" );
-					continue;
-				}		
+				// if (existeArquivo(exist) == 0)
+				// {
+				// 	printf("Table doesn't exist.\n" );
+				// 	continue;
+				// }		
 				
 				int ok = excluirTabela(t);
 
