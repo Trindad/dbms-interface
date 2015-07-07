@@ -312,6 +312,11 @@ Alunos: EDIMAR ROQUE MARTELLO JUNIOR, GEOVANI KOSTULSKI, LEONARDO BELINSKI, SILV
 
 Link github
 	https://github.com/Trindad/PK_FK
+	
+PREFÁCIO:
+	Para suportar o cadastramento de bancos de dados, foi criado um arquivo que servirá para armazenar o nome dos bancos cadastrados na aplicação. Este arquivo
+	foi nomeado como fs_database. Todos os bancos cadastrados pelo usuário serão gravados neste arquivo. Para cada banco será atribuído um código de identificação 
+	único, que é gerado pelo próprio sistema. Assim, ao cadastrar um banco, será gravado no arquivo fs_database o nome do banco e o seu código de identificação.
 
 RESUMO:
 
