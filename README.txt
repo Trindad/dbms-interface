@@ -472,12 +472,12 @@ A implementação das funções está no arquivo database.c e seus protótipos e
 
 
  -DROP 
-	banco de dados
-		cada banco de dados possui seu id e suas tabelas possuem o mesmo id. Então inicialmente é verificado se o nome do banco passado existe no dicionário de dados e se 
-        	existe e feito a verificação de suas tabelas. Então é realizada a exclusão das tabelas referentes ao id do banco obedecendo ordem para não violar chaves estrangeiras.
+	Banco de dados
+		Cada banco de dados possui seu id e suas tabelas possuem este id. Inicialmente é verificado se o nome do banco passado existe no dicionário de dados e se 
+        existe é feita a verificação das suas tabelas. Se este banco conter alguma tabela cadastrada, então é realizada a exclusão das tabelas (conteúdo, esquema e registros no dicionário de dados) deste banco obedecendo a ordem para não violar chaves estrangeiras.
 		Posteriormente o nome do banco é retirado do dicionário.
 
-	tabela
+	Tabela
 		
 
 
