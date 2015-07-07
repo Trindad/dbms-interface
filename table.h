@@ -161,4 +161,6 @@ int finalizaInsert(char *nome, column *c);
     *c - Estrutura com o valores que vão ser inseridos na tabela *nome.
 */
 
+int verificaNomeCampo(char *table_name, char *column);//verifica se a coluna existe na tabela
+
 #endif

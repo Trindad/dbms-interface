@@ -22,6 +22,41 @@ int quantidadeTabelas(){
     return codTbl;
 }
 
+
+int verificaNomeCampo(char *table_name, char *column)
+{
+    struct fs_objects objeto,dicio; // Le dicionario
+    tp_table *auxT ; // Le esquema
+    auxT = abreTabela(table_name, &dicio, &auxT);
+
+    table *tab     = (table *) malloc (sizeof(table));
+
+    if (tab == NULL)
+    {
+        printf("Out of memory.\nAborting...\n");
+        abort();
+    }
+
+    tab->esquema = abreTabela(table_name, &objeto, &tab->esquema);
+
+    auxT = tab->esquema;
+    int t = 0;
+
+    while(auxT != NULL)
+    {
+        if (strcmp(auxT->nome,column) == 0)
+        {
+            free(tab);
+            return 1;
+        }
+        auxT = auxT->next;
+        t++;
+    }
+
+    return 0;
+}
+
+
 int verificaNomeTabela(char *nomeTabela)
 {
     FILE *dicionario;
@@ -37,7 +72,7 @@ int verificaNomeTabela(char *nomeTabela)
         fseek(dicionario, -1, 1);
 
         fread(tupla, sizeof(char), TAMANHO_NOME_TABELA, dicionario); //Lê somente o nome da tabela
-        // printf("TUPLA %s %s\n",tupla,nomeTabela );
+        
         if(strcmp(tupla, nomeTabela) == 0){ // Verifica se o nome dado pelo usuario existe no dicionario de dados.
             free(tupla);
             return 1;
@@ -474,6 +509,7 @@ int finalizaInsert(char *nome, column *c){
     
     auxC = c;
     t = 0;
+
     while(t < dicio.qtdCampos) 
     {        
         // printf("nome Campo %s %s\n",auxC->nomeCampo,auxT[t].nome );
@@ -1156,6 +1192,7 @@ int existeAtributo(char *nomeTabela, column *c){
    ---------------------------------------------------------------------------------------------*/
 
 int verificaChaveFK(char *nomeTabela,column *c, char *nomeCampo, char *valorCampo, char *tabelaApt, char *attApt){
+    
     int x,j, erro;
     char str[20]; 
     char dat[5] = ".dat";

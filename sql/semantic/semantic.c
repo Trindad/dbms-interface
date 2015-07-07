@@ -366,7 +366,13 @@ void createTable(char *sql, int index_database)
 				printf("Table %s referenced in FK doesn't exist\n",datas.create_new_table[i].table_foreign);
 				return;
 			}
-			
+
+			if (verificaNomeCampo(table_name_cat(datas.create_new_table[i].table_foreign,database),datas.create_new_table[i].name_column_foreign) == 0)
+			{
+				printf("Column %s doesn't exist in table %s\n",datas.create_new_table[i].name_column_foreign,datas.create_new_table[i].table_foreign);
+				return;
+			}
+
 			tab[0] = adicionaCampo(tab[0],datas.create_new_table[i].name_column_table,datas.create_new_table[i].type_column,datas.create_new_table[i].size,datas.create_new_table[i].constraint,table_name_cat(datas.create_new_table[i].table_foreign,database),datas.create_new_table[i].name_column_foreign);
 		}
 		else
