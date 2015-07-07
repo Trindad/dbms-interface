@@ -9,7 +9,7 @@ int cod_id_db(int flag){
 
     if (database == NULL)
     {
-        fprintf(stderr, "Out of memory.\n");
+        fprintf(stderr, "Out of memory.\nAborting...\n");
         abort();
     }
 
@@ -49,6 +49,7 @@ int cod_id_db(int flag){
 
     fclose(file);
     free(database);
+
     return cod_id;
 }
 
