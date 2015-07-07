@@ -1249,8 +1249,11 @@ int excluirTabela(char *nomeTabela) {
 
         return ERRO_REMOVER_ARQUIVO_OBJECT;
     }
-        
-    remove(str);
+
+    if(existeArquivo(str)) 
+    {
+        remove(str);
+    }
 
     if (str != NULL)
     {
