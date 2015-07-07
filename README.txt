@@ -353,31 +353,52 @@ Todos os comandos aceitam ';' no final com exceção dos \l e \d.
 			insert into Aluno values (8079, "Joca", "Rua dos martins", 258.0),(100000, "Joao", "Rua dos capitaes", 70.0);
 			insert into Aluno (CPF,Nome,Endereco,Peso) values (2138, "Joca", "Rua dos martins", 258.0),(6778, "Joao", "Rua dos capitaes", 70.0);
 
-Sair do Shell (interface)
+	Sair do Shell (interface)
 		exit
 		bye
 		quit
-Copyright
+		\q
+		
+		
+	Copyright
 		\copyright
-Excluir banco de dados
-	drop database <database_name>
-	O banco não pode ser excluído caso esteja esteja logado nele mesmo
-Excluir tabela do banco de dados
-	drop table <table_name>
-	A ordem de exlusão das tabelas obdece o esquema de chaves estrangeiras
+
+	Excluir banco de dados
+		drop database <database_name>
+		O banco não pode ser excluído caso esteja esteja logado nele mesmo
+
+	Criação de tabelas
+		create table <nome_tabela> ( <nome coluna> <tipo coluna> [ <atributo constraint> ]{ , <nome coluna> <tipo coluna> [ <atributo constrain> ] } [ <constraint da tabela>
+        	{ , <constraint da tabela> } ] );
+
+		Exemplos:
+			create table curso (nome string primary key,creditos integer,professor string(100));
+	
+	Excluir tabela do banco de dados
+		drop table <table_name>
+		A ordem de exlusão das tabelas obdece o esquema de chaves estrangeiras
+
+	Mostrar esquema da tabela
+		\d table
+
+	Ajuda para interação com a interface
+		\help ou \h
+		
+
 Implementação das funções:
 
 A implementação das funções está no arquivo database.c e seus protótipos em database.h. 
 
  - \c name_my_db: 
-Para realizar conexão a um banco é utilizado o comando \c nome_banco.
-Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem dois bancos com o mesmo nome. Faz uso da função checkCreateDB do arquivo database.c para testar. 
-É possível se conectar a um banco a qualquer momento, ou seja, posso estar em um banco de dados e utilizar o comando \c nome_banco e me conectar a um outro banco (saindo do atual).
+	Para realizar conexão a um banco é utilizado o comando \c nome_banco.
+	Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem dois bancos com o mesmo nome. Faz uso da função checkCreateDB do arquivo database.c para testar. 
+	É possível se conectar a um banco a qualquer momento, ou seja, posso estar em um banco de dados e utilizar o comando \c nome_banco e me conectar a um outro banco (saindo do
+ 	atual).
 
  - \d
 	Lista as tabelas do banco, para isso é acionado a função listaTabelas.
 
-- \d <nome_tabela>
+ - \d <nome_tabela>
 	Lista o esquema de uma tabela
 
  - show name_table
@@ -387,9 +408,9 @@ Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem d
 	Lista o nomes dos bancos existentes no SGBD. Podendo ser utilizada, estando ou não conectado a um banco. 
 	Mesmo que o programa seja recompilado por completo os bancos criados permanecem lá. A listagem é feita através da função listaBancos, do arquivo database.c.
 
--help
+ -help
 	ajuda ao usuário
--\h
+ -\h
 	ajuda ao usuário
 
  - INSERT:
@@ -418,28 +439,43 @@ Conecta ao banco que já foi criado. Não existe a possíbilidade de existirem d
 		Ex: insert into Aluno (CPF,Nome,Endereco,Peso) values (2138, "Joca", "Rua dos martins", 258.0),(6778, "Joao", "Rua dos capitaes", 70.0);
 	
 	Para o desenvolvimento do insert foi feito a análise léxica, semântica e sintática do comando sql. O código pode ser encontrado no diretório insert
-	onde contêm dois diretórios, o sintátic e semantic. O código desenvolvido básicamente recebe uma string com o comando sql, verifica a questão léxica, em seguida a análise semântica utiliza de expressões para verificar a string passada que deve seguir o padrão dos exemplos anteriores, caso algum erro ocorra então é lançado uma mensagem de erro, as mensagens são geradas com o padrão do bison. 
+	onde contêm dois diretórios, o sintátic e semantic. O código desenvolvido básicamente recebe uma string com o comando sql, verifica a questão léxica, em seguida a análise 	   semântica utiliza de expressões para verificar a string passada que deve seguir o padrão dos exemplos anteriores, caso algum erro ocorra então é lançado uma mensagem de erro,
+ 	as mensagens são geradas com o padrão do bison. 
 	Na análise semântica, é verificado se os tipos estão corretos, se a tabela existe para o banco logado, estando tudo certo ele faz a inserção das tuplas na tabela.  
 
--CREATE
+ -CREATE
 	Banco de dados
 		Nessa nova versão cada tabela criada no banco recebe o id do banco ao qual ela pertence. 
 		As tabelas são guardadas no dicionário com os ids e são escritas em arquivo com o id também. 
-		O id é controlado por uma varíavel que é atualizada a cada conexão ao banco, assim sendo necessário que o usuário crie e se conecte ao banco para depois inserir as tabelas e os dados no respectivo banco. 
+		O id é controlado por uma varíavel que é atualizada a cada conexão ao banco, assim sendo necessário que o usuário crie e se conecte ao banco para depois inserir as 
+        	tabelas e os dados no respectivo banco. 
 		Para criar um banco utiliza-se o comando create database nome_do_banco, sendo que o nome do banco pode conter letras maiúsculas e minúsculas. 
 		Pode se criar um novo banco estando ou não conectado a  um banco.
 		create database <nome_db>
 	Tabela
-		create table <nome_tabela> ( <nome coluna> <tipo coluna> [ <atributo constraint> ]{ , <nome coluna> <tipo coluna> [ <atributo constrain> ] } [ <constraint da tabela> { , <constraint da tabela> } ] );
+		create table <nome_tabela> ( <nome coluna> <tipo coluna> [ <atributo constraint> ]{ , <nome coluna> <tipo coluna> [ <atributo constrain> ] } [ <constraint da tabela>
+        	{ , <constraint da tabela> } ] );
 
 		Exemplos:
 			create table curso (nome string primary key,creditos integer,professor string(100));
 
-			create table cursoverao (nome string,cod integer, creditos integer,professor string(100),constraint primary key (nome) , CONSTRAINT FOREIGN KEY ( cod ) REFERENCES Inst(CodInst));
+			create table cursoverao (nome string,cod integer, creditos integer,professor string(100),constraint primary key (nome) , CONSTRAINT FOREIGN KEY ( cod ) 
+                	REFERENCES Inst(CodInst));
 		OBS: pode ser minúsculo ou maiúsculo
 
--DIRETÓRIO 'sql'
-	Neste diretório tem as funções que tratam a análise sintática e léxica, para trabalhos futuros podrá ser inserido facilmente mais informações na estrutura Datas que está no arquivo c.y (sql/sintatic).
+ -DIRETÓRIO 'sql'
+	Neste diretório tem as funções que tratam a análise sintática e léxica, para trabalhos futuros podrá ser inserido facilmente mais informações na estrutura Datas que está no
+ 	arquivo c.y (sql/sintatic).
+
+
+
+ -DROP 
+	banco de dados
+
+
+	tabela
+
+
 
 PASSOS PARA UTILIZAR A INTERFACE
 
@@ -452,6 +488,8 @@ PASSOS PARA UTILIZAR A INTERFACE
 		Para conferir se você já possuim instalado digite no terminal:
 			lex --version
 			bison --version
+		*Caso ocorra algum erro do tipo arquivo readline/readline.h não encontrado instale o pacote:
+		sudo apt-get install libreadline6 libreadline6-dev
 
 	OPÇÃO 1: Manual
 		1º Passo
