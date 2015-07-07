@@ -320,14 +320,23 @@ RESUMO:
 	O shell.c e o shell.h possuem funções relacionadas a interface. 
 	O arquivos do database são funções relacionadas ao banco de dados, como criação do banco, buscar bancos entre outras. 
 	O semantic.c faz a análise semântica e chama o arquivo gerado pelo .c gerado pelo bison.
-	Além disso, dividimos o arquivo buffend nos arquivos table,tuple,common e buffend, todos com .c e .h.
+	Além disso, dividimos o arquivo buffend nos arquivos table,tuple,common,databases,hell e buffend, todos com .c e .h.
 
 FUNCIONAMENTO:
 
-	A interface foi escrita no arquivo shell.c . Inicialmente nenhum banco estará logado. Guando o usuário entrar no shell poderá digita os comandos desejados e aceitos neste momento. O comando de insert é tratado com o BISON na análise sintática.
+	A interface foi escrita no arquivo shell.c . Inicialmente nenhum banco estará logado. Guando o usuário entrar no shell poderá digita os comandos desejados e aceitos neste
+ 	momento. O comando de insert é tratado com o BISON na análise sintática.
+	
 	A partir dessa versão existe a possibilidade da criação de vários bancos de dados, listagem dos bancos, de tabelas do sgbd e de inserção de dados via interface.
-	A interface é inicializada no começo do arquivo exemploMain.c com a chamada da função shell(), antes de chamar está função é executado um comando de exemplo que gera, insere tabelas, dados nas tabelas no banco de dados, denominado UFFS. Em seguida executa a interface, ela é responsável por chamar as funções que interpretam os comandos digitados pelo usuário.  
-	Para seu desenvolvimento foi utilizado como referência a comandos SQL padrão. Os comandos interpretados pelo SGBD podem ser minúsculos ou maiúsculos, portanto pode ter 'CREATE DATABASE my_db' ou 'create datebase my_db', para isso foi desenvolvido função para converter os comandos de entrada para minúsculo (strtolower() -- que recebe como entrada a string que deseja ser convertida, retornando a string convertida para minúsculo, esta função esta implementada em shell.c).
+	A interface é inicializada no começo do arquivo exemploMain.c com a chamada da função shell(), antes de chamar está função é executado um comando de exemplo que gera, insere
+	tabelas, dados nas tabelas no banco de dados, denominado UFFS. Em seguida executa a interface, ela é responsável por chamar as funções que interpretam os comandos digitados
+	pelo usuário.  
+	
+	Para seu desenvolvimento foi utilizado como referência a comandos SQL padrão. Os comandos interpretados pelo SGBD podem ser minúsculos ou maiúsculos, portanto pode ter 'CREATE
+	DATABASE my_db' ou 'create datebase my_db', para isso foi desenvolvido função para converter os comandos de entrada para minúsculo (strtolower() -- que recebe como entrada a
+	string que deseja ser convertida, retornando a string convertida para minúsculo, esta função esta implementada em shell.c).
+	
+	A interface possui comandos de acesso ao histórico de comandos digitados. O usuário pode rever os comando digitados através da ("seta para cima"), semelhante ao postgres.
 
 Comandos do Shell:
 
@@ -344,7 +353,7 @@ Todos os comandos aceitam ';' no final com exceção dos \l e \d.
 	Listar tabelas existentes
 		\d
 	Mostrar dados de uma tabela
-		show <table_name> ou select *from <table_name>
+		show <table_name> ou select *from <table_name>;
 
 	Inserções 
 		Segue sintaxe SQL normal (abaixo melhor descritas cada umas das maneiras de inserção interpretadas pelo nosso shell)
@@ -474,12 +483,15 @@ A implementação das funções está no arquivo database.c e seus protótipos e
  -DROP 
 	Banco de dados
 		Cada banco de dados possui seu id e suas tabelas possuem este id. Inicialmente é verificado se o nome do banco passado existe no dicionário de dados e se 
-        existe é feita a verificação das suas tabelas. Se este banco conter alguma tabela cadastrada, então é realizada a exclusão das tabelas (conteúdo, esquema e registros no dicionário de dados) deste banco obedecendo a ordem para não violar chaves estrangeiras.
+        	existe é feita a verificação das suas tabelas. Se este banco conter alguma tabela cadastrada, então é realizada a exclusão das tabelas (conteúdo, esquema e registros
+	 	no dicionário de dados) deste banco obedecendo a ordem para não violar chaves estrangeiras.
 		Posteriormente o nome do banco é retirado do dicionário.
 
 	Tabela
 		
-
+		O nome passado na função de drop table é verificado. Se este é pertencente ao banco ao qual o usuário está conectado a excluiTabela é chamada. A função lê a tabela no
+	 	dicionário e lê o esquema da tabela. Após isso verifica as chaves através do esquema para fazer a exclusão em ordem afim de não violar chaves estrangeiras. Exclui a
+		tabela que desejada pelo usuário, seu esquema e o objeto da tabela do dicionário.
 
 PASSOS PARA UTILIZAR A INTERFACE
 
