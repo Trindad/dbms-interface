@@ -1037,8 +1037,9 @@ int excluirTabela(char *nomeTabela) {
     strcpy (str, nomeTabela); 
     strcat (str, ".dat");              //Concatena e junta o nome com .dat
 
-    if (existeArquivo(nomeTabela) == 0)
+    if (existeArquivo(str) == 0)
     {
+
         delete_table(nomeTabela);
 
         return SUCCESS;
@@ -1056,6 +1057,7 @@ int excluirTabela(char *nomeTabela) {
 
         abort();
     }
+
     for(i = 0; i < qtTable; i++) {
 
         tupla[i] = (char *) malloc (sizeof(char)*TAMANHO_NOME_TABELA);
@@ -1127,7 +1129,6 @@ int excluirTabela(char *nomeTabela) {
         //coloca o nome de todas as tabelas em tupla
         fread(tupla[k], sizeof(char),TAMANHO_NOME_TABELA , dicionario);
         k++;
-
         fseek(dicionario, 28, 1);
     }
 
@@ -1163,9 +1164,10 @@ int excluirTabela(char *nomeTabela) {
                     }
                     tab3 = procuraAtributoFK(objeto1);
 
-                    for(l = 0; l < objeto1.qtdCampos; l++) {
-                        
-                        if(tab3[l].chave == FK) {                               //verifica se a outra tabela possui
+                    for(l = 0; l < objeto1.qtdCampos; l++) {   
+                        if(tab3[l].chave == FK) { 
+                            printf("'%s' e '%s' \n",nomeTabela, tab3[l].tabelaApt );
+                            //verifica se a outra tabela possui
                             if(strcmp(nomeTabela, tab3[l].tabelaApt) == 0) {    //chave estrangeira
                                 printf("Cannot delete row due to foreign key constraint!\n");            //se sim, verifica se e da tabela
                                 if(tab2 != NULL)
