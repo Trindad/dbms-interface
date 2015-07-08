@@ -1110,7 +1110,7 @@ int excluirTabela(char *nomeTabela) {
             free(str);
             
         }
-        if (str != NULL)
+        if (tupla != NULL)
         {
             free(tupla);
             
@@ -1154,7 +1154,7 @@ int excluirTabela(char *nomeTabela) {
                             free(str);
                             
                         }
-                        if (str != NULL)
+                        if (tupla != NULL)
                         {
                             free(tupla);
                             
@@ -1179,7 +1179,7 @@ int excluirTabela(char *nomeTabela) {
                                     free(str);
                                     
                                 }
-                                if (str != NULL)
+                                if (tupla != NULL)
                                 {
                                     free(tupla);
                                 }
@@ -1207,7 +1207,7 @@ int excluirTabela(char *nomeTabela) {
             free(str);
             
         }
-        if (str != NULL)
+        if (tupla != NULL)
         {
             free(tupla);
             
@@ -1228,7 +1228,7 @@ int excluirTabela(char *nomeTabela) {
             free(str);
             
         }
-        if (str != NULL)
+        if (tupla != NULL)
         {
             free(tupla);
             
@@ -1243,7 +1243,7 @@ int excluirTabela(char *nomeTabela) {
             free(str);
             
         }
-        if (str != NULL)
+        if (tupla != NULL)
         {
             free(tupla);
             
@@ -1262,7 +1262,7 @@ int excluirTabela(char *nomeTabela) {
         free(str);
         
     }
-    if (str != NULL)
+    if (tupla != NULL)
     {
         free(tupla);
         
