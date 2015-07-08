@@ -1166,7 +1166,7 @@ int excluirTabela(char *nomeTabela) {
 
                     for(l = 0; l < objeto1.qtdCampos; l++) {   
                         if(tab3[l].chave == FK) { 
-                            printf("'%s' e '%s' \n",nomeTabela, tab3[l].tabelaApt );
+                            // printf("'%s' e '%s' \n",nomeTabela, tab3[l].tabelaApt );
                             //verifica se a outra tabela possui
                             if(strcmp(nomeTabela, tab3[l].tabelaApt) == 0) {    //chave estrangeira
                                 printf("Cannot delete row due to foreign key constraint!\n");            //se sim, verifica se e da tabela
